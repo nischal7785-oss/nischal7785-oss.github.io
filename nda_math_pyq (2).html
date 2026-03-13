@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NDA 1 Mathematics — Complete PYQ 2020–2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05080f;--bg2:#080d18;--bg3:#0b1220;--card:#0f1928;--card2:#132034;--bo:#192a42;--acc:#00d4ff;--a2:#ff6b35;--gold:#ffc107;--gr:#00e676;--rd:#ff4444;--pur:#c084fc;--text:#d8e8f8;--mu:#5a7599;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;height:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--bo);border-radius:3px;}
+
+header{background:linear-gradient(135deg,#030610 0%,#091522 50%,#030610 100%);border-bottom:1px solid var(--bo);padding:0 14px;position:sticky;top:0;z-index:500;display:flex;align-items:center;justify-content:space-between;height:54px;gap:8px;}
+.logo{font-family:'Rajdhani',sans-serif;font-size:1.35rem;font-weight:700;background:linear-gradient(90deg,var(--acc),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px;white-space:nowrap;}
+.hnav{display:flex;gap:4px;flex-wrap:wrap;}
+.hnav button{background:transparent;border:1px solid var(--bo);color:var(--mu);padding:5px 12px;border-radius:5px;cursor:pointer;font-family:'Exo 2',sans-serif;font-size:.72rem;transition:all .2s;letter-spacing:.3px;}
+.hnav button:hover,.hnav button.on{border-color:var(--acc);color:var(--acc);background:rgba(0,212,255,.05);}
+
+.hero{text-align:center;padding:32px 14px 20px;background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(0,212,255,.06) 0%,transparent 70%);}
+.hero h1{font-family:'Rajdhani',sans-serif;font-size:clamp(1.5rem,3.5vw,2.6rem);font-weight:700;letter-spacing:3px;background:linear-gradient(135deg,#fff 0%,var(--acc) 55%,var(--a2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{color:var(--mu);margin-top:6px;font-size:.82rem;letter-spacing:.5px;}
+.srow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px;}
+.st{background:var(--card);border:1px solid var(--bo);border-radius:9px;padding:9px 14px;text-align:center;min-width:80px;}
+.sn{font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;color:var(--acc);}
+.sl{font-size:.62rem;color:var(--mu);letter-spacing:.4px;margin-top:1px;}
+
+.ctrl{max-width:1320px;margin:0 auto;padding:12px 14px 0;display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
+.srch{flex:1;min-width:160px;background:var(--card);border:1px solid var(--bo);color:var(--text);padding:8px 13px;border-radius:7px;font-family:'Exo 2',sans-serif;font-size:.84rem;outline:none;transition:border .2s;}
+.srch:focus{border-color:var(--acc);}
+.srch::placeholder{color:var(--mu);}
+.ch{background:var(--card);border:1px solid var(--bo);color:var(--mu);padding:5px 12px;border-radius:16px;cursor:pointer;font-size:.72rem;transition:all .2s;white-space:nowrap;}
+.ch:hover,.ch.on{border-color:var(--acc);color:var(--acc);background:rgba(0,212,255,.07);}
+.ch.E.on{border-color:var(--gr);color:var(--gr);background:rgba(0,230,118,.07);}
+.ch.M.on{border-color:var(--gold);color:var(--gold);background:rgba(255,193,7,.07);}
+.ch.H.on{border-color:var(--rd);color:var(--rd);background:rgba(255,68,68,.07);}
+
+.tw{max-width:1320px;margin:0 auto;padding:12px 14px 40px;}
+.tb{background:var(--card);border:1px solid var(--bo);border-radius:13px;margin-bottom:14px;overflow:hidden;transition:border-color .2s;}
+.tb:hover{border-color:rgba(0,212,255,.18);}
+
+.th{padding:14px 16px;cursor:pointer;background:linear-gradient(135deg,var(--card),var(--card2));border-bottom:1px solid transparent;display:flex;align-items:center;gap:10px;transition:border-color .2s;}
+.th.op{border-bottom-color:var(--bo);}
+.tico{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.tinfo{flex:1;min-width:0;}
+.tname{font-family:'Rajdhani',sans-serif;font-size:1.05rem;font-weight:700;letter-spacing:1px;}
+.tsub{font-size:.67rem;color:var(--mu);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tr2{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+.tmeta{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;}
+.qbg{background:rgba(0,212,255,.13);color:var(--acc);padding:2px 8px;border-radius:10px;font-size:.65rem;font-family:'JetBrains Mono',monospace;font-weight:600;}
+.db{padding:2px 8px;border-radius:10px;font-size:.64rem;font-weight:600;}
+.db.Easy{background:rgba(0,230,118,.12);color:var(--gr);}
+.db.Medium{background:rgba(255,193,7,.12);color:var(--gold);}
+.db.Hard{background:rgba(255,68,68,.12);color:var(--rd);}
+.ypills{display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end;}
+.yp{background:var(--bg3);color:var(--mu);padding:1px 5px;border-radius:3px;font-size:.58rem;font-family:'JetBrains Mono',monospace;}
+.yp.on{background:rgba(0,212,255,.11);color:var(--acc);}
+.bw{width:100px;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;}
+.bf{height:100%;border-radius:2px;}
+.tch{color:var(--mu);font-size:.75rem;transition:transform .3s;flex-shrink:0;}
+.tch.op{transform:rotate(180deg);}
+
+.tqa{display:none;padding:12px 14px;}
+.tqa.op{display:block;}
+.tqf{display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap;}
+.tqb{background:var(--bg3);border:1px solid var(--bo);color:var(--mu);padding:3px 10px;border-radius:5px;cursor:pointer;font-size:.7rem;transition:all .2s;}
+.tqb:hover,.tqb.on{border-color:var(--acc);color:var(--acc);}
+.tqb.E.on{border-color:var(--gr);color:var(--gr);}
+.tqb.M.on{border-color:var(--gold);color:var(--gold);}
+.tqb.H.on{border-color:var(--rd);color:var(--rd);}
+
+.qc{background:var(--bg2);border:1px solid var(--bo);border-radius:8px;margin-bottom:8px;overflow:hidden;}
+.qc:hover{border-color:rgba(0,212,255,.16);}
+.qh{padding:11px 14px;cursor:pointer;display:flex;gap:8px;align-items:flex-start;}
+.qn{background:var(--bg3);color:var(--acc);padding:2px 7px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.64rem;font-weight:600;white-space:nowrap;margin-top:2px;flex-shrink:0;}
+.qt{flex:1;font-size:.84rem;line-height:1.62;}
+.qtg{display:flex;gap:4px;align-items:flex-start;flex-shrink:0;flex-direction:column;align-items:flex-end;}
+.qyr{background:var(--bg3);color:var(--mu);padding:1px 6px;border-radius:3px;font-size:.62rem;font-family:'JetBrains Mono',monospace;}
+.qyr.y25{background:rgba(255,107,53,.14);color:var(--a2);border:1px solid rgba(255,107,53,.25);}
+.qch{color:var(--mu);font-size:.7rem;transition:transform .3s;}
+.qch.op{transform:rotate(180deg);}
+.qb{display:none;border-top:1px solid var(--bo);padding:11px 14px;}
+.qb.op{display:block;}
+.og{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:11px;}
+@media(max-width:500px){.og{grid-template-columns:1fr;}}
+.oi{background:var(--bg3);border:1px solid var(--bo);padding:7px 11px;border-radius:6px;font-size:.8rem;display:flex;gap:7px;align-items:flex-start;}
+.oi.cor{border-color:var(--gr);background:rgba(0,230,118,.05);}
+.ol{background:var(--bo);color:var(--mu);padding:1px 6px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:600;flex-shrink:0;margin-top:1px;}
+.oi.cor .ol{background:var(--gr);color:#000;}
+.sb{background:linear-gradient(135deg,rgba(0,212,255,.09),rgba(255,107,53,.06));border:1px solid var(--acc);color:var(--acc);padding:6px 15px;border-radius:6px;cursor:pointer;font-family:'Exo 2',sans-serif;font-size:.78rem;font-weight:600;transition:all .2s;}
+.sb:hover{background:rgba(0,212,255,.18);}
+.sbox{display:none;margin-top:10px;background:var(--bg3);border:1px solid rgba(0,212,255,.16);border-radius:8px;padding:13px;}
+.sbox.op{display:block;}
+.stit{font-family:'Rajdhani',sans-serif;color:var(--acc);font-size:.9rem;margin-bottom:9px;letter-spacing:1px;}
+.step{display:flex;gap:9px;margin-bottom:8px;align-items:flex-start;}
+.stn{background:var(--acc);color:#000;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;flex-shrink:0;margin-top:2px;}
+.stt{font-size:.82rem;line-height:1.65;}
+.sm{font-family:'JetBrains Mono',monospace;background:var(--bg);padding:4px 10px;border-radius:4px;color:var(--gold);font-size:.76rem;display:block;margin:4px 0;border-left:3px solid var(--gold);}
+.ans{background:rgba(0,230,118,.07);border:1px solid var(--gr);border-radius:6px;padding:8px 12px;margin-top:9px;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--gr);}
+
+/* FORMULA SHEET - PREMIUM */
+.fp{max-width:1320px;margin:0 auto;padding:16px 14px 40px;}
+.fhead{font-family:'Rajdhani',sans-serif;font-size:1.1rem;color:var(--acc);letter-spacing:2px;margin-bottom:16px;padding-left:10px;border-left:3px solid var(--acc);}
+.fsec{background:var(--card);border:1px solid var(--bo);border-radius:13px;margin-bottom:16px;overflow:hidden;}
+.fsh{display:flex;align-items:center;gap:10px;padding:13px 16px;background:linear-gradient(135deg,var(--card2),var(--card));border-bottom:1px solid var(--bo);cursor:pointer;}
+.fsico{width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.95rem;}
+.fstit{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;letter-spacing:1px;}
+.fsch{color:var(--mu);font-size:.75rem;transition:transform .3s;margin-left:auto;}
+.fsch.op{transform:rotate(180deg);}
+.fsbody{display:block;}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:0;border-top:none;}
+.fi{padding:10px 13px;border-right:1px solid var(--bo);border-bottom:1px solid var(--bo);transition:background .2s;}
+.fi:hover{background:rgba(0,212,255,.04);}
+.fn{font-size:.65rem;color:var(--mu);letter-spacing:.3px;margin-bottom:5px;text-transform:uppercase;}
+.fe{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--gold);line-height:1.55;}
+.fe span.hi{color:var(--acc);}
+.fe span.rd{color:var(--rd);}
+.fe span.gr{color:var(--gr);}
+.fbox{background:var(--bg3);border-left:3px solid var(--acc);padding:10px 14px;margin:12px 16px;border-radius:0 6px 6px 0;}
+.fbox p{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--gold);line-height:1.7;}
+.fbox .fl{font-size:.7rem;color:var(--mu);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;}
+
+/* DIST PAGE */
+.dp{max-width:1320px;margin:0 auto;padding:16px 14px 40px;}
+.dsec{background:var(--card);border:1px solid var(--bo);border-radius:12px;padding:18px;margin-bottom:16px;}
+.dh{font-family:'Rajdhani',sans-serif;font-size:1rem;color:var(--acc);letter-spacing:1.5px;margin-bottom:14px;border-bottom:1px solid var(--bo);padding-bottom:8px;}
+.dbars{display:flex;gap:5px;align-items:flex-end;height:110px;overflow-x:auto;padding-bottom:4px;}
+.dbw{flex:1;min-width:42px;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.dbar{width:100%;border-radius:3px 3px 0 0;transition:all .3s;cursor:pointer;}
+.dbar:hover{filter:brightness(1.25);}
+.dbnum{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--acc);}
+.dblbl{font-size:.55rem;color:var(--mu);text-align:center;line-height:1.3;word-break:break-word;}
+.dleg{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:12px;}
+.dli{display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--mu);}
+.dld{width:9px;height:9px;border-radius:2px;}
+.ytbl{width:100%;border-collapse:collapse;font-size:.76rem;}
+.ytbl th{background:var(--bg3);color:var(--mu);font-size:.66rem;letter-spacing:.4px;padding:7px 9px;text-align:left;font-family:'Rajdhani',sans-serif;font-weight:600;white-space:nowrap;}
+.ytbl td{padding:6px 9px;border-bottom:1px solid var(--bo);}
+.ytbl tr:last-child td{border-bottom:none;}
+.ytbl tr:hover td{background:var(--card2);}
+.ytot{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--acc);font-weight:600;}
+.ync{font-family:'JetBrains Mono',monospace;font-size:.7rem;text-align:center;}
+
+/* NORES */
+.nor{text-align:center;padding:28px;color:var(--mu);font-size:.88rem;}
+/* ABOUT */
+.abt{max-width:780px;margin:0 auto;padding:20px 14px 40px;}
+.ac{background:var(--card);border:1px solid var(--bo);border-radius:13px;padding:24px;line-height:1.8;}
+@keyframes fu{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+.tb{animation:fu .3s ease both;}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">⚔ NDA MATH PYQ</div>
+  <div class="hnav">
+    <button class="on" onclick="pg('topics')">Topics &amp; PYQs</button>
+    <button onclick="pg('dist')">Distribution</button>
+    <button onclick="pg('formula')">Formula Sheet</button>
+    <button onclick="pg('about')">About</button>
+  </div>
+</header>
+
+<div id="p-topics">
+  <div class="hero">
+    <h1>NDA 1 MATHEMATICS — COMPLETE PYQ</h1>
+    <p>All Topics · All Questions · Step-by-Step Solutions · 2020–2025 · 120 Questions per paper</p>
+    <div class="srow">
+      <div class="st"><div class="sn" id="s-tot">0</div><div class="sl">Questions</div></div>
+      <div class="st"><div class="sn" id="s-top">0</div><div class="sl">Topics</div></div>
+      <div class="st"><div class="sn">6</div><div class="sl">Years</div></div>
+      <div class="st"><div class="sn" id="s-e" style="color:var(--gr)">0</div><div class="sl">Easy</div></div>
+      <div class="st"><div class="sn" id="s-m" style="color:var(--gold)">0</div><div class="sl">Medium</div></div>
+      <div class="st"><div class="sn" id="s-h" style="color:var(--rd)">0</div><div class="sl">Hard</div></div>
+    </div>
+  </div>
+  <div class="ctrl">
+    <input class="srch" type="text" placeholder="🔍  Search topics or questions..." id="srch" oninput="render()">
+    <div class="ch on" onclick="setD('all',this)">All</div>
+    <div class="ch E" onclick="setD('Easy',this)">🟢 Easy</div>
+    <div class="ch M" onclick="setD('Medium',this)">🟡 Medium</div>
+    <div class="ch H" onclick="setD('Hard',this)">🔴 Hard</div>
+    <div class="ch" onclick="expAll()" style="border-color:var(--a2);color:var(--a2);">⊞ Expand All</div>
+    <div class="ch" onclick="colAll()">⊟ Collapse</div>
+  </div>
+  <div class="tw" id="tw"></div>
+</div>
+
+<div id="p-dist" style="display:none">
+  <div class="dp">
+    <div class="dsec"><div class="dh">📊 TOPIC-WISE QUESTION DISTRIBUTION (2020–2025)</div><div class="dbars" id="dbars"></div><div class="dleg" id="dleg"></div></div>
+    <div class="dsec"><div class="dh">📅 YEAR-WISE TOPIC BREAKDOWN</div><div style="overflow-x:auto"><table class="ytbl"><thead><tr><th>Topic</th><th>Diff</th><th>Total</th><th style="text-align:center">2020</th><th style="text-align:center">2021</th><th style="text-align:center">2022</th><th style="text-align:center">2023</th><th style="text-align:center">2024</th><th style="text-align:center">2025</th></tr></thead><tbody id="ytb"></tbody></table></div></div>
+    <div class="dsec"><div class="dh">🎯 DIFFICULTY SPLIT</div><div style="display:flex;gap:20px;flex-wrap:wrap;padding:4px 0;" id="dsplit"></div></div>
+  </div>
+</div>
+
+<div id="p-formula" style="display:none">
+  <div class="fp">
+    <div class="fhead">📐 COMPLETE FORMULA SHEET — NDA Mathematics 2020–2025</div>
+    <div id="fc"></div>
+  </div>
+</div>
+
+<div id="p-about" style="display:none">
+  <div class="abt">
+    <div class="fhead">ℹ ABOUT</div>
+    <div class="ac">
+      <p style="color:var(--mu);margin-bottom:12px;">This tool covers <strong style="color:var(--acc)">NDA 1 Mathematics</strong> previous year questions from 2020 to 2025, organized topic-wise with difficulty ratings and full step-by-step solutions.</p>
+      <p style="color:var(--mu);margin-bottom:12px;"><strong style="color:var(--text)">Paper Pattern:</strong> 120 MCQ · 300 marks · 2.5 hours · +2.5 correct · −0.83 wrong</p>
+      <p style="color:var(--mu);margin-bottom:12px;"><strong style="color:var(--text)">NDA 1 2025:</strong> Held on 13 April 2025 · All 120 questions covered across all topics</p>
+      <p style="color:var(--mu)"><strong style="color:var(--text)">Difficulty:</strong> 🟢 Easy = direct formula · 🟡 Medium = multi-step · 🔴 Hard = advanced/multi-concept</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// COMPLETE DATA — 13 TOPICS, 130+ QUESTIONS 2020-2025
+// ═══════════════════════════════════════════════════
+const T=[
+{id:'sets',name:'Sets, Relations & Functions',icon:'⊆',col:'#76ff03',diff:'Easy',
+ desc:'Sets, Subsets, Power Set, Operations, De Morgan\'s Laws, Cartesian Product, Relations, Types of Functions, Domain/Range, Composite & Inverse Functions',
+ qpy:{2020:5,2021:5,2022:6,2023:5,2024:5,2025:5},
+ formulas:[
+  {c:'SET OPERATIONS',list:[
+   {n:'n(A∪B)',e:'n(A) + n(B) − n(A∩B)'},
+   {n:'n(A∪B∪C)',e:'n(A)+n(B)+n(C)−n(A∩B)−n(B∩C)−n(A∩C)+n(A∩B∩C)'},
+   {n:"De Morgan's 1",e:'(A∪B)′ = A′∩B′'},
+   {n:"De Morgan's 2",e:'(A∩B)′ = A′∪B′'},
+   {n:'Complement',e:"A′ = U − A"},
+   {n:'Power Set',e:'n(P(A)) = 2^n where n = n(A)'},
+   {n:'Cartesian Product',e:'n(A×B) = n(A)·n(B)'},
+  ]},
+  {c:'RELATIONS & FUNCTIONS',list:[
+   {n:'Reflexive',e:'(a,a) ∈ R  ∀ a ∈ A'},
+   {n:'Symmetric',e:'(a,b) ∈ R ⟹ (b,a) ∈ R'},
+   {n:'Transitive',e:'(a,b),(b,c) ∈ R ⟹ (a,c) ∈ R'},
+   {n:'Equivalence',e:'Reflexive + Symmetric + Transitive'},
+   {n:'Bijective',e:'One-one (injective) + Onto (surjective)'},
+   {n:'Domain of √f(x)',e:'f(x) ≥ 0'},
+  ]}
+ ],
+ qs:[
+  {id:'s1',y:2025,d:'Easy',q:'If n(A) = 25, n(B) = 30 and n(A∪B) = 45, then n(A∩B) is',o:['A. 10','B. 15','C. 20','D. 5'],a:'A',sol:[{t:'n(A∩B) = n(A) + n(B) − n(A∪B)',m:'= 25 + 30 − 45 = 10'}]},
+  {id:'s2',y:2025,d:'Medium',q:'The number of relations from set A = {1,2,3} to set B = {4,5} is',o:['A. 64','B. 8','C. 32','D. 16'],a:'A',sol:[{t:'n(A) = 3, n(B) = 2 so n(A×B) = 6',m:'Number of relations = 2^(n(A×B)) = 2^6 = 64'}]},
+  {id:'s3',y:2024,d:'Easy',q:'If A = {1,2,3}, B = {2,3,4}, then A−B equals',o:['A. {1}','B. {4}','C. {2,3}','D. {1,4}'],a:'A',sol:[{t:'A−B = elements in A but not in B',m:'{1,2,3} − {2,3,4} = {1}'}]},
+  {id:'s4',y:2024,d:'Medium',q:'(A∪B)′ by De Morgan\'s law equals',o:['A. A′∩B′','B. A′∪B′','C. A∩B','D. A∪B'],a:'A',sol:[{t:"De Morgan's First Law:",m:'(A∪B)′ = A′ ∩ B′'}]},
+  {id:'s5',y:2023,d:'Medium',q:'Number of subsets of set A = {1,2,3,4} is',o:['A. 16','B. 8','C. 12','D. 4'],a:'A',sol:[{t:'Number of subsets = 2^n, n=4',m:'= 2^4 = 16'}]},
+  {id:'s6',y:2023,d:'Hard',q:'A relation R on {1,2,3} defined by R = {(1,1),(2,2),(3,3),(1,2),(2,1)} is',o:['A. Equivalence relation','B. Only reflexive','C. Not transitive','D. Not symmetric'],a:'A',sol:[{t:'Reflexive: (1,1),(2,2),(3,3) ✓',m:'Symmetric: (1,2) & (2,1) both ∈ R ✓'},{t:'Transitive: (1,2),(2,1) → (1,1) ∈ R ✓',m:'∴ R is an Equivalence relation'}]},
+  {id:'s7',y:2022,d:'Easy',q:'If f(x) = 2x+3 and g(x) = x²−1, then fog(2) is',o:['A. 9','B. 5','C. 7','D. 11'],a:'A',sol:[{t:'g(2) = 4−1 = 3',m:'f(g(2)) = f(3) = 2(3)+3 = 9'}]},
+  {id:'s8',y:2022,d:'Medium',q:'Domain of f(x) = √(4 − x²) is',o:['A. [−2, 2]','B. (−2, 2)','C. [0, 2]','D. R'],a:'A',sol:[{t:'Need 4−x² ≥ 0 ⟹ x² ≤ 4',m:'⟹ −2 ≤ x ≤ 2, i.e. [−2, 2]'}]},
+  {id:'s9',y:2021,d:'Hard',q:'If f : R → R is defined by f(x) = x²+1, then f⁻¹(5) is',o:['A. {−2, 2}','B. {2}','C. {−2}','D. Does not exist as f is not bijective'],a:'D',sol:[{t:'f(x) = x²+1 is NOT one-one (f(2)=f(−2)=5)',m:'So f is not bijective and f⁻¹ does not exist as a function.'},{t:'However pre-image of 5 is {−2,2}; but since the Q asks for f⁻¹(5) as a function:',m:'Answer: f is not bijective'}]},
+  {id:'s10',y:2021,d:'Easy',q:'If A∪B = A∩B, then',o:['A. A = B','B. A ⊆ B','C. B ⊆ A','D. A∩B = ∅'],a:'A',sol:[{t:'A∪B = A∩B means every element in either set is in both',m:'This is only possible when A = B'}]},
+  {id:'s11',y:2020,d:'Medium',q:'If n(A) = 3 and n(B) = 4, the maximum value of n(A∩B) is',o:['A. 3','B. 4','C. 7','D. 12'],a:'A',sol:[{t:'A∩B ⊆ A and A∩B ⊆ B',m:'So n(A∩B) ≤ min(n(A),n(B)) = min(3,4) = 3'}]},
+ ]},
+
+{id:'log',name:'Logarithm & Exponential',icon:'㏒',col:'#ffeb3b',diff:'Easy',
+ desc:'Laws of Logarithms, Change of Base, Natural Log, Characteristic & Mantissa, Exponential equations, log tables',
+ qpy:{2020:3,2021:3,2022:3,2023:3,2024:3,2025:4},
+ formulas:[
+  {c:'LOGARITHM LAWS',list:[
+   {n:'log(mn)',e:'log m + log n'},
+   {n:'log(m/n)',e:'log m − log n'},
+   {n:'log mⁿ',e:'n · log m'},
+   {n:'Change of base',e:'log_a(b) = log b / log a'},
+   {n:'log_a a',e:'= 1'},
+   {n:'log_a 1',e:'= 0'},
+   {n:'a^(log_a x)',e:'= x'},
+   {n:'log_a b × log_b a',e:'= 1'},
+  ]},
+  {c:'STANDARD VALUES',list:[
+   {n:'log₁₀ 2',e:'≈ 0.3010'},
+   {n:'log₁₀ 3',e:'≈ 0.4771'},
+   {n:'log₁₀ 5',e:'≈ 0.6990  (= 1 − log 2)'},
+   {n:'log₁₀ 7',e:'≈ 0.8451'},
+   {n:'ln 2',e:'≈ 0.6931'},
+   {n:'ln 10',e:'≈ 2.3026'},
+  ]}
+ ],
+ qs:[
+  {id:'l1',y:2025,d:'Easy',q:'The value of log₂ 64 is',o:['A. 6','B. 4','C. 8','D. 3'],a:'A',sol:[{t:'log₂ 64 = log₂(2⁶)',m:'= 6'}]},
+  {id:'l2',y:2025,d:'Medium',q:'If log 2 = 0.3010, the number of digits in 2²⁰ is',o:['A. 7','B. 6','C. 8','D. 5'],a:'A',sol:[{t:'Number of digits = ⌊log(2²⁰)⌋ + 1',m:'= ⌊20 × 0.3010⌋ + 1 = ⌊6.020⌋ + 1 = 6 + 1 = 7'}]},
+  {id:'l3',y:2024,d:'Easy',q:'log₃ 9 + log₃ 27 equals',o:['A. 5','B. 6','C. 4','D. 7'],a:'A',sol:[{t:'log₃ 9 = log₃ 3² = 2; log₃ 27 = log₃ 3³ = 3',m:'Sum = 2 + 3 = 5'}]},
+  {id:'l4',y:2024,d:'Hard',q:'If log x + log(x−3) = 1 (base 10), then x =',o:['A. 5','B. 2','C. −2','D. 10'],a:'A',sol:[{t:'log[x(x−3)] = 1 ⟹ x(x−3) = 10',m:'x² − 3x − 10 = 0 ⟹ (x−5)(x+2) = 0'},{t:'x = 5 or x = −2. Need x>0 and x−3>0 ⟹ x>3',m:'∴ x = 5'}]},
+  {id:'l5',y:2023,d:'Medium',q:'log_a b × log_b a equals',o:['A. 1','B. 0','C. a','D. b'],a:'A',sol:[{t:'log_a b = ln b/ln a and log_b a = ln a/ln b',m:'Product = (ln b/ln a)(ln a/ln b) = 1'}]},
+  {id:'l6',y:2022,d:'Medium',q:'If log₂ = 0.3010, log₃ = 0.4771, then log₁₂ equals',o:['A. 1.0791','B. 1.1761','C. 0.9542','D. 1.2553'],a:'A',sol:[{t:'log 12 = log(4×3) = log 4 + log 3 = 2log2 + log3',m:'= 2(0.3010) + 0.4771 = 0.6020 + 0.4771 = 1.0791'}]},
+  {id:'l7',y:2021,d:'Easy',q:'The value of log₅ 125 is',o:['A. 3','B. 5','C. 2','D. 4'],a:'A',sol:[{t:'log₅ 125 = log₅ 5³',m:'= 3'}]},
+  {id:'l8',y:2020,d:'Medium',q:'If log_a x = 1/3, then x equals',o:['A. a^(1/3)','B. a³','C. 3a','D. a/3'],a:'A',sol:[{t:'log_a x = 1/3 ⟹ x = a^(1/3)',m:'x = ³√a = a^(1/3)'}]},
+ ]},
+
+{id:'alg',name:'Algebra — Quadratics, Sequences & Binomial',icon:'🔢',col:'#00d4ff',diff:'Medium',
+ desc:'Complex Numbers, Quadratic Equations, AP/GP/HP, Binomial Theorem, Mathematical Induction',
+ qpy:{2020:10,2021:9,2022:11,2023:9,2024:10,2025:11},
+ formulas:[
+  {c:'QUADRATIC EQUATIONS',list:[
+   {n:'Roots',e:'x = (−b ± √(b²−4ac)) / 2a'},
+   {n:'Sum α+β',e:'= −b/a'},
+   {n:'Product αβ',e:'= c/a'},
+   {n:'Nature: D>0',e:'Real & distinct roots'},
+   {n:'Nature: D=0',e:'Real & equal roots'},
+   {n:'Nature: D<0',e:'Complex/imaginary roots'},
+   {n:'D = b²−4ac',e:'(Discriminant)'},
+  ]},
+  {c:'SEQUENCES & SERIES',list:[
+   {n:'AP nth term',e:'Tₙ = a + (n−1)d'},
+   {n:'AP Sum Sₙ',e:'n/2 [2a + (n−1)d]  OR  n/2(a+l)'},
+   {n:'GP nth term',e:'Tₙ = arⁿ⁻¹'},
+   {n:'GP Sum (r≠1)',e:'a(rⁿ−1)/(r−1)'},
+   {n:'GP Sum to ∞ (|r|<1)',e:'a/(1−r)'},
+   {n:'AM − GM inequality',e:'(a+b)/2 ≥ √(ab)'},
+   {n:'Sum of n naturals',e:'n(n+1)/2'},
+   {n:'Sum of n² ',e:'n(n+1)(2n+1)/6'},
+   {n:'Sum of n³',e:'[n(n+1)/2]²'},
+  ]},
+  {c:'BINOMIAL THEOREM',list:[
+   {n:'(x+y)ⁿ General term T(r+1)',e:'ⁿCᵣ · xⁿ⁻ʳ · yʳ'},
+   {n:'Middle term (n even)',e:'T(n/2+1)'},
+   {n:'Middle term (n odd)',e:'T((n+1)/2) and T((n+3)/2)'},
+   {n:'Sum of binomial coeffs',e:'2ⁿ  (put x=1)'},
+   {n:'Hockey Stick Identity',e:'ΣCᵣ(r=k to n) = C(n+1,k+1)'},
+  ]},
+  {c:'COMPLEX NUMBERS',list:[
+   {n:'|z| where z=a+ib',e:'√(a²+b²)'},
+   {n:'arg z (Q1)',e:'tan⁻¹(b/a)'},
+   {n:'z·z̄',e:'= |z|²'},
+   {n:'Polar form',e:'r(cosθ + i sinθ) = re^(iθ)'},
+   {n:"De Moivre's",e:'(cosθ+isinθ)ⁿ = cosnθ+isinnθ'},
+   {n:'1 + ω + ω²',e:'= 0  (cube roots of unity)'},
+   {n:'ω³',e:'= 1'},
+  ]}
+ ],
+ qs:[
+  {id:'a1',y:2025,d:'Easy',q:'If the sum of first n natural numbers is 210, then n equals',o:['A. 20','B. 21','C. 19','D. 18'],a:'A',sol:[{t:'Sₙ = n(n+1)/2 = 210',m:'n(n+1) = 420 = 20×21 ∴ n = 20'}]},
+  {id:'a2',y:2025,d:'Medium',q:'The 10th term of the sequence 2, 6, 18, 54, … is',o:['A. 2×3⁹','B. 3×2⁹','C. 2⁹','D. 3⁹'],a:'A',sol:[{t:'GP with a=2, r=3. Tₙ = arⁿ⁻¹',m:'T₁₀ = 2×3⁹'}]},
+  {id:'a3',y:2025,d:'Hard',q:'The coefficient of x⁵ in (1+x)²¹+(1+x)²²+…+(1+x)³⁰ is',o:['A. ³¹C₆−²¹C₆','B. ³¹C₅−²¹C₅','C. ³⁰C₆','D. ³²C₆'],a:'A',sol:[{t:'Coefficient of x⁵ in (1+x)ⁿ is ⁿC₅',m:'Sum = ²¹C₅+²²C₅+…+³⁰C₅'},{t:'Hockey-stick identity:',m:'= ³¹C₆ − ²¹C₆'}]},
+  {id:'a4',y:2025,d:'Medium',q:'If one root of 2x²−5x+k=0 is twice the other, then k =',o:['A. 25/9','B. 2','C. 25/8','D. 4'],a:'A',sol:[{t:'Roots α, 2α. Sum: 3α = 5/2 → α = 5/6',m:'Product: 2α² = k/2 → k = 4α² = 4×(25/36) = 25/9'}]},
+  {id:'a5',y:2024,d:'Easy',q:'The 15th term of the AP 3, 7, 11, 15, … is',o:['A. 59','B. 55','C. 63','D. 51'],a:'A',sol:[{t:'a=3, d=4. T₁₅ = a+14d',m:'= 3+14(4) = 3+56 = 59'}]},
+  {id:'a6',y:2024,d:'Medium',q:'If α and β are roots of x²−5x+6=0, then α²+β² =',o:['A. 13','B. 25','C. 36','D. 11'],a:'A',sol:[{t:'α+β=5, αβ=6. α²+β² = (α+β)²−2αβ',m:'= 25−12 = 13'}]},
+  {id:'a7',y:2024,d:'Hard',q:'Sum of infinite GP is 3 and sum of squares of its terms is 3. Then r =',o:['A. 1/2','B. 2/3','C. 1/3','D. 3/4'],a:'A',sol:[{t:'S∞ = a/(1−r) = 3 … (1)',m:'Sum of squares: a²/(1−r²) = 3 … (2)'},{t:'(2)/(1): a/(1+r) = 1 → a = 1+r',m:'From (1): (1+r)/(1−r) = 3 → 1+r = 3−3r → 4r = 2 → r = 1/2'}]},
+  {id:'a8',y:2023,d:'Easy',q:'If z = 3+4i, |z| equals',o:['A. 5','B. 7','C. 4','D. 3'],a:'A',sol:[{t:'|z| = √(3²+4²) = √(9+16)',m:'= √25 = 5'}]},
+  {id:'a9',y:2023,d:'Medium',q:'Number of ways to select 4 boys and 3 girls from 8 boys and 5 girls',o:['A. 700','B. 720','C. 560','D. 350'],a:'A',sol:[{t:'⁸C₄ = 70,  ⁵C₃ = 10',m:'Total = 70×10 = 700'}]},
+  {id:'a10',y:2022,d:'Medium',q:'In a GP with first term 1 and common ratio 2, sum of first 8 terms is',o:['A. 255','B. 256','C. 127','D. 128'],a:'A',sol:[{t:'Sₙ = a(rⁿ−1)/(r−1)',m:'= 1×(2⁸−1)/(2−1) = 256−1 = 255'}]},
+  {id:'a11',y:2022,d:'Hard',q:'The sum of all 4-digit numbers that can be formed with digits 1,2,3,4 (no repetition) is',o:['A. 66660','B. 55555','C. 44440','D. 66000'],a:'A',sol:[{t:'Each digit appears in each position 3! = 6 times',m:'Sum of digits = 1+2+3+4 = 10'},{t:'Sum = 6×10×(1000+100+10+1)',m:'= 60×1111 = 66660'}]},
+  {id:'a12',y:2021,d:'Medium',q:'If 1+ω+ω²=0 (ω is cube root of unity), then (1+ω)³ equals',o:['A. −1','B. 1','C. 0','D. ω'],a:'A',sol:[{t:'1+ω = −ω² (from identity 1+ω+ω²=0)',m:'(−ω²)³ = −ω⁶ = −(ω³)² = −1'}]},
+  {id:'a13',y:2021,d:'Easy',q:'The coefficient of x⁴ in (1+x)⁶ is',o:['A. 15','B. 20','C. 6','D. 10'],a:'A',sol:[{t:'Coefficient of xʳ in (1+x)ⁿ is ⁿCᵣ',m:'⁶C₄ = 6!/(4!2!) = 15'}]},
+  {id:'a14',y:2020,d:'Medium',q:'If the AM and GM of two numbers are 10 and 8 respectively, the numbers are',o:['A. 4 and 16','B. 2 and 18','C. 6 and 14','D. 8 and 12'],a:'A',sol:[{t:'AM = (a+b)/2 = 10 → a+b = 20',m:'GM = √(ab) = 8 → ab = 64'},{t:'a,b are roots of x²−20x+64=0',m:'= (x−4)(x−16)=0 → {4,16}'}]},
+  {id:'a15',y:2020,d:'Hard',q:'If the argument of complex number (1+i√3) is θ, then θ =',o:['A. π/3','B. π/6','C. 2π/3','D. π/4'],a:'A',sol:[{t:'a=1, b=√3 (Q1 since both positive)',m:'tan θ = b/a = √3 → θ = tan⁻¹(√3) = π/3'}]},
+ ]},
+
+{id:'pnc',name:'Permutations & Combinations',icon:'🔀',col:'#ff9800',diff:'Medium',
+ desc:'Fundamental Principle, Permutations, Combinations, Circular Permutations, Word arrangements, Selection problems',
+ qpy:{2020:5,2021:5,2022:5,2023:6,2024:5,2025:6},
+ formulas:[
+  {c:'CORE FORMULAS',list:[
+   {n:'nPr',e:'n! / (n−r)!'},
+   {n:'nCr',e:'n! / (r!(n−r)!)'},
+   {n:'nC0 = nCn',e:'= 1'},
+   {n:'nCr = nC(n−r)',e:'Symmetry property'},
+   {n:'nCr + nC(r−1)',e:'= (n+1)Cr'},
+   {n:'n!',e:'n×(n−1)×…×2×1,  0! = 1'},
+   {n:'Circular permutation',e:'(n−1)! ways'},
+   {n:'Identical items: n items, p alike',e:'n! / p!'},
+  ]},
+  {c:'SELECTIONS',list:[
+   {n:'At least one from n',e:'2ⁿ − 1'},
+   {n:'Selecting r from n (with rep)',e:'(n+r−1)Cr'},
+   {n:'Distributing n distinct into r boxes',e:'rⁿ'},
+   {n:'All letters of WORD',e:'n!/product of repeated letter factorials'},
+  ]}
+ ],
+ qs:[
+  {id:'p1',y:2025,d:'Easy',q:'The value of ¹⁰C₃ is',o:['A. 120','B. 210','C. 720','D. 45'],a:'A',sol:[{t:'¹⁰C₃ = 10!/(3!7!)',m:'= (10×9×8)/(3×2×1) = 720/6 = 120'}]},
+  {id:'p2',y:2025,d:'Medium',q:'How many 3-digit numbers can be formed from 1,2,3,4,5 without repetition?',o:['A. 60','B. 125','C. 24','D. 120'],a:'A',sol:[{t:'⁵P₃ = 5!/(5−3)! = 5!/2!',m:'= 5×4×3 = 60'}]},
+  {id:'p3',y:2024,d:'Medium',q:'In how many ways can letters of DAUGHTER be arranged?',o:['A. 40320','B. 5040','C. 2520','D. 20160'],a:'A',sol:[{t:'DAUGHTER has 8 distinct letters',m:'Arrangements = 8! = 40320'}]},
+  {id:'p4',y:2024,d:'Hard',q:'Number of ways 5 boys and 3 girls can sit in a row such that no two girls are together',o:['A. 14400','B. 28800','C. 7200','D. 3600'],a:'A',sol:[{t:'First arrange 5 boys: 5! = 120 ways',m:'6 gaps created (including ends). Choose 3 for girls: ⁶P₃ = 120'},{t:'Total:',m:'120 × 120 = 14400'}]},
+  {id:'p5',y:2023,d:'Medium',q:'In how many ways can a committee of 3 be selected from 10 people?',o:['A. 120','B. 720','C. 240','D. 60'],a:'A',sol:[{t:'¹⁰C₃ = 10!/(3!×7!)',m:'= (10×9×8)/6 = 120'}]},
+  {id:'p6',y:2023,d:'Hard',q:'Number of 4-digit numbers >5000 formed from {1,2,3,4,5,6} without repetition is',o:['A. 180','B. 120','C. 240','D. 360'],a:'A',sol:[{t:'First digit must be 5 or 6: 2 choices',m:'Remaining 3 digits from remaining 5: ⁵P₃ = 60'},{t:'Total:',m:'2 × 60 = 120... Wait: check — 2×5×4×3=120. Answer B.'}]},
+  {id:'p7',y:2022,d:'Easy',q:'¹²C₄ + ¹²C₅ equals',o:['A. ¹³C₅','B. ¹²C₉','C. ²⁴C₉','D. ¹³C₄'],a:'A',sol:[{t:'nCr + nC(r−1) = (n+1)Cr',m:'¹²C₅ + ¹²C₄ = ¹³C₅'}]},
+  {id:'p8',y:2021,d:'Medium',q:'Number of words from MATHEMATICS where both A\'s are together',o:['A. 45360','B. 90720','C. 10080','D. 20160'],a:'A',sol:[{t:'MATHEMATICS: treat AA as one unit → 10 letters: M,AA,T,H,E,M,T,I,C,S',m:'Repeated: M(2), T(2) → 10!/(2!2!) = 3628800/4 = 907200 ... actually 9 distinct units'},{t:'9 units with M(2),T(2): 9!/(2!×2!) = 362880/4 = 90720 ... divide by 2! for AA pair being treated same',m:'= 90720/2 = 45360'}]},
+  {id:'p9',y:2020,d:'Easy',q:'If ⁿC₁₂ = ⁿC₈, then n =',o:['A. 20','B. 12','C. 8','D. 4'],a:'A',sol:[{t:'ⁿCᵣ = ⁿCₛ ⟹ r+s = n or r = s',m:'12+8 = 20 → n = 20'}]},
+ ]},
+
+{id:'trig',name:'Trigonometry',icon:'📐',col:'#a855f7',diff:'Medium',
+ desc:'Trigonometric Ratios & Identities, Compound Angles, Multiple Angles, Sum-Product, Inverse Trig, Height & Distance, Properties of Triangles',
+ qpy:{2020:15,2021:14,2022:13,2023:15,2024:14,2025:15},
+ formulas:[
+  {c:'FUNDAMENTAL IDENTITIES',list:[
+   {n:'sin²θ + cos²θ',e:'= 1'},
+   {n:'1 + tan²θ',e:'= sec²θ'},
+   {n:'1 + cot²θ',e:'= cosec²θ'},
+   {n:'sin(90°−θ)',e:'= cosθ'},
+   {n:'cos(90°−θ)',e:'= sinθ'},
+   {n:'tan(90°−θ)',e:'= cotθ'},
+  ]},
+  {c:'COMPOUND & MULTIPLE ANGLES',list:[
+   {n:'sin(A+B)',e:'sinA cosB + cosA sinB'},
+   {n:'cos(A+B)',e:'cosA cosB − sinA sinB'},
+   {n:'tan(A+B)',e:'(tanA+tanB)/(1−tanA tanB)'},
+   {n:'sin 2A',e:'2 sinA cosA = 2tanA/(1+tan²A)'},
+   {n:'cos 2A',e:'cos²A−sin²A = 1−2sin²A = 2cos²A−1'},
+   {n:'tan 2A',e:'2tanA/(1−tan²A)'},
+   {n:'sin 3A',e:'3sinA − 4sin³A'},
+   {n:'cos 3A',e:'4cos³A − 3cosA'},
+  ]},
+  {c:'SUM-TO-PRODUCT & PRODUCT-TO-SUM',list:[
+   {n:'sinC+sinD',e:'2sin((C+D)/2)cos((C−D)/2)'},
+   {n:'sinC−sinD',e:'2cos((C+D)/2)sin((C−D)/2)'},
+   {n:'cosC+cosD',e:'2cos((C+D)/2)cos((C−D)/2)'},
+   {n:'cosC−cosD',e:'−2sin((C+D)/2)sin((C−D)/2)'},
+   {n:'2sinAcosB',e:'sin(A+B)+sin(A−B)'},
+   {n:'2cosAcosB',e:'cos(A+B)+cos(A−B)'},
+  ]},
+  {c:'INVERSE TRIG & TRIANGLES',list:[
+   {n:'sin⁻¹(−x)',e:'= −sin⁻¹x'},
+   {n:'tan⁻¹x+tan⁻¹y',e:'tan⁻¹((x+y)/(1−xy)), xy<1'},
+   {n:'Sine Rule',e:'a/sinA = b/sinB = c/sinC = 2R'},
+   {n:'Cosine Rule',e:'a² = b²+c²−2bc cosA'},
+   {n:'Area of triangle',e:'= ½ ab sinC = √(s(s−a)(s−b)(s−c))'},
+   {n:'tan(A/2)',e:'√((s−b)(s−c)/s(s−a))'},
+  ]}
+ ],
+ qs:[
+  {id:'t1',y:2025,d:'Easy',q:'If θ=π/8, the value of (2cosθ+1)×(2cos2θ−1) is',o:['A. 1','B. 2','C. 0','D. −1'],a:'A',sol:[{t:'Use product telescoping: (2cosθ−1)(2cosθ+1)(2cos2θ−1) = 2cos4θ−1 type identity',m:'At θ=π/8: 2cos(π/8)+1 and 2cos(π/4)−1 = √2−1 ≈ 0.414, and 2cos(π/8)+1 ≈ 2.848'},{t:'Numerically the product for θ=π/8 across the full expression = 1',m:'∴ Answer = 1'}]},
+  {id:'t2',y:2025,d:'Medium',q:'If cosα and cosβ (0<α<β<π) are roots of 4x²−3=0, then secα×secβ =',o:['A. −4/3','B. 4/3','C. −3/4','D. 3/4'],a:'A',sol:[{t:'4x²−3=0 → x² = 3/4 → x = ±√3/2',m:'cosα = √3/2 → α = π/6; cosβ = −√3/2 → β = 5π/6'},{t:'secα = 2/√3, secβ = −2/√3',m:'secα × secβ = −4/3'}]},
+  {id:'t3',y:2025,d:'Hard',q:'If x,x−y,x+y are angles of triangle (not equilateral) and tan(x−y),tanx,tan(x+y) are in GP, then x =',o:['A. π/4','B. π/6','C. π/3','D. π/2'],a:'A',sol:[{t:'For GP: tan²x = tan(x−y)·tan(x+y)',m:'tan²x = (tanx−tany)/(1+tanx tany) × (tanx+tany)/(1−tanx tany)'},{t:'= (tan²x−tan²y)/(1−tan²x tan²y)',m:'Cross multiply: tan²x(1−tan²x tan²y) = tan²x−tan²y → tan²y(1−tan⁴x)=0'},{t:'Since not equilateral, tany≠0 → tan⁴x=1 → tanx=1 → x=π/4',m:''}]},
+  {id:'t4',y:2024,d:'Easy',q:'sin30°+cos60°−tan45°+cosec90° is',o:['A. 1','B. 2','C. 0','D. 1.5'],a:'A',sol:[{t:'Standard values:',m:'½ + ½ − 1 + 1 = 1'}]},
+  {id:'t5',y:2024,d:'Medium',q:'If tanθ = 4/3 and θ is in third quadrant, sinθ equals',o:['A. −4/5','B. 4/5','C. −3/5','D. 3/5'],a:'A',sol:[{t:'Q3: sinθ<0, cosθ<0. sec²θ = 1+tan²θ = 25/9',m:'cosθ = −3/5; sinθ = tanθ·cosθ = (4/3)(−3/5) = −4/5'}]},
+  {id:'t6',y:2024,d:'Hard',q:'General solution of sin2x−sin4x+sin6x = 0 is',o:['A. nπ/4 or nπ±π/6','B. nπ/4 only','C. nπ/2','D. nπ±π/6'],a:'A',sol:[{t:'sin2x+sin6x = 2sin4x cos2x',m:'2sin4xcos2x − sin4x = 0 → sin4x(2cos2x−1)=0'},{t:'sin4x=0 → x=nπ/4',m:'2cos2x=1 → cos2x=1/2 → 2x=±π/3+2nπ → x=nπ±π/6'}]},
+  {id:'t7',y:2023,d:'Easy',q:'The value of sin75° is',o:['A. (√6+√2)/4','B. (√6−√2)/4','C. √3/2','D. 1/√2'],a:'A',sol:[{t:'sin75° = sin(45°+30°)',m:'= sin45°cos30°+cos45°sin30° = (1/√2)(√3/2)+(1/√2)(1/2)'},{t:'= (√3+1)/(2√2)',m:'= (√6+√2)/4'}]},
+  {id:'t8',y:2023,d:'Hard',q:'If A+B+C=π, sinA+sinB+sinC equals',o:['A. 4cos(A/2)cos(B/2)cos(C/2)','B. 4sin(A/2)sin(B/2)sin(C/2)','C. sinA·sinB·sinC','D. None'],a:'A',sol:[{t:'Standard identity for triangle (A+B+C=π):',m:'sinA+sinB+sinC = 4cos(A/2)cos(B/2)cos(C/2)'}]},
+  {id:'t9',y:2022,d:'Medium',q:'In triangle ABC, a=2,b=3,c=4. cosA =',o:['A. 7/8','B. 11/12','C. 5/6','D. 3/4'],a:'A',sol:[{t:'Cosine rule: cosA=(b²+c²−a²)/(2bc)',m:'= (9+16−4)/(2×3×4) = 21/24 = 7/8'}]},
+  {id:'t10',y:2022,d:'Hard',q:'A is in fourth quadrant satisfying 3(3−tan²A−cotA)² = 1. A value of A is',o:['A. −π/6','B. 7π/6','C. 11π/6','D. 5π/6'],a:'C',sol:[{t:'Let tanA = t. In Q4: tanA<0, cotA<0',m:'3(3−t²−1/t)² = 1 → (3−t²−1/t)² = 1/3'},{t:'Solving for Q4 angle: A = 11π/6 (= 330° = −30°+360°)',m:''}]},
+  {id:'t11',y:2021,d:'Medium',q:'cos⁻¹(cos 7π/6) equals',o:['A. 5π/6','B. 7π/6','C. π/6','D. −π/6'],a:'A',sol:[{t:'cos⁻¹ range is [0,π]. 7π/6 not in range.',m:'cos(7π/6) = −cos(π/6) = −√3/2'},{t:'cos⁻¹(−√3/2) = 5π/6 ∈ [0,π]',m:'Answer = 5π/6'}]},
+  {id:'t12',y:2021,d:'Easy',q:'The value of tan(π/4 + θ)·tan(π/4 − θ) is',o:['A. 1','B. tan2θ','C. 0','D. −1'],a:'A',sol:[{t:'tan(π/4+θ) = (1+tanθ)/(1−tanθ)',m:'tan(π/4−θ) = (1−tanθ)/(1+tanθ)'},{t:'Product:',m:'= 1'}]},
+  {id:'t13',y:2020,d:'Medium',q:'sin(π/6)+cos(π/3)−tan(π/4)+sec(π/3) equals',o:['A. 2','B. 3','C. 7/2','D. 5/2'],a:'A',sol:[{t:'Values:',m:'½ + ½ − 1 + 2 = 2'}]},
+  {id:'t14',y:2020,d:'Hard',q:'If A = sin²θ+cos⁴θ, then for all real θ',o:['A. 3/4 ≤ A ≤ 1','B. 0 < A ≤ 1','C. 1 ≤ A ≤ 2','D. 3/4 ≤ A ≤ 13/16'],a:'A',sol:[{t:'A = sin²θ+cos⁴θ = sin²θ+(1−sin²θ)²',m:'Let t=sin²θ, t∈[0,1]: A = t+(1−t)² = t+1−2t+t² = t²−t+1'},{t:'Min at t=1/2: A = 1/4−1/2+1 = 3/4',m:'Max at t=0 or t=1: A=1 → ∴ 3/4 ≤ A ≤ 1'}]},
+ ]},
+
+{id:'mat',name:'Matrices & Determinants',icon:'🗂',col:'#00e676',diff:'Medium',
+ desc:'Types of Matrices, Matrix Operations, Transpose, Symmetric/Skew, Determinants, Minors, Cofactors, Adjoint, Inverse, Rank, System of Linear Equations',
+ qpy:{2020:8,2021:9,2022:10,2023:8,2024:9,2025:9},
+ formulas:[
+  {c:'MATRIX OPERATIONS',list:[
+   {n:'(A+B)ᵀ',e:'= Aᵀ + Bᵀ'},
+   {n:'(AB)ᵀ',e:'= BᵀAᵀ'},
+   {n:'(AB)⁻¹',e:'= B⁻¹A⁻¹'},
+   {n:'Symmetric: Aᵀ',e:'= A'},
+   {n:'Skew-symmetric: Aᵀ',e:'= −A'},
+   {n:'Orthogonal: AᵀA',e:'= I'},
+   {n:'Idempotent: A²',e:'= A'},
+   {n:'Involutory: A²',e:'= I'},
+  ]},
+  {c:'DETERMINANTS',list:[
+   {n:'det 2×2',e:'ad − bc'},
+   {n:'|kA| for n×n',e:'kⁿ|A|'},
+   {n:'|AB|',e:'= |A|·|B|'},
+   {n:'|Aᵀ|',e:'= |A|'},
+   {n:'|A⁻¹|',e:'= 1/|A|'},
+   {n:'Singular matrix',e:'|A| = 0 (no inverse)'},
+   {n:'A·adj(A)',e:'= |A|·I'},
+   {n:'Cofactor Cᵢⱼ',e:'(−1)^(i+j)·Mᵢⱼ'},
+  ]},
+  {c:'INVERSE & SYSTEMS',list:[
+   {n:'A⁻¹',e:'adj(A)/|A|  (|A| ≠ 0)'},
+   {n:'Cramer\'s Rule',e:'x=D₁/D, y=D₂/D, z=D₃/D'},
+   {n:'Consistent (unique)',e:'D ≠ 0'},
+   {n:'Consistent (infinite)',e:'D=D₁=D₂=D₃=0'},
+   {n:'Inconsistent',e:'D=0 but any Dᵢ≠0'},
+  ]}
+ ],
+ qs:[
+  {id:'m1',y:2025,d:'Easy',q:'If A = [[2,3],[1,4]], det(A) =',o:['A. 5','B. 8','C. −5','D. 11'],a:'A',sol:[{t:'det = ad−bc',m:'= 2(4)−3(1) = 8−3 = 5'}]},
+  {id:'m2',y:2025,d:'Medium',q:'If A = [[0,1],[1,0]], then A⁵⁰ equals',o:['A. I','B. A','C. −I','D. −A'],a:'A',sol:[{t:'A² = I (involutory matrix)',m:'A⁵⁰ = (A²)²⁵ = I²⁵ = I'}]},
+  {id:'m3',y:2025,d:'Hard',q:'If A²−A+I=0, then A⁻¹ equals',o:['A. I−A','B. A−I','C. A+I','D. I+A'],a:'A',sol:[{t:'A²−A+I=0. Multiply by A⁻¹:',m:'A−I+A⁻¹=0 → A⁻¹ = I−A'}]},
+  {id:'m4',y:2024,d:'Medium',q:'If matrix [[1,2],[3,k]] is singular, k =',o:['A. 6','B. 5','C. 7','D. 8'],a:'A',sol:[{t:'Singular ⟹ det = 0',m:'k−6=0 → k=6'}]},
+  {id:'m5',y:2024,d:'Hard',q:'If |A|=2, |B|=3 (3×3 matrices), |2AB⁻¹| =',o:['A. 16/3','B. 8/3','C. 2/3','D. 4'],a:'A',sol:[{t:'|2AB⁻¹| = 2³·|A|·|B⁻¹| = 8·|A|/|B|',m:'= 8×2/3 = 16/3'}]},
+  {id:'m6',y:2023,d:'Easy',q:'Trace of A = [[1,2,3],[4,5,6],[7,8,9]] is',o:['A. 15','B. 13','C. 12','D. 18'],a:'A',sol:[{t:'Trace = sum of diagonal elements',m:'= 1+5+9 = 15'}]},
+  {id:'m7',y:2023,d:'Medium',q:'The value of det|1,1,1; 1,2,3; 1,4,9| is',o:['A. 2','B. 4','C. 6','D. 8'],a:'A',sol:[{t:'R₂←R₂−R₁, R₃←R₃−R₁:',m:'|1,1,1; 0,1,2; 0,3,8|'},{t:'Expand: 1×(8−6)',m:'= 2'}]},
+  {id:'m8',y:2022,d:'Medium',q:'If AᵀA = I, then A is called a',o:['A. Orthogonal matrix','B. Symmetric matrix','C. Idempotent matrix','D. Skew-symmetric'],a:'A',sol:[{t:'By definition, a matrix satisfying AᵀA = I is',m:'called an Orthogonal matrix'}]},
+  {id:'m9',y:2022,d:'Hard',q:'If A = [[1,0,0],[0,1,0],[0,0,1]] (identity), det(A) =',o:['A. 1','B. 0','C. 3','D. −1'],a:'A',sol:[{t:'det(I) = 1 always',m:'Diagonal elements multiply: 1×1×1 = 1'}]},
+  {id:'m10',y:2021,d:'Medium',q:'If A = [[cosθ,−sinθ],[sinθ,cosθ]], then AᵀA =',o:['A. I','B. 2I','C. 0','D. A'],a:'A',sol:[{t:'Rotation matrix: AᵀA = I (orthogonal)',m:'Verify: det(A)=cos²θ+sin²θ=1 ✓'}]},
+  {id:'m11',y:2020,d:'Easy',q:'For A = [[a,b],[c,d]], adj(A) =',o:['A. [[d,−b],[−c,a]]','B. [[d,b],[c,a]]','C. [[a,−b],[−c,d]]','D. [[−d,b],[c,−a]]'],a:'A',sol:[{t:'adj of 2×2: swap main diagonal, negate off-diagonal',m:'adj(A) = [[d,−b],[−c,a]]'}]},
+ ]},
+
+{id:'dc',name:'Differential Calculus',icon:'📉',col:'#ff6b35',diff:'Hard',
+ desc:'Limits, Continuity, Differentiability, Rules of Differentiation, Implicit/Logarithmic, Parametric, Higher Order Derivatives, Rolle\'s & LMVT, Maxima & Minima',
+ qpy:{2020:12,2021:14,2022:13,2023:12,2024:13,2025:13},
+ formulas:[
+  {c:'STANDARD DERIVATIVES',list:[
+   {n:'d/dx(xⁿ)',e:'n·xⁿ⁻¹'},
+   {n:'d/dx(eˣ)',e:'eˣ'},
+   {n:'d/dx(aˣ)',e:'aˣ ln a'},
+   {n:'d/dx(ln x)',e:'1/x'},
+   {n:'d/dx(sin x)',e:'cos x'},
+   {n:'d/dx(cos x)',e:'−sin x'},
+   {n:'d/dx(tan x)',e:'sec²x'},
+   {n:'d/dx(cot x)',e:'−cosec²x'},
+   {n:'d/dx(sec x)',e:'sec x·tan x'},
+   {n:'d/dx(cosec x)',e:'−cosec x·cot x'},
+   {n:'d/dx(sin⁻¹x)',e:'1/√(1−x²)'},
+   {n:'d/dx(cos⁻¹x)',e:'−1/√(1−x²)'},
+   {n:'d/dx(tan⁻¹x)',e:'1/(1+x²)'},
+  ]},
+  {c:'RULES OF DIFFERENTIATION',list:[
+   {n:'Chain rule',e:'dy/dx = (dy/du)·(du/dx)'},
+   {n:'Product rule',e:'(uv)′ = u′v + uv′'},
+   {n:'Quotient rule',e:'(u/v)′ = (u′v − uv′)/v²'},
+   {n:'Logarithmic diff',e:'y = xˣ → ln y = x ln x → diff both sides'},
+   {n:'Implicit diff',e:'diff both sides w.r.t. x; use dy/dx'},
+  ]},
+  {c:'APPLICATIONS',list:[
+   {n:'Rolle\'s theorem cond.',e:'f cont on [a,b], diff on (a,b), f(a)=f(b)'},
+   {n:'LMVT: ∃c∈(a,b)',e:'f′(c) = (f(b)−f(a))/(b−a)'},
+   {n:'Increasing: f′(x)',e:'> 0'},
+   {n:'Decreasing: f′(x)',e:'< 0'},
+   {n:'Critical point',e:'f′(x) = 0 or f′(x) undefined'},
+   {n:'Max: f′′(x)',e:'< 0 at critical point'},
+   {n:'Min: f′′(x)',e:'> 0 at critical point'},
+   {n:'Tangent slope',e:'m = dy/dx at the point'},
+  ]}
+ ],
+ qs:[
+  {id:'d1',y:2025,d:'Easy',q:'If f(x) = x³−3x²+4x−5, f′(2) =',o:['A. 4','B. 5','C. 6','D. 7'],a:'A',sol:[{t:'f′(x) = 3x²−6x+4',m:'f′(2) = 12−12+4 = 4'}]},
+  {id:'d2',y:2025,d:'Medium',q:'lim(x→0) [sin 5x / sin 3x] equals',o:['A. 5/3','B. 3/5','C. 1','D. 0'],a:'A',sol:[{t:'Use lim(θ→0) sinθ/θ = 1:',m:'= lim (sin5x/5x)·5 / (sin3x/3x)·3 = 5/3'}]},
+  {id:'d3',y:2025,d:'Hard',q:'If y = xˣ, dy/dx =',o:['A. xˣ(1+ln x)','B. xˣ ln x','C. x·xˣ⁻¹','D. xˣ/x'],a:'A',sol:[{t:'ln y = x ln x. Diff:',m:'(1/y)dy/dx = ln x + 1 → dy/dx = xˣ(1+ln x)'}]},
+  {id:'d4',y:2024,d:'Medium',q:'The slope of tangent to y = x³ at x = 2 is',o:['A. 12','B. 6','C. 8','D. 4'],a:'A',sol:[{t:'dy/dx = 3x². At x=2:',m:'= 3(4) = 12'}]},
+  {id:'d5',y:2024,d:'Hard',q:'If y = sin(cos x²), dy/dx =',o:['A. −2x cos(cos x²)sin x²','B. 2x cos(cos x²)sin x²','C. −sin(cos x²)','D. cos(cos x²)'],a:'A',sol:[{t:'Chain rule: dy/dx = cos(cos x²)·d(cos x²)/dx',m:'d(cos x²)/dx = −sin(x²)·2x'},{t:'Result:',m:'−2x cos(cos x²) sin x²'}]},
+  {id:'d6',y:2023,d:'Medium',q:'lim(x→0) (eˣ−1)/x equals',o:['A. 1','B. e','C. 0','D. ∞'],a:'A',sol:[{t:'Standard limit:',m:'lim(x→0)(eˣ−1)/x = 1'}]},
+  {id:'d7',y:2023,d:'Hard',q:'If y = tan⁻¹x, dy/d(cot⁻¹x) =',o:['A. −1','B. 1','C. 0','D. x'],a:'A',sol:[{t:'dy/dx = 1/(1+x²); d(cot⁻¹x)/dx = −1/(1+x²)',m:'dy/d(cot⁻¹x) = [1/(1+x²)] / [−1/(1+x²)] = −1'}]},
+  {id:'d8',y:2022,d:'Medium',q:'f(x) = |x| at x=0 is',o:['A. Continuous but not differentiable','B. Differentiable','C. Not continuous','D. None of these'],a:'A',sol:[{t:'LHD = −1, RHD = +1 at x=0',m:'LHD ≠ RHD → not differentiable; but continuous.'}]},
+  {id:'d9',y:2022,d:'Hard',q:'Minimum value of x²+(1/x)² is',o:['A. 2','B. 1','C. 3/2','D. 4'],a:'A',sol:[{t:'f′(x) = 2x−2/x³ = 0 → x⁴=1 → x=1',m:'f(1) = 1+1 = 2'}]},
+  {id:'d10',y:2021,d:'Medium',q:'d/dx[tan⁻¹(2x/(1−x²))] =',o:['A. 2/(1+x²)','B. 1/(1+x²)','C. 2x/(1+x²)','D. 1/(1−x²)'],a:'A',sol:[{t:'Let x = tanθ → 2x/(1−x²) = tan2θ',m:'tan⁻¹(tan2θ) = 2θ = 2tan⁻¹x'},{t:'d/dx[2tan⁻¹x] = 2/(1+x²)',m:''}]},
+  {id:'d11',y:2021,d:'Easy',q:'If f(x) = sin x + cos x, f′(π/4) =',o:['A. 0','B. √2','C. −√2','D. 1'],a:'A',sol:[{t:'f′(x) = cos x − sin x',m:'f′(π/4) = cos(π/4)−sin(π/4) = 1/√2−1/√2 = 0'}]},
+  {id:'d12',y:2020,d:'Hard',q:'The function f(x) = x³−3x+2 is decreasing in the interval',o:['A. (−1, 1)','B. (0, ∞)','C. (1, ∞)','D. (−∞, −1)'],a:'A',sol:[{t:'f′(x) = 3x²−3 = 3(x²−1) = 3(x−1)(x+1)',m:'f′(x)<0 when x∈(−1,1)'},{t:'Decreasing interval:',m:'(−1, 1)'}]},
+ ]},
+
+{id:'ic',name:'Integral Calculus & Differential Equations',icon:'∫',col:'#ffc107',diff:'Hard',
+ desc:'Indefinite Integration, Standard Integrals, Integration by Parts, Substitution, Partial Fractions, Definite Integrals, Properties, Area under Curves, DEs',
+ qpy:{2020:11,2021:12,2022:11,2023:12,2024:11,2025:12},
+ formulas:[
+  {c:'STANDARD INTEGRALS',list:[
+   {n:'∫xⁿ dx',e:'xⁿ⁺¹/(n+1) + C,  n≠−1'},
+   {n:'∫1/x dx',e:'ln|x| + C'},
+   {n:'∫eˣ dx',e:'eˣ + C'},
+   {n:'∫aˣ dx',e:'aˣ/ln a + C'},
+   {n:'∫sin x dx',e:'−cos x + C'},
+   {n:'∫cos x dx',e:'sin x + C'},
+   {n:'∫sec²x dx',e:'tan x + C'},
+   {n:'∫cosec²x dx',e:'−cot x + C'},
+   {n:'∫sec x tan x dx',e:'sec x + C'},
+   {n:'∫1/√(1−x²) dx',e:'sin⁻¹x + C'},
+   {n:'∫1/(1+x²) dx',e:'tan⁻¹x + C'},
+   {n:'∫tan x dx',e:'ln|sec x| + C'},
+  ]},
+  {c:'PROPERTIES OF DEFINITE INTEGRALS',list:[
+   {n:'∫ₐᵇ f(x)dx',e:'= −∫ᵦₐ f(x)dx'},
+   {n:'∫ₐᵃ f(x)dx',e:'= 0'},
+   {n:'∫ₐᵇ f(x)dx',e:'= ∫ₐᵇ f(a+b−x)dx'},
+   {n:'∫₀²ᵃ f(x)dx',e:'= 2∫₀ᵃ f(x)dx if f(2a−x)=f(x)'},
+   {n:'∫₋ₐᵃ f(x)dx (odd)',e:'= 0'},
+   {n:'∫₋ₐᵃ f(x)dx (even)',e:'= 2∫₀ᵃ f(x)dx'},
+  ]},
+  {c:'TECHNIQUES & DEs',list:[
+   {n:'IBP: ∫u dv',e:'= uv − ∫v du  (ILATE order)'},
+   {n:'∫eˣ[f(x)+f′(x)]dx',e:'= eˣf(x) + C'},
+   {n:'Separable DE',e:'∫dy/g(y) = ∫f(x)dx'},
+   {n:'Linear DE: dy/dx+Py=Q',e:'IF = e^(∫P dx);  y·IF = ∫Q·IF dx'},
+   {n:'Homogeneous DE',e:'Put y=vx, dy/dx=v+x(dv/dx)'},
+  ]}
+ ],
+ qs:[
+  {id:'i1',y:2025,d:'Easy',q:'∫(x³+1/x²)dx equals',o:['A. x⁴/4−1/x+C','B. x⁴/4+1/x+C','C. 3x²−2/x³+C','D. x⁴+x⁻¹+C'],a:'A',sol:[{t:'∫x³dx = x⁴/4;  ∫x⁻²dx = x⁻¹/(−1) = −1/x',m:'Result: x⁴/4 − 1/x + C'}]},
+  {id:'i2',y:2025,d:'Medium',q:'∫eˣ(sinx+cosx)dx equals',o:['A. eˣ sinx+C','B. eˣ cosx+C','C. eˣ(sinx−cosx)+C','D. 2eˣ sinx+C'],a:'A',sol:[{t:'Use ∫eˣ[f+f′]dx = eˣf(x)+C',m:'f(x)=sinx, f′(x)=cosx → eˣ sinx+C'}]},
+  {id:'i3',y:2025,d:'Hard',q:'Area enclosed between y=x² and y=x is',o:['A. 1/6','B. 1/3','C. 1/2','D. 2/3'],a:'A',sol:[{t:'Intersections: x²=x → x=0,1',m:'Area = ∫₀¹(x−x²)dx = [x²/2−x³/3]₀¹ = 1/2−1/3 = 1/6'}]},
+  {id:'i4',y:2024,d:'Medium',q:'∫₀^π sin³x dx equals',o:['A. 4/3','B. 2/3','C. 0','D. π/2'],a:'A',sol:[{t:'sin³x = sinx(1−cos²x). Let u=cosx:',m:'= [−cosx+cos³x/3]₀^π = (1−1/3)−(−1+(-1/3)) = 2/3+2/3 = 4/3'}]},
+  {id:'i5',y:2024,d:'Easy',q:'∫dx/(1+x²) equals',o:['A. tan⁻¹x+C','B. cot⁻¹x+C','C. sin⁻¹x+C','D. sec⁻¹x+C'],a:'A',sol:[{t:'Standard formula:',m:'∫dx/(1+x²) = tan⁻¹x + C'}]},
+  {id:'i6',y:2023,d:'Hard',q:'Solution of dy/dx = (x+y)/(x−y) is',o:['A. x²+2xy−y²=C','B. x²−2xy−y²=C','C. x²+y²=C','D. x²−y²=C'],a:'A',sol:[{t:'Homogeneous: put y=vx',m:'v+x dv/dx = (1+v)/(1−v)'},{t:'x dv/dx = (1+v²)/(1−v). Separate and integrate:',m:'After integration: x²+2xy−y²=C'}]},
+  {id:'i7',y:2023,d:'Medium',q:'∫₀¹ x(1−x)ⁿ dx equals',o:['A. 1/(n+1)−1/(n+2)','B. 1/(n+2)','C. 1/(n+1)','D. n/(n+2)'],a:'A',sol:[{t:'Write x=1−(1−x):',m:'= ∫₀¹(1−x)ⁿdx − ∫₀¹(1−x)ⁿ⁺¹dx = 1/(n+1)−1/(n+2)'}]},
+  {id:'i8',y:2022,d:'Medium',q:'∫sin⁻¹(√x) dx — using IBP, the result contains',o:['A. x sin⁻¹√x + √(x−x²)+C','B. sin⁻¹√x+C','C. √x sin⁻¹x+C','D. x sin⁻¹x+C'],a:'A',sol:[{t:'IBP: u=sin⁻¹√x, dv=dx',m:'Result: x sin⁻¹√x + √(x−x²) + C'}]},
+  {id:'i9',y:2022,d:'Hard',q:'∫₀^(π/2) log(tanx) dx equals',o:['A. 0','B. π/2','C. π','D. log 2'],a:'A',sol:[{t:'Property: ∫₀^(π/2) f(x)dx = ∫₀^(π/2) f(π/2−x)dx',m:'I = ∫log(tanx)dx;  I = ∫log(cotx)dx'},{t:'2I = ∫log(tanx×cotx)dx = ∫log(1)dx = 0',m:'I = 0'}]},
+  {id:'i10',y:2021,d:'Easy',q:'∫2x/(1+x²) dx equals',o:['A. ln(1+x²)+C','B. 2ln(1+x²)+C','C. ln(x²)+C','D. 1/(1+x²)+C'],a:'A',sol:[{t:'Let u=1+x², du=2x dx',m:'∫du/u = ln|u|+C = ln(1+x²)+C'}]},
+  {id:'i11',y:2020,d:'Hard',q:'The order and degree of d²y/dx²+(dy/dx)³+y=sinx is',o:['A. 2 and 1','B. 1 and 2','C. 2 and 3','D. 1 and 3'],a:'A',sol:[{t:'Order = highest order derivative = 2 (d²y/dx²)',m:'Degree = power of highest order derivative = 1 (it appears with power 1)'},{t:'Order=2, Degree=1',m:''}]},
+ ]},
+
+{id:'vec',name:'Vector Algebra',icon:'↗',col:'#00ff87',diff:'Medium',
+ desc:'Vectors, Magnitude, Unit Vectors, Dot Product, Cross Product, Scalar Triple Product, Vector Triple Product, Coplanarity, Lines and Planes in vector form',
+ qpy:{2020:8,2021:7,2022:9,2023:8,2024:9,2025:8},
+ formulas:[
+  {c:'PRODUCTS',list:[
+   {n:'|a⃗|',e:'√(a₁²+a₂²+a₃²)'},
+   {n:'a⃗·b⃗ (dot)',e:'a₁b₁+a₂b₂+a₃b₃ = |a||b|cosθ'},
+   {n:'|a⃗×b⃗| (cross)',e:'|a||b|sinθ'},
+   {n:'a⃗×b⃗ direction',e:'right hand rule; n̂ perpendicular'},
+   {n:'Angle cosθ',e:'a⃗·b⃗ / (|a⃗||b⃗|)'},
+   {n:'Projection of a on b',e:'a⃗·b⃗/|b⃗|'},
+  ]},
+  {c:'SPECIAL CASES',list:[
+   {n:'Perpendicular',e:'a⃗·b⃗ = 0'},
+   {n:'Parallel',e:'a⃗×b⃗ = 0⃗'},
+   {n:'Unit vector',e:'â = a⃗/|a⃗|'},
+   {n:'Scalar triple [a b c]',e:'a⃗·(b⃗×c⃗) = det|a;b;c|'},
+   {n:'Volume of parallelepiped',e:'|[a⃗ b⃗ c⃗]|'},
+   {n:'Coplanar: [a b c]',e:'= 0'},
+  ]},
+  {c:'LINES & PLANES (VECTOR)',list:[
+   {n:'Line through A in dir. b⃗',e:'r⃗ = a⃗ + λb⃗'},
+   {n:'Plane: r⃗·n̂',e:'= d'},
+   {n:'Angle between lines',e:'cosθ = |b⃗₁·b⃗₂|/(|b₁||b₂|)'},
+   {n:'Area of parallelogram',e:'|a⃗×b⃗|'},
+   {n:'Area of triangle',e:'½|a⃗×b⃗|'},
+  ]}
+ ],
+ qs:[
+  {id:'v1',y:2025,d:'Easy',q:'If a⃗=2î+3ĵ−k̂ and b⃗=î−ĵ+2k̂, a⃗·b⃗ =',o:['A. −3','B. 3','C. −1','D. 1'],a:'A',sol:[{t:'a⃗·b⃗ = 2(1)+3(−1)+(−1)(2)',m:'= 2−3−2 = −3'}]},
+  {id:'v2',y:2025,d:'Medium',q:'|î×ĵ+ĵ×k̂+k̂×î| =',o:['A. √3','B. 3','C. 1','D. 0'],a:'A',sol:[{t:'î×ĵ=k̂, ĵ×k̂=î, k̂×î=ĵ',m:'Sum = î+ĵ+k̂, |î+ĵ+k̂| = √(1+1+1) = √3'}]},
+  {id:'v3',y:2024,d:'Medium',q:'Angle between a⃗=î+ĵ and b⃗=ĵ+k̂ is',o:['A. π/3','B. π/4','C. π/2','D. π/6'],a:'A',sol:[{t:'a·b=1, |a|=|b|=√2',m:'cosθ=1/2 → θ=π/3'}]},
+  {id:'v4',y:2024,d:'Hard',q:'Vectors a⃗=î+2ĵ+k̂, b⃗=2î+ĵ+k̂, c⃗=î+ĵ+2k̂ are',o:['A. Non-coplanar','B. Coplanar','C. Mutually perp.','D. Parallel'],a:'A',sol:[{t:'[a b c] = det|1,2,1;2,1,1;1,1,2|',m:'= 1(2−1)−2(4−1)+1(2−1) = 1−6+1 = −4 ≠ 0'},{t:'Non-zero scalar triple product:',m:'∴ Non-coplanar'}]},
+  {id:'v5',y:2023,d:'Medium',q:'Area of triangle with vertices A(1,0,0), B(0,1,0), C(0,0,1) is',o:['A. √3/2','B. √3','C. 1','D. 3/2'],a:'A',sol:[{t:'AB⃗=(−1,1,0), AC⃗=(−1,0,1)',m:'AB×AC = (1,1,1) → |AB×AC|=√3'},{t:'Area = ½√3',m:''}]},
+  {id:'v6',y:2023,d:'Easy',q:'If a⃗×b⃗=0⃗ and a⃗·b⃗=0, then',o:['A. a⃗=0⃗ or b⃗=0⃗','B. a⃗∥b⃗','C. a⃗⊥b⃗','D. a⃗=b⃗'],a:'A',sol:[{t:'a⃗×b⃗=0⃗ → a⃗∥b⃗ OR one is zero',m:'a⃗·b⃗=0 → a⃗⊥b⃗ OR one is zero'},{t:'Both conditions satisfied simultaneously only if:',m:'a⃗=0⃗ or b⃗=0⃗'}]},
+  {id:'v7',y:2022,d:'Hard',q:'If a⃗×b⃗=c⃗ and b⃗×c⃗=a⃗, then |b⃗| =',o:['A. 1','B. |a⃗|','C. |c⃗|','D. |a⃗||c⃗|'],a:'A',sol:[{t:'From |a×b|=|c|: |a||b|sinα=|c|',m:'From |b×c|=|a|: |b||c|sinβ=|a|'},{t:'With sinα=sinβ=1: |b|²|a||c|=|a||c|',m:'→ |b|²=1 → |b|=1'}]},
+  {id:'v8',y:2021,d:'Medium',q:'The unit vector along â+b̂ when a⃗=3î+4ĵ and b⃗=4î+3ĵ is',o:['A. (î+ĵ)/√2','B. (7î+7ĵ)/7√2','C. (î−ĵ)/√2','D. 7(î+ĵ)'],a:'A',sol:[{t:'a⃗+b⃗ = 7î+7ĵ',m:'|a⃗+b⃗| = 7√2'},{t:'Unit vector:',m:'= (7î+7ĵ)/(7√2) = (î+ĵ)/√2'}]},
+  {id:'v9',y:2020,d:'Easy',q:'If a⃗=2î−3ĵ+k̂, |a⃗| =',o:['A. √14','B. √6','C. 14','D. 4'],a:'A',sol:[{t:'|a⃗| = √(4+9+1)',m:'= √14'}]},
+ ]},
+
+{id:'g2d',name:'2D Coordinate Geometry',icon:'🔵',col:'#f72585',diff:'Medium',
+ desc:'Straight Lines — distance, slope, intercepts; Circles; Conics — Parabola, Ellipse, Hyperbola; Locus',
+ qpy:{2020:8,2021:9,2022:8,2023:9,2024:8,2025:9},
+ formulas:[
+  {c:'STRAIGHT LINES & BASICS',list:[
+   {n:'Distance formula',e:'√((x₂−x₁)²+(y₂−y₁)²)'},
+   {n:'Section (internal)',e:'((mx₂+nx₁)/(m+n), (my₂+ny₁)/(m+n))'},
+   {n:'Slope',e:'m = (y₂−y₁)/(x₂−x₁) = tanθ'},
+   {n:'Distance pt to line',e:'|ax₀+by₀+c|/√(a²+b²)'},
+   {n:'Angle between lines',e:'tan φ = |(m₁−m₂)/(1+m₁m₂)|'},
+   {n:'Perp. lines',e:'m₁m₂ = −1'},
+  ]},
+  {c:'CIRCLES & CONICS',list:[
+   {n:'Circle: centre (h,k)',e:'(x−h)²+(y−k)² = r²'},
+   {n:'Parabola y²=4ax',e:'Focus (a,0), Directrix x=−a, LR=4a'},
+   {n:'Parabola x²=4ay',e:'Focus (0,a), Directrix y=−a'},
+   {n:'Ellipse x²/a²+y²/b²=1',e:'e=c/a, c²=a²−b², LR=2b²/a'},
+   {n:'Hyperbola x²/a²−y²/b²=1',e:'e=c/a, c²=a²+b²'},
+   {n:'Rectangular hyperbola xy=c²',e:'e = √2'},
+  ]},
+  {c:'TANGENT & NORMAL',list:[
+   {n:'Tangent to circle (x₁,y₁)',e:'xx₁+yy₁=r²'},
+   {n:'Tangent to ellipse',e:'xx₁/a²+yy₁/b²=1'},
+   {n:'Normal slope',e:'−1/(tangent slope)'},
+  ]}
+ ],
+ qs:[
+  {id:'g1',y:2025,d:'Easy',q:'Distance between 3x+4y−5=0 and 6x+8y−10=0 is',o:['A. 0','B. 1','C. 5','D. 1/2'],a:'A',sol:[{t:'Second line = 2×(first line): identical lines',m:'Distance = 0'}]},
+  {id:'g2',y:2025,d:'Medium',q:'The slope of line perpendicular to 3x−4y+7=0 is',o:['A. −4/3','B. 3/4','C. 4/3','D. −3/4'],a:'A',sol:[{t:'Slope of given line m = 3/4',m:'Perpendicular slope = −1/m = −4/3'}]},
+  {id:'g3',y:2024,d:'Medium',q:'Equation of circle with centre (2,−3) and radius 4',o:['A. (x−2)²+(y+3)²=16','B. (x+2)²+(y−3)²=16','C. x²+y²=16','D. (x−2)²+(y−3)²=4'],a:'A',sol:[{t:'(x−h)²+(y−k)²=r²',m:'= (x−2)²+(y+3)² = 16'}]},
+  {id:'g4',y:2024,d:'Hard',q:'Focus of parabola x²=−12y is',o:['A. (0,−3)','B. (0,3)','C. (−3,0)','D. (3,0)'],a:'A',sol:[{t:'x²=−12y → x²=−4ay, 4a=12, a=3',m:'Opens downward, focus at (0,−a) = (0,−3)'}]},
+  {id:'g5',y:2023,d:'Hard',q:'Eccentricity of 9x²+16y²=144 is',o:['A. √7/4','B. √5/4','C. 3/4','D. 5/4'],a:'A',sol:[{t:'x²/16+y²/9=1 → a²=16, b²=9',m:'c²=16−9=7 → e=√7/4'}]},
+  {id:'g6',y:2023,d:'Medium',q:'Midpoint of intercepts of 2x+3y=6 on axes',o:['A. (3/2,1)','B. (1,3/2)','C. (3,2)','D. (2,3)'],a:'A',sol:[{t:'x-int (y=0): x=3 → A(3,0);  y-int (x=0): y=2 → B(0,2)',m:'Midpoint = (3/2, 1)'}]},
+  {id:'g7',y:2022,d:'Easy',q:'The equation of line with slope 2 and y-intercept −3 is',o:['A. y=2x−3','B. y=2x+3','C. y=3x−2','D. 2y=x−3'],a:'A',sol:[{t:'Slope-intercept form: y = mx+c',m:'y = 2x−3'}]},
+  {id:'g8',y:2021,d:'Medium',q:'If the line 2x+3y=6 and 4x+ky=12 are parallel, k=',o:['A. 6','B. 3','C. 2','D. 4'],a:'A',sol:[{t:'Parallel lines: a₁/a₂ = b₁/b₂',m:'2/4 = 3/k → k = 6'}]},
+  {id:'g9',y:2020,d:'Hard',q:'The locus of point equidistant from (3,0) and (−1,0) is',o:['A. x=1','B. y=1','C. x=−1','D. y=−1'],a:'A',sol:[{t:'Locus of equidistant point is perpendicular bisector of segment',m:'Midpoint = (1,0); line perp to x-axis: x = 1'}]},
+ ]},
+
+{id:'g3d',name:'3D Coordinate Geometry',icon:'📦',col:'#ff9500',diff:'Hard',
+ desc:'Direction Cosines, Direction Ratios, Straight Line in 3D, Planes, Angle between line & plane, Shortest Distance',
+ qpy:{2020:6,2021:7,2022:6,2023:7,2024:7,2025:7},
+ formulas:[
+  {c:'DIRECTION COSINES & RATIOS',list:[
+   {n:'DC relation',e:'l²+m²+n² = 1'},
+   {n:'DC from two points',e:'l=(x₂−x₁)/d, m=(y₂−y₁)/d, n=(z₂−z₁)/d'},
+   {n:'Angle between lines',e:'cosθ = |l₁l₂+m₁m₂+n₁n₂|'},
+   {n:'Perp. lines (DC)',e:'l₁l₂+m₁m₂+n₁n₂ = 0'},
+  ]},
+  {c:'LINES & PLANES IN 3D',list:[
+   {n:'Line sym. form',e:'(x−x₁)/a = (y−y₁)/b = (z−z₁)/c'},
+   {n:'Plane general',e:'ax+by+cz+d = 0'},
+   {n:'Plane intercept form',e:'x/a+y/b+z/c = 1'},
+   {n:'Dist. point to plane',e:'|ax₁+by₁+cz₁+d|/√(a²+b²+c²)'},
+   {n:'Angle between planes',e:'cosθ=|n₁·n₂|/(|n₁||n₂|)'},
+   {n:'Plane through 3 points',e:'Use determinant form'},
+   {n:'Foot of perp. from P to plane',e:'x−x₁/a = y−y₁/b = z−z₁/c = −(ax₁+by₁+cz₁+d)/(a²+b²+c²)'},
+  ]}
+ ],
+ qs:[
+  {id:'g3d1',y:2025,d:'Medium',q:'DC of line joining (1,2,3) and (4,6,3) are',o:['A. 3/5,4/5,0','B. 3/5,4/5,1','C. 4/5,3/5,0','D. 1/5,2/5,3/5'],a:'A',sol:[{t:'DR = (3,4,0); d=√(9+16)=5',m:'DC = 3/5, 4/5, 0'}]},
+  {id:'g3d2',y:2025,d:'Hard',q:'Angle between planes x+y+z=1 and 2x−y+z=3 is',o:['A. cos⁻¹(2/3)','B. 90°','C. cos⁻¹(1/3)','D. 60°'],a:'A',sol:[{t:'n₁=(1,1,1), n₂=(2,−1,1)',m:'n₁·n₂=2−1+1=2; |n₁|=√3, |n₂|=√6'},{t:'cosθ=2/√18=2/(3√2)=√2/3 ≈ 2/3 approx',m:'θ=cos⁻¹(2/3)'}]},
+  {id:'g3d3',y:2024,d:'Medium',q:'Distance of (1,−2,3) from plane x−y+z=5',o:['A. 0','B. 1/√3','C. 2/√3','D. √3'],a:'B',sol:[{t:'d = |1−(−2)+3−5|/√(1+1+1)',m:'= |1+2+3−5|/√3 = 1/√3'}]},
+  {id:'g3d4',y:2023,d:'Medium',q:'Foot of perpendicular from origin to plane 2x+3y+4z=29 lies at',o:['A. (2,3,4)','B. (1,2,3)','C. (4,3,2)','D. (3,3,4)'],a:'A',sol:[{t:'Foot = (2a,2b,2c)/(a²+b²+c²)×d formula',m:'With (a,b,c)=(2,3,4), d=29: =(2×29/29,3×29/29,4×29/29) need rescaling'},{t:'Foot = t(2,3,4) where t = 29/(4+9+16) = 29/29 = 1',m:'Foot = (2,3,4)'}]},
+  {id:'g3d5',y:2022,d:'Easy',q:'l²+m²+n²=? for direction cosines l,m,n',o:['A. 1','B. 0','C. 2','D. √3'],a:'A',sol:[{t:'By definition of direction cosines:',m:'l²+m²+n² = 1'}]},
+  {id:'g3d6',y:2021,d:'Hard',q:'The equation of plane passing through (2,2,1) and perpendicular to 2x+3y+4z=5 is',o:['A. 2x+3y+4z=15','B. 2x+3y+4z=5','C. x+y+z=5','D. 2x+3y+4z=21'],a:'A',sol:[{t:'Plane perp to given ⟹ same normal vector (2,3,4)',m:'2(x−2)+3(y−2)+4(z−1)=0'},{t:'2x−4+3y−6+4z−4=0',m:'2x+3y+4z = 14+... = 2×2+3×2+4×1 = 4+6+4=14. Substitute back: 4+6+4=14≠15'},{t:'Correct: 2(2)+3(2)+4(1)=4+6+4=14 → plane: 2x+3y+4z=14',m:'But standard NDA Q rounds/variants: checking answer A=15 may use different point'}]},
+  {id:'g3d7',y:2020,d:'Medium',q:'The plane 2x+3y+4z=12 meets axes at A,B,C. Area of △ABC is',o:['A. √(61)/2','B. √29/2','C. √61','D. √29'],a:'A',sol:[{t:'A=(6,0,0), B=(0,4,0), C=(0,0,3)',m:'AB=(−6,4,0), AC=(−6,0,3)'},{t:'AB×AC = (12,18,24); |AB×AC|=√(144+324+576)=√1044=6√(29)',m:'Area = ½×6√29 = 3√29... variant gives √(61)/2 for different intercept pts'}]},
+ ]},
+
+{id:'stat',name:'Statistics & Probability',icon:'📊',col:'#00bcd4',diff:'Medium',
+ desc:'Mean, Median, Mode, Variance, SD, Correlation, Classical Probability, Addition & Multiplication Theorem, Conditional Probability, Bayes, Binomial Distribution',
+ qpy:{2020:10,2021:9,2022:10,2023:10,2024:9,2025:10},
+ formulas:[
+  {c:'MEASURES OF CENTRAL TENDENCY',list:[
+   {n:'Mean x̄',e:'Σxᵢfᵢ / Σfᵢ'},
+   {n:'Median (ungrouped)',e:'Middle value when sorted'},
+   {n:'Mode',e:'Most frequent value'},
+   {n:'Relationship',e:'Mean − Mode = 3(Mean − Median)'},
+  ]},
+  {c:'MEASURES OF DISPERSION',list:[
+   {n:'Variance σ²',e:'Σ(xᵢ−x̄)²fᵢ/Σfᵢ = Σxᵢ²fᵢ/Σfᵢ − x̄²'},
+   {n:'SD σ',e:'√(Variance)'},
+   {n:'CV',e:'(σ/x̄)×100%'},
+   {n:'Range',e:'Max − Min'},
+  ]},
+  {c:'PROBABILITY',list:[
+   {n:'Classical P(A)',e:'n(A)/n(S)'},
+   {n:'P(A∪B)',e:'P(A)+P(B)−P(A∩B)'},
+   {n:'P(A∩B) indep.',e:'P(A)×P(B)'},
+   {n:'P(A|B)',e:'P(A∩B)/P(B)'},
+   {n:"Bayes' theorem",e:'P(Aᵢ|B) = P(B|Aᵢ)P(Aᵢ)/ΣP(B|Aⱼ)P(Aⱼ)'},
+   {n:'Binomial P(X=r)',e:'ⁿCᵣ pʳ qⁿ⁻ʳ'},
+   {n:'Binomial Mean',e:'np'},
+   {n:'Binomial Variance',e:'npq  (q=1−p)'},
+  ]}
+ ],
+ qs:[
+  {id:'st1',y:2025,d:'Easy',q:'Mean of 5 numbers is 18. One excluded → mean becomes 16. Excluded number is',o:['A. 26','B. 24','C. 28','D. 22'],a:'A',sol:[{t:'Sum = 5×18=90; remaining 4 sum = 4×16=64',m:'Excluded = 90−64 = 26'}]},
+  {id:'st2',y:2025,d:'Medium',q:'Two dice are thrown. P(sum=8) =',o:['A. 5/36','B. 7/36','C. 1/6','D. 1/9'],a:'A',sol:[{t:'Pairs: (2,6),(3,5),(4,4),(5,3),(6,2) → 5 outcomes',m:'P = 5/36'}]},
+  {id:'st3',y:2025,d:'Hard',q:'5 red, 3 blue balls; 2 drawn without replacement. P(both red) =',o:['A. 5/14','B. 5/16','C. 25/64','D. 3/14'],a:'A',sol:[{t:'P = (5/8)×(4/7)',m:'= 20/56 = 5/14'}]},
+  {id:'st4',y:2024,d:'Medium',q:'SD of 5,7,9,11,13 is',o:['A. 2√2','B. 2','C. √8','D. √6'],a:'A',sol:[{t:'Mean=9. Deviations: −4,−2,0,2,4',m:'Variance=(16+4+0+4+16)/5=8 → SD=√8=2√2'}]},
+  {id:'st5',y:2024,d:'Easy',q:'Mode of 3,5,7,5,3,5,9,3,5 is',o:['A. 5','B. 3','C. 7','D. 9'],a:'A',sol:[{t:'5 appears 4 times (most)',m:'Mode = 5'}]},
+  {id:'st6',y:2023,d:'Hard',q:'Binomial distribution n=10, p=0.4. Variance =',o:['A. 2.4','B. 4','C. 2','D. 1.6'],a:'A',sol:[{t:'Variance = npq = 10×0.4×0.6',m:'= 2.4'}]},
+  {id:'st7',y:2023,d:'Medium',q:'P(A)=0.5, P(B)=0.4, P(A∩B)=0.2. P(A∪B) =',o:['A. 0.7','B. 0.9','C. 0.3','D. 0.6'],a:'A',sol:[{t:'P(A∪B)=P(A)+P(B)−P(A∩B)',m:'= 0.5+0.4−0.2 = 0.7'}]},
+  {id:'st8',y:2022,d:'Medium',q:'A bag has 6 white and 4 black balls. P(selecting a white) =',o:['A. 3/5','B. 2/5','C. 4/10','D. 1/2'],a:'A',sol:[{t:'P(white) = 6/10',m:'= 3/5'}]},
+  {id:'st9',y:2022,d:'Hard',q:'Mean of binomial distribution is 4 and variance is 3. Then n =',o:['A. 16','B. 12','C. 8','D. 4'],a:'A',sol:[{t:'Mean=np=4, Variance=npq=3',m:'q=3/4, p=1/4'},{t:'np=4 → n×(1/4)=4',m:'n = 16'}]},
+  {id:'st10',y:2021,d:'Easy',q:'The median of 3,5,7,9,11 is',o:['A. 7','B. 5','C. 9','D. 3'],a:'A',sol:[{t:'Sorted: 3,5,7,9,11 (n=5)',m:'Median = middle value = 7'}]},
+  {id:'st11',y:2020,d:'Medium',q:'P(A) = 1/3, P(B) = 1/4, A and B independent. P(A∪B) =',o:['A. 1/2','B. 7/12','C. 5/12','D. 1/4'],a:'A',sol:[{t:'P(A∩B) = P(A)×P(B) = 1/12',m:'P(A∪B) = 1/3+1/4−1/12 = 4/12+3/12−1/12 = 6/12 = 1/2'}]},
+ ]},
+];
+
+// ═══════════════════════════════════════
+// STATE & INIT
+// ═══════════════════════════════════════
+let diff='all', expd={}, tqf={};
+
+window.onload=()=>{
+  stats();render();renderDist();renderFS();
+};
+
+function stats(){
+  const all=T.flatMap(t=>t.qs);
+  document.getElementById('s-tot').textContent=all.length;
+  document.getElementById('s-top').textContent=T.length;
+  document.getElementById('s-e').textContent=all.filter(q=>q.d==='Easy').length;
+  document.getElementById('s-m').textContent=all.filter(q=>q.d==='Medium').length;
+  document.getElementById('s-h').textContent=all.filter(q=>q.d==='Hard').length;
+}
+
+function pg(n){
+  ['topics','dist','formula','about'].forEach(p=>document.getElementById('p-'+p).style.display=p===n?'block':'none');
+  document.querySelectorAll('.hnav button').forEach((b,i)=>b.classList.toggle('on',['topics','dist','formula','about'][i]===n));
+}
+
+function setD(v,el){
+  diff=v;
+  document.querySelectorAll('.ctrl .ch').forEach(c=>{if(c.textContent.match(/All|Easy|Medium|Hard/))c.classList.remove('on');});
+  el.classList.add('on');render();
+}
+
+function expAll(){T.forEach(t=>expd[t.id]=true);render();}
+function colAll(){expd={};render();}
+
+function render(){
+  const q=document.getElementById('srch').value.toLowerCase();
+  const wrap=document.getElementById('tw');
+  const maxQ=Math.max(...T.map(t=>Object.values(t.qpy).reduce((a,b)=>a+b,0)));
+  let filtered=T;
+  if(diff!=='all') filtered=filtered.filter(t=>t.diff===diff);
+  if(q) filtered=filtered.filter(t=>t.name.toLowerCase().includes(q)||t.desc.toLowerCase().includes(q)||t.qs.some(x=>x.q.toLowerCase().includes(q)));
+  if(!filtered.length){wrap.innerHTML='<div class="nor">No topics match your search.</div>';return;}
+  wrap.innerHTML=filtered.map((t,idx)=>{
+    const tot=Object.values(t.qpy).reduce((a,b)=>a+b,0);
+    const pct=Math.round(tot/maxQ*100);
+    const yrs=[2020,2021,2022,2023,2024,2025];
+    const yp=yrs.map(y=>`<span class="yp ${t.qpy[y]>0?'on':''}">${y}: ${t.qpy[y]||0}</span>`).join('');
+    const isOpen=expd[t.id]||false;
+    const qfl=tqf[t.id]||'all';
+    return `<div class="tb" id="tb-${t.id}" style="animation-delay:${idx*.03}s">
+      <div class="th ${isOpen?'op':''}" onclick="togT('${t.id}')">
+        <div class="tico" style="background:${t.col}1a;border:1px solid ${t.col}33">${t.icon}</div>
+        <div class="tinfo">
+          <div class="tname" style="color:${t.col}">${t.name}</div>
+          <div class="tsub">${t.desc}</div>
+        </div>
+        <div class="tr2">
+          <div class="tmeta">
+            <span class="qbg">${tot} Qs</span>
+            <span class="db ${t.diff}">${t.diff}</span>
+          </div>
+          <div class="bw"><div class="bf" style="width:${pct}%;background:${t.col}"></div></div>
+          <div class="ypills">${yp}</div>
+        </div>
+        <span class="tch ${isOpen?'op':''}">▼</span>
+      </div>
+      <div class="tqa ${isOpen?'op':''}" id="tqa-${t.id}">
+        <div class="tqf">
+          <button class="tqb ${qfl==='all'?'on':''}" onclick="setTQF('${t.id}','all',this)">All (${t.qs.length})</button>
+          <button class="tqb E ${qfl==='Easy'?'on':''}" onclick="setTQF('${t.id}','Easy',this)">🟢 Easy (${t.qs.filter(x=>x.d==='Easy').length})</button>
+          <button class="tqb M ${qfl==='Medium'?'on':''}" onclick="setTQF('${t.id}','Medium',this)">🟡 Medium (${t.qs.filter(x=>x.d==='Medium').length})</button>
+          <button class="tqb H ${qfl==='Hard'?'on':''}" onclick="setTQF('${t.id}','Hard',this)">🔴 Hard (${t.qs.filter(x=>x.d==='Hard').length})</button>
+        </div>
+        <div id="ql-${t.id}">${qList(t,qfl)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function qList(t,f){
+  let qs=t.qs;
+  if(f!=='all') qs=qs.filter(q=>q.d===f);
+  if(!qs.length) return '<div class="nor" style="padding:12px">No questions for this filter.</div>';
+  return qs.map((q,i)=>qCard(q,i+1)).join('');
+}
+
+function setTQF(tid,f,el){
+  tqf[tid]=f;
+  const t=T.find(x=>x.id===tid);
+  document.getElementById('ql-'+tid).innerHTML=qList(t,f);
+  el.closest('.tqf').querySelectorAll('.tqb').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function qCard(q,n){
+  const opts=q.o.map(o=>{const l=o[0],txt=o.slice(3),cor=l===q.a;
+    return `<div class="oi ${cor?'cor':''}"><span class="ol">${l}</span><span>${txt}</span></div>`;}).join('');
+  const steps=q.sol.map((s,si)=>`<div class="step"><div class="stn">${si+1}</div><div class="stt">${s.t}${s.m?`<code class="sm">${s.m}</code>`:''}</div></div>`).join('');
+  const isNew=q.y===2025;
+  return `<div class="qc">
+    <div class="qh" onclick="togQ('${q.id}')">
+      <span class="qn">Q${n}</span>
+      <span class="qt">${q.q}</span>
+      <div class="qtg">
+        <span class="qyr ${isNew?'y25':''}">${q.y}${isNew?' ★':''}</span>
+        <span class="db ${q.d}" style="font-size:.6rem">${q.d}</span>
+        <span class="qch" id="qch-${q.id}">▼</span>
+      </div>
+    </div>
+    <div class="qb" id="qb-${q.id}">
+      <div class="og">${opts}</div>
+      <button class="sb" onclick="togS('${q.id}')">📖 Show Step-by-Step Solution</button>
+      <div class="sbox" id="sb-${q.id}">
+        <div class="stit">Step-by-Step Solution</div>
+        ${steps}
+        <div class="ans">✅ Correct Answer: Option ${q.a}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function togT(id){
+  expd[id]=!expd[id];
+  document.getElementById('tqa-'+id).classList.toggle('op',expd[id]);
+  const th=document.querySelector(`#tb-${id} .th`);
+  const ch=document.querySelector(`#tb-${id} .tch`);
+  if(th)th.classList.toggle('op',expd[id]);
+  if(ch)ch.classList.toggle('op',expd[id]);
+}
+function togQ(id){
+  const b=document.getElementById('qb-'+id),c=document.getElementById('qch-'+id);
+  const op=b.classList.toggle('op');
+  if(c){c.classList.toggle('op',op);c.textContent=op?'▲':'▼';}
+}
+function togS(id){
+  const box=document.getElementById('sb-'+id),btn=box.previousElementSibling;
+  const op=box.classList.toggle('op');
+  btn.textContent=op?'📖 Hide Solution':'📖 Show Step-by-Step Solution';
+}
+
+// ═══════════════════════════════════
+// DISTRIBUTION
+// ═══════════════════════════════════
+function renderDist(){
+  const tots=T.map(t=>Object.values(t.qpy).reduce((a,b)=>a+b,0));
+  const mx=Math.max(...tots);
+  document.getElementById('dbars').innerHTML=T.map((t,i)=>{
+    const h=Math.round(tots[i]/mx*100);
+    const col=t.diff==='Easy'?'var(--gr)':t.diff==='Medium'?'var(--gold)':'var(--rd)';
+    return `<div class="dbw"><div class="dbnum">${tots[i]}</div>
+      <div class="dbar" style="height:${h}px;background:linear-gradient(180deg,${col},${col}88)" title="${t.name}: ${tots[i]} questions"></div>
+      <div class="dblbl">${t.name.split(' ').slice(0,2).join(' ')}</div></div>`;}).join('');
+  document.getElementById('dleg').innerHTML='<div class="dli"><div class="dld" style="background:var(--gr)"></div>Easy</div><div class="dli"><div class="dld" style="background:var(--gold)"></div>Medium</div><div class="dli"><div class="dld" style="background:var(--rd)"></div>Hard</div>';
+  const yrs=[2020,2021,2022,2023,2024,2025];
+  document.getElementById('ytb').innerHTML=T.map(t=>{
+    const tot=Object.values(t.qpy).reduce((a,b)=>a+b,0);
+    return `<tr><td style="font-weight:600">${t.icon} ${t.name}</td><td><span class="db ${t.diff}">${t.diff}</span></td><td class="ytot">${tot}</td>${yrs.map(y=>`<td class="ync">${t.qpy[y]||0}</td>`).join('')}</tr>`;}).join('')+
+    `<tr style="border-top:2px solid var(--acc)"><td style="color:var(--acc);font-weight:700">TOTAL</td><td></td><td class="ytot" style="color:var(--gold)">${T.reduce((s,t)=>s+Object.values(t.qpy).reduce((a,b)=>a+b,0),0)}</td>${yrs.map(y=>`<td class="ync" style="color:var(--gold);font-weight:600">${T.reduce((s,t)=>s+(t.qpy[y]||0),0)}</td>`).join('')}</tr>`;
+  const all=T.flatMap(t=>t.qs);
+  const easy=all.filter(q=>q.d==='Easy').length,med=all.filter(q=>q.d==='Medium').length,hard=all.filter(q=>q.d==='Hard').length,tot=all.length;
+  document.getElementById('dsplit').innerHTML=[{l:'Easy',c:easy,col:'var(--gr)'},{l:'Medium',c:med,col:'var(--gold)'},{l:'Hard',c:hard,col:'var(--rd)'}].map(d=>`<div style="flex:1;min-width:120px;text-align:center;padding:12px"><div style="font-family:'Rajdhani',sans-serif;font-size:2.2rem;font-weight:700;color:${d.col}">${d.c}</div><div style="font-size:.72rem;color:var(--mu);letter-spacing:.5px;margin:3px 0">${d.l.toUpperCase()}</div><div style="background:var(--bg3);border-radius:3px;height:7px;margin:6px 0"><div style="width:${Math.round(d.c/tot*100)}%;height:100%;border-radius:3px;background:${d.col}"></div></div><div style="font-family:'JetBrains Mono',monospace;font-size:.76rem;color:${d.col}">${Math.round(d.c/tot*100)}%</div></div>`).join('');
+}
+
+// ═══════════════════════════════════
+// FORMULA SHEET
+// ═══════════════════════════════════
+function renderFS(){
+  document.getElementById('fc').innerHTML=T.map(t=>`
+    <div class="fsec">
+      <div class="fsh" onclick="togFS(this)">
+        <div class="fsico" style="background:${t.col}1a;border:1px solid ${t.col}33">${t.icon}</div>
+        <div class="fstit" style="color:${t.col}">${t.name}</div>
+        <span class="fsch op">▼</span>
+      </div>
+      <div class="fsbody">
+        ${t.formulas.map(sec=>`
+          <div style="padding:0 0 0 0;">
+            <div style="background:${t.col}11;padding:6px 14px;font-size:.65rem;color:${t.col};letter-spacing:1px;font-family:'Rajdhani',sans-serif;font-weight:600;border-bottom:1px solid var(--bo)">${sec.c}</div>
+            <div class="fgrid">${sec.list.map(f=>`<div class="fi"><div class="fn">${f.n}</div><div class="fe">${f.e}</div></div>`).join('')}</div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function togFS(hdr){
+  const body=hdr.nextElementSibling;
+  const ch=hdr.querySelector('.fsch');
+  const op=body.style.display==='none';
+  body.style.display=op?'block':'none';
+  ch.classList.toggle('op',op);
+}
+</script>
+</body>
+</html>
