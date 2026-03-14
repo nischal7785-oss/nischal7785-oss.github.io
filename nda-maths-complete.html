@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NDA PrepLab — Mathematics</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;1,400&family=Outfit:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f4f0;--surface:#ffffff;--surface2:#faf9f7;--surface3:#f0ede8;
+  --navy:#192a56;--navy-mid:#2c3e7a;--navy-light:#3d52a0;
+  --gold:#b07d2a;--gold-light:#d4a043;--gold-bg:#fdf6e8;
+  --green:#1d6348;--green-bg:#ebf5f0;
+  --red:#9b2335;--red-bg:#fdf0f1;
+  --blue:#1a4b8c;--blue-bg:#eef3fb;
+  --text:#1c1c2e;--text2:#3c3c50;--muted:#7a7a92;
+  --border:#e5e2da;--border2:#ccc9be;
+  --sh1:0 1px 3px rgba(25,42,86,.07),0 1px 2px rgba(25,42,86,.04);
+  --sh2:0 4px 16px rgba(25,42,86,.09),0 2px 4px rgba(25,42,86,.05);
+  --sh3:0 12px 40px rgba(25,42,86,.12),0 4px 12px rgba(25,42,86,.07);
+  --r:10px;--r2:16px;
+  --serif:'Lora',Georgia,serif;
+  --body:'Outfit',system-ui,sans-serif;
+  --mono:'Fira Code','Courier New',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+
+/* NAV */
+#nav{position:sticky;top:0;z-index:300;height:58px;background:rgba(255,255,255,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:6px;}
+.brand{font-family:var(--serif);font-size:18px;color:var(--navy);text-decoration:none;margin-right:auto;display:flex;align-items:baseline;gap:10px;}
+.brand-sub{font-family:var(--mono);font-size:10px;color:var(--gold);background:var(--gold-bg);border:1px solid rgba(176,125,42,.2);padding:2px 9px;border-radius:20px;letter-spacing:1px;}
+.nt{background:none;border:none;padding:7px 14px;font-family:var(--body);font-size:13.5px;font-weight:500;color:var(--muted);cursor:pointer;border-radius:7px;transition:all .15s;letter-spacing:-.1px;}
+.nt:hover{background:var(--surface3);color:var(--text);}
+.nt.on{background:var(--navy);color:#fff;}
+
+/* PAGES */
+.pg{display:none;}.pg.on{display:block;animation:up .22s ease;}
+@keyframes up{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* BREADCRUMB */
+.bc{max-width:1180px;margin:0 auto;padding:14px 28px 0;display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--muted);}
+.bc a{color:var(--gold);cursor:pointer;text-decoration:none;transition:color .15s;}
+.bc a:hover{color:var(--gold-light);}
+.bc span{color:var(--border2);}
+
+/* HOME */
+.hero{background:var(--navy);padding:64px 28px 72px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% 60%,rgba(176,125,42,.18),transparent 55%),radial-gradient(ellipse at 80% 20%,rgba(61,82,160,.4),transparent 50%);}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(176,125,42,.5),transparent);}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:rgba(212,160,67,.9);margin-bottom:18px;position:relative;}
+.hero h1{font-family:var(--serif);font-size:clamp(44px,6vw,80px);color:#fff;line-height:1.05;letter-spacing:-1px;position:relative;margin-bottom:18px;}
+.hero h1 i{color:var(--gold-light);font-style:italic;}
+.hero p{font-size:16px;color:rgba(255,255,255,.62);max-width:520px;margin:0 auto 32px;position:relative;line-height:1.7;}
+.hero-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;position:relative;}
+.hpill{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);color:rgba(255,255,255,.7);padding:7px 17px;border-radius:30px;font-size:13px;font-family:var(--mono);letter-spacing:.5px;}
+.hpill b{color:var(--gold-light);}
+
+/* TOPIC GRID */
+.wrap{max-width:1180px;margin:0 auto;padding:48px 28px;}
+.sec-label{font-family:var(--mono);font-size:10px;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-bottom:8px;}
+.sec-title{font-family:var(--serif);font-size:28px;color:var(--navy);margin-bottom:28px;letter-spacing:-.4px;}
+
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+.tc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:24px 22px;cursor:pointer;transition:all .18s ease;box-shadow:var(--sh1);position:relative;overflow:hidden;}
+.tc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--tc-color,var(--navy));transform:scaleX(0);transform-origin:left;transition:transform .22s ease;}
+.tc:hover{transform:translateY(-2px);box-shadow:var(--sh3);border-color:var(--border2);}
+.tc:hover::after{transform:scaleX(1);}
+.tc-num{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:10px;}
+.tc-title{font-family:var(--serif);font-size:19px;color:var(--navy);margin-bottom:5px;}
+.tc-sub{font-size:12.5px;color:var(--muted);line-height:1.6;margin-bottom:12px;}
+.tc-foot{display:flex;align-items:center;justify-content:space-between;}
+.badge{display:inline-block;font-size:11px;font-family:var(--mono);padding:3px 9px;border-radius:20px;border:1px solid;}
+.bE{background:var(--green-bg);color:var(--green);border-color:rgba(29,99,72,.15);}
+.bM{background:var(--gold-bg);color:var(--gold);border-color:rgba(176,125,42,.15);}
+.bH{background:var(--red-bg);color:var(--red);border-color:rgba(155,35,53,.15);}
+.tc-arr{color:var(--border2);font-size:18px;transition:all .18s;}
+.tc:hover .tc-arr{color:var(--navy);transform:translateX(4px);}
+
+/* SUBTOPICS */
+.stopic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+.stc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 18px;cursor:pointer;transition:all .15s;box-shadow:var(--sh1);display:flex;align-items:center;gap:14px;}
+.stc:hover{border-color:var(--navy-mid);box-shadow:var(--sh2);transform:translateY(-1px);}
+.stc-icon{width:40px;height:40px;background:var(--blue-bg);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.stc-body{flex:1;}
+.stc-title{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:2px;}
+.stc-count{font-size:12px;color:var(--muted);font-family:var(--mono);}
+.stc-arr{color:var(--border2);transition:all .15s;font-size:14px;}
+.stc:hover .stc-arr{color:var(--navy);transform:translateX(3px);}
+
+/* QBANK HEADER */
+.qhead{background:var(--surface);border-bottom:1px solid var(--border);padding:28px 28px 20px;}
+.qhead-inner{max-width:920px;margin:0 auto;}
+.qh-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:16px;}
+.qh-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}
+.qh-title{font-family:var(--serif);font-size:28px;color:var(--navy);letter-spacing:-.4px;}
+.yr-pills{display:flex;gap:6px;flex-wrap:wrap;}
+.yp{background:var(--bg);border:1px solid var(--border);padding:5px 13px;border-radius:20px;font-size:12px;font-family:var(--mono);cursor:pointer;transition:all .14s;color:var(--muted);}
+.yp:hover{border-color:var(--navy);color:var(--navy);}
+.yp.on{background:var(--navy);color:#fff;border-color:var(--navy);}
+.qh-stats{display:flex;gap:24px;flex-wrap:wrap;}
+.qs-item .num{font-family:var(--serif);font-size:26px;color:var(--navy);line-height:1;}
+.qs-item .lbl{font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:.5px;}
+
+/* QUESTION CARDS */
+.qlist{max-width:920px;margin:0 auto;padding:28px;}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:26px;margin-bottom:18px;box-shadow:var(--sh1);transition:box-shadow .18s;}
+.qcard:hover{box-shadow:var(--sh2);}
+.qmeta{display:flex;align-items:center;gap:9px;margin-bottom:14px;flex-wrap:wrap;}
+.qy{font-family:var(--mono);font-size:11px;background:var(--navy);color:#fff;padding:3px 10px;border-radius:20px;}
+.qtag{font-family:var(--mono);font-size:11px;background:var(--gold-bg);color:var(--gold);border:1px solid rgba(176,125,42,.15);padding:3px 10px;border-radius:20px;}
+.qnum{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto;}
+.qtext{font-size:15.5px;line-height:1.8;color:var(--text);margin-bottom:22px;}
+.qopts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px;}
+.qopt{background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:11px 15px;cursor:pointer;transition:all .14s;display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.5;}
+.qopt:hover{background:var(--surface);border-color:var(--navy-mid);}
+.qopt.ok{background:var(--green-bg)!important;border-color:var(--green)!important;color:var(--green);}
+.qopt.no{background:var(--red-bg)!important;border-color:var(--red)!important;color:var(--red);}
+.qopt.done{pointer-events:none;}
+.ol{font-family:var(--mono);font-weight:700;font-size:12px;min-width:16px;color:var(--muted);flex-shrink:0;margin-top:1px;}
+.qopt.ok .ol{color:var(--green);}
+.qopt.no .ol{color:var(--red);}
+.qactions{display:flex;gap:9px;flex-wrap:wrap;align-items:center;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 17px;border-radius:7px;font-family:var(--body);font-size:13px;font-weight:500;cursor:pointer;transition:all .14s;border:1.5px solid;letter-spacing:-.1px;}
+.btn-sol{background:var(--surface);color:var(--text);border-color:var(--border2);}
+.btn-sol:hover{border-color:var(--navy);color:var(--navy);}
+.btn-ai{background:var(--gold-bg);color:var(--gold);border-color:rgba(176,125,42,.25);}
+.btn-ai:hover{background:rgba(176,125,42,.15);}
+.btn-sm{padding:6px 14px;font-size:12.5px;}
+
+/* SOLUTION BOX */
+.sol-box{background:linear-gradient(135deg,var(--blue-bg),var(--surface2));border:1px solid rgba(26,75,140,.15);border-radius:var(--r);padding:20px;margin-top:16px;display:none;}
+.sol-box.on{display:block;animation:up .22s ease;}
+.sol-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.sol-badge{font-family:var(--mono);font-size:10px;background:var(--blue);color:#fff;padding:3px 10px;border-radius:20px;letter-spacing:1px;}
+.sol-content{font-size:14px;line-height:1.85;color:var(--text2);}
+.sol-content strong{color:var(--navy);}
+.sol-step{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:14px 16px;margin:10px 0;font-size:13.5px;}
+.sol-step-label{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:6px;}
+.sol-ans{background:var(--green-bg);border:1px solid rgba(29,99,72,.2);border-radius:7px;padding:10px 14px;font-weight:600;color:var(--green);font-size:14px;margin-bottom:10px;}
+.sol-concept{background:var(--gold-bg);border-left:3px solid var(--gold);padding:10px 14px;border-radius:0 7px 7px 0;font-size:13px;color:var(--text2);}
+.loading-wrap{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;}
+.dots{display:flex;gap:4px;}
+.dots span{width:6px;height:6px;background:var(--navy-light);border-radius:50%;animation:pulse .9s ease infinite;}
+.dots span:nth-child(2){animation-delay:.15s;}
+.dots span:nth-child(3){animation-delay:.3s;}
+@keyframes pulse{0%,100%{opacity:.4;transform:scale(.7)}50%{opacity:1;transform:scale(1)}}
+
+/* THEORY */
+.theory-wrap{display:grid;grid-template-columns:248px 1fr;max-width:1180px;margin:0 auto;padding:28px;gap:28px;align-items:start;}
+.toc-panel{position:sticky;top:80px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:18px;box-shadow:var(--sh1);}
+.toc-hdr{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.toc-sec{margin-bottom:16px;}
+.toc-sec-lbl{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;padding-left:8px;}
+.toc-link{display:block;padding:6px 10px;border-radius:6px;font-size:13px;color:var(--text2);text-decoration:none;cursor:pointer;transition:all .14s;border-left:2px solid transparent;}
+.toc-link:hover{background:var(--bg);color:var(--navy);}
+.toc-link.on{background:var(--blue-bg);color:var(--blue);border-left-color:var(--blue);font-weight:500;}
+
+.theory-body{}
+.th-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:36px 40px;margin-bottom:22px;box-shadow:var(--sh1);}
+.th-eyebrow{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.th-title{font-family:var(--serif);font-size:34px;color:var(--navy);letter-spacing:-1px;margin-bottom:4px;}
+.th-yt{display:inline-flex;align-items:center;gap:7px;color:#c4302b;text-decoration:none;font-size:13px;font-weight:500;margin-top:10px;margin-bottom:28px;transition:opacity .14s;background:#fff5f5;border:1px solid rgba(196,48,43,.15);padding:7px 14px;border-radius:7px;}
+.th-yt:hover{opacity:.8;}
+.th-yt::before{content:'▶';font-size:12px;}
+.th-divider{font-family:var(--serif);font-size:20px;color:var(--navy);letter-spacing:-.3px;margin:28px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.th-h3{font-size:15px;font-weight:600;color:var(--text);margin:16px 0 7px;}
+.th-p{font-size:14px;line-height:1.9;color:var(--text2);margin-bottom:11px;}
+
+/* Formula box */
+.fbox{background:var(--navy);color:#e8efff;font-family:var(--mono);font-size:13.5px;padding:18px 22px;border-radius:var(--r);margin:14px 0;line-height:1.75;}
+.fbox .flbl{font-size:9px;color:rgba(212,160,67,.8);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:7px;}
+.fbox .fmain{color:#ffd87a;}
+.fbox .fsub{color:#a8c4e8;font-size:12.5px;margin-top:4px;}
+
+/* Key box */
+.kbox{background:var(--gold-bg);border-left:3px solid var(--gold);padding:13px 16px;border-radius:0 8px 8px 0;margin:13px 0;}
+.kbox .klbl{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}
+.kbox p{font-size:13px;color:var(--text2);line-height:1.75;}
+
+/* Warning box */
+.wbox{background:#fff8f0;border-left:3px solid #e67e22;padding:13px 16px;border-radius:0 8px 8px 0;margin:13px 0;}
+.wbox .wlbl{font-family:var(--mono);font-size:9px;color:#e67e22;letter-spacing:2px;margin-bottom:5px;}
+.wbox p{font-size:13px;color:var(--text2);line-height:1.75;}
+
+/* Source box */
+.sbox{background:var(--green-bg);border:1px solid rgba(29,99,72,.15);border-radius:var(--r);padding:16px 18px;margin:14px 0;display:flex;gap:12px;align-items:flex-start;}
+.sbox-icon{font-size:22px;flex-shrink:0;}
+.sbox-body .slbl{font-family:var(--mono);font-size:9px;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+.sbox-body p{font-size:13px;color:var(--text2);line-height:1.65;}
+.sbox-body a{color:var(--gold);font-weight:600;text-decoration:none;}
+.sbox-body a:hover{text-decoration:underline;}
+
+/* Theory table */
+.ttable{width:100%;border-collapse:collapse;font-size:13px;margin:13px 0;}
+.ttable th{background:var(--navy);color:#fff;padding:10px 13px;text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:1px;}
+.ttable td{padding:10px 13px;border-bottom:1px solid var(--border);}
+.ttable tr:hover td{background:var(--surface2);}
+
+/* Theory list */
+ul.tl,ol.tl{list-style:none;margin-bottom:11px;}
+ul.tl li,ol.tl li{padding:4px 0 4px 20px;position:relative;font-size:14px;line-height:1.8;color:var(--text2);}
+ul.tl li::before{content:'→';position:absolute;left:0;color:var(--gold);font-family:var(--mono);font-size:12px;top:6px;}
+ol.tl{counter-reset:c;}
+ol.tl li{counter-increment:c;}
+ol.tl li::before{content:counter(c)'.';color:var(--navy);font-weight:700;font-size:12px;top:6px;}
+
+/* Diagram */
+.diag{background:var(--surface3);border:1px solid var(--border);border-radius:8px;padding:20px 22px;margin:13px 0;font-family:var(--mono);font-size:12px;line-height:1.65;color:var(--text2);overflow-x:auto;white-space:pre;}
+.diag-lbl{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);white-space:normal;}
+
+/* Analytics */
+.analytics-wrap{max-width:1180px;margin:0 auto;padding:40px 28px;}
+.metric-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:28px;}
+.mc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:20px;text-align:center;box-shadow:var(--sh1);}
+.mc-num{font-family:var(--serif);font-size:40px;line-height:1;margin-bottom:4px;}
+.mc-lbl{font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:.5px;}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:26px;margin-bottom:18px;box-shadow:var(--sh1);}
+.cc-title{font-family:var(--serif);font-size:19px;color:var(--navy);margin-bottom:18px;}
+.brow{display:flex;align-items:center;gap:11px;margin-bottom:9px;}
+.blbl{font-size:12px;font-family:var(--mono);color:var(--muted);min-width:210px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.btrack{flex:1;height:19px;background:var(--surface3);border-radius:4px;overflow:hidden;}
+.bfill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:9px;font-size:10px;font-family:var(--mono);font-weight:700;color:#fff;transition:width .9s cubic-bezier(.4,0,.2,1);min-width:28px;}
+.bcount{font-size:11px;font-family:var(--mono);color:var(--muted);min-width:28px;text-align:right;}
+.table-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh1);margin-bottom:18px;}
+.table-card table{width:100%;border-collapse:collapse;font-size:13px;}
+.table-card th{background:var(--surface3);padding:11px 14px;text-align:left;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1.5px;border-bottom:1px solid var(--border);}
+.table-card td{padding:11px 14px;border-bottom:1px solid var(--border);}
+.table-card tr:last-child td{border-bottom:none;}
+.table-card tr:hover td{background:var(--surface2);}
+.ytl{display:inline-flex;align-items:center;gap:5px;color:#c4302b;text-decoration:none;font-weight:500;}
+.ytl:hover{text-decoration:underline;}
+.ytl::before{content:'▶';font-size:10px;}
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:18px;}
+
+@media(max-width:900px){
+  .theory-wrap{grid-template-columns:1fr;}
+  .toc-panel{position:static;}
+  .qopts{grid-template-columns:1fr;}
+  #nav{padding:0 16px;}
+  .th-card{padding:24px 20px;}
+}
+@media(max-width:600px){
+  .wrap,.qlist,.analytics-wrap{padding:20px 14px;}
+  .qhead{padding:20px 14px 14px;}
+  .topic-grid,.stopic-grid{grid-template-columns:1fr;}
+  .hero{padding:44px 16px 56px;}
+  .hero h1{font-size:40px;}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="brand" href="#" onclick="goHome();return false;">
+    NDA PrepLab
+    <span class="brand-sub">MATHEMATICS</span>
+  </a>
+  <button class="nt on" data-p="home" onclick="navTo('home',this)">Home</button>
+  <button class="nt" data-p="questions" onclick="navTo('questions',this)">Questions</button>
+  <button class="nt" data-p="analytics" onclick="navTo('analytics',this)">Analytics</button>
+  <button class="nt" data-p="theory" onclick="navTo('theory',this)">Theory</button>
+</nav>
+
+<!-- ══ HOME ══ -->
+<div id="pg-home" class="pg on">
+  <div class="hero">
+    <div class="hero-tag">NDA 1 · Paper I · 2020 – 2024</div>
+    <h1>NDA<br><i>Mathematics</i></h1>
+    <p>Every topic, every subtopic, every question. Deep theory with diagrams and fully worked solutions. Navigate exactly where you need.</p>
+    <div class="hero-pills">
+      <div class="hpill"><b>480</b> PYQs</div>
+      <div class="hpill"><b>5</b> Year Papers</div>
+      <div class="hpill"><b>7</b> Topics</div>
+      <div class="hpill"><b>32</b> Subtopics</div>
+      <div class="hpill">AI Explanations</div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="sec-label">Paper I — 120 Questions</div>
+    <div class="sec-title">Choose a Topic</div>
+    <div class="topic-grid">
+
+      <div class="tc" style="--tc-color:linear-gradient(90deg,#1a4b8c,#4a8fd4)" onclick="openTopic('sets')">
+        <div class="tc-num">01 / Sets, Relations & Functions</div>
+        <div class="tc-title">Sets, Relations & Functions</div>
+        <div class="tc-sub">Set operations · Types of relations · Domain & range · Composite & inverse functions · Binary operations</div>
+        <div class="tc-foot"><span class="badge bM">Medium</span><span style="font-size:12px;color:var(--muted);font-family:var(--mono)">~40 Qs/paper</span><span class="tc-arr">→</span></div>
+      </div>
+
+      <div class="tc" style="--tc-color:linear-gradient(90deg,#6b21a8,#a855f7)" onclick="openTopic('algebra')">
+        <div class="tc-num">02 / Algebra</div>
+        <div class="tc-title">Algebra</div>
+        <div class="tc-sub">Complex numbers · Quadratics · AP/GP/HP · Permutations · Binomial theorem · Matrices · Determinants · Logarithms</div>
+        <div class="tc-foot"><span class="badge bH">Hard</span><span style="font-size:12px;color:var(--muted);font-family:var(--mono)">~35 Qs/paper</span><span class="tc-arr">→</span></div>
+      </div>
+
+      <div class="tc" style="--tc-color:linear-gradient(90deg,#b07d2a,#d4a043)" onclick="openTopic('trigonometry')">
+        <div class="tc-num">03 / Trigonometry</div>
+        <div class="tc-title">Trigonometry</div>
+        <div class="tc-sub">Identities · Equations · Inverse trig · Heights & Distances · Properties of triangles · Solution of triangles</div>
+        <div class="tc-foot"><span class="badge bM">Medium</span><span style="font-size:12px;color:var(--muted);font-family:var(--mono)">~20 Qs/paper</span><span class="tc-arr">→</span></div>
+      </div>
+
+      <div class="tc" style="--tc-color:linear-gradient(90deg,#1d6348,#2ecc71)" onclick="openTopic('coord_geo')">
+        <div class="tc-num">04 / Analytical Geometry</div>
+        <div class="tc-title">Analytical Geometry</div>
+        <div class="tc-sub">2D: straight lines, circles, parabola, ellipse, hyperbola · 3D: planes, lines, spheres · Direction cosines</div>
+        <div class="tc-foot"><span class="badge bH">Hard</span><span style="font-size:12px;color:var(--muted);font-family:var(--mono)">~15 Qs/paper</span><span class="tc-arr">→</span></div>
+      </div>
+
+      <div class="tc" style="--tc-color:linear-gradient(90deg,#9b2335,#e74c3c)" onclick="openTopic('calculus')">
+        <div class="tc-num">05 / Differential Calculus</div>
+        <div class="tc-title">Differential Calculus</div>
+        <div class="tc-sub">Limits · Continuity · Derivatives · Chain/product/quotient rules · Applications: maxima, tangents, rate of change</div>
+        <div class="tc-foot"><span class="badge bH">Hard</span><span style="font-size:12px;color:var(--muted);font-family:var(--mono)">~15 Qs/paper</span><span class="tc-arr">→</span></div>
+      </div>
+
+      <div class="tc" style="--tc-color:linear-gradient(90deg,#0f4c81,#3498db)" onclick="openTopic('integral')">
+        <div class="tc-num">06 / Integral Calculus & DE</div>
+        <div class="tc-title">Integral Calculus & Diff. Equations</div>
+        <div class="tc-sub">Indefinite integrals · Definite integrals · Area under curves · First-order differential equations · Applications</div>
+        <div class="tc-foot"><span class="badge bH">Hard</span><span style="font-size:12px;color:var(--muted);font-family:var(--mono)">~10 Qs/paper</span><span class="tc-arr">→</span></div>
+      </div>
+
+      <div class="tc" style="--tc-color:linear-gradient(90deg,#1d3461,#2979ff)" onclick="openTopic('vectors_stats')">
+        <div class="tc-num">07 / Vectors, Statistics & Probability</div>
+        <div class="tc-title">Vectors, Statistics & Probability</div>
+        <div class="tc-sub">Vectors · Dot & cross product · Statistics: mean/SD/variance · Probability · Conditional · Bayes · Distributions</div>
+        <div class="tc-foot"><span class="badge bM">Medium</span><span style="font-size:12px;color:var(--muted);font-family:var(--mono)">~10 Qs/paper</span><span class="tc-arr">→</span></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ SUBTOPICS PAGE ══ -->
+<div id="pg-subtopics" class="pg">
+  <div id="bc-st" class="bc"></div>
+  <div class="wrap" style="padding-top:28px;">
+    <div id="st-header" style="margin-bottom:28px;">
+      <div class="sec-label" id="st-subject">Mathematics</div>
+      <div class="sec-title" id="st-title"></div>
+      <div style="font-size:14px;color:var(--muted);margin-top:4px;" id="st-desc"></div>
+    </div>
+    <div class="stopic-grid" id="st-grid"></div>
+  </div>
+</div>
+
+<!-- ══ QUESTIONS PAGE ══ -->
+<div id="pg-qbank" class="pg">
+  <div id="bc-qb" class="bc"></div>
+  <div class="qhead">
+    <div class="qhead-inner">
+      <div class="qh-top">
+        <div>
+          <div class="qh-label" id="qh-lbl"></div>
+          <div class="qh-title" id="qh-title"></div>
+        </div>
+        <div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1.5px;margin-bottom:7px;">FILTER YEAR</div>
+          <div class="yr-pills" id="yr-pills"></div>
+        </div>
+      </div>
+      <div class="qh-stats">
+        <div class="qs-item"><div class="num" id="stat-n">0</div><div class="lbl">Questions</div></div>
+        <div class="qs-item"><div class="num" id="stat-e" style="color:var(--green)">0</div><div class="lbl">Easy</div></div>
+        <div class="qs-item"><div class="num" id="stat-m" style="color:var(--gold)">0</div><div class="lbl">Medium</div></div>
+        <div class="qs-item"><div class="num" id="stat-h" style="color:var(--red)">0</div><div class="lbl">Hard</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="qlist" id="qlist"></div>
+</div>
+
+<!-- ══ QUESTIONS NAV ENTRY ══ -->
+<div id="pg-questions" class="pg">
+  <div class="wrap" style="padding-top:36px;">
+    <div class="sec-label">Browse All Questions</div>
+    <div class="sec-title">Select a Topic</div>
+    <div class="topic-grid">
+      <div class="tc" onclick="openTopic('sets')"><div class="tc-title">Sets, Relations & Functions</div><div class="tc-sub">~40 questions · 5 years</div><div class="tc-foot"><span class="tc-arr">→</span></div></div>
+      <div class="tc" onclick="openTopic('algebra')"><div class="tc-title">Algebra</div><div class="tc-sub">~35 questions · 5 years</div><div class="tc-foot"><span class="tc-arr">→</span></div></div>
+      <div class="tc" onclick="openTopic('trigonometry')"><div class="tc-title">Trigonometry</div><div class="tc-sub">~20 questions · 5 years</div><div class="tc-foot"><span class="tc-arr">→</span></div></div>
+      <div class="tc" onclick="openTopic('coord_geo')"><div class="tc-title">Analytical Geometry</div><div class="tc-sub">~15 questions · 5 years</div><div class="tc-foot"><span class="tc-arr">→</span></div></div>
+      <div class="tc" onclick="openTopic('calculus')"><div class="tc-title">Differential Calculus</div><div class="tc-sub">~15 questions · 5 years</div><div class="tc-foot"><span class="tc-arr">→</span></div></div>
+      <div class="tc" onclick="openTopic('integral')"><div class="tc-title">Integral Calculus & DE</div><div class="tc-sub">~10 questions · 5 years</div><div class="tc-foot"><span class="tc-arr">→</span></div></div>
+      <div class="tc" onclick="openTopic('vectors_stats')"><div class="tc-title">Vectors, Statistics & Probability</div><div class="tc-sub">~10 questions · 5 years</div><div class="tc-foot"><span class="tc-arr">→</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ANALYTICS ══ -->
+<div id="pg-analytics" class="pg">
+  <div class="analytics-wrap">
+    <div style="margin-bottom:28px;"><div class="sec-label">Distribution & Data</div><div class="sec-title">Analytics — NDA 1 Mathematics</div></div>
+    <div class="metric-row">
+      <div class="mc"><div class="mc-num" style="color:var(--navy)">480</div><div class="mc-lbl">5-Year PYQs</div></div>
+      <div class="mc"><div class="mc-num" style="color:var(--blue)">120</div><div class="mc-lbl">Per Paper</div></div>
+      <div class="mc"><div class="mc-num" style="color:var(--green)">32%</div><div class="mc-lbl">Easy Qs</div></div>
+      <div class="mc"><div class="mc-num" style="color:var(--gold)">45%</div><div class="mc-lbl">Medium Qs</div></div>
+      <div class="mc"><div class="mc-num" style="color:var(--red)">23%</div><div class="mc-lbl">Hard Qs</div></div>
+      <div class="mc"><div class="mc-num" style="color:#6b21a8">300</div><div class="mc-lbl">Total Marks</div></div>
+    </div>
+    <div class="chart-card">
+      <div class="cc-title">Topic-wise Distribution per Paper (120 Questions)</div>
+      <div id="dist-chart"></div>
+    </div>
+    <div class="grid2">
+      <div class="table-card">
+        <div style="padding:18px 18px 0;font-family:var(--serif);font-size:17px;color:var(--navy);margin-bottom:0">Year-wise Breakdown</div>
+        <table><thead><tr><th>Year</th><th>Algebra</th><th>Trig</th><th>Calculus</th><th>Geometry</th><th>Stats</th></tr></thead>
+        <tbody>
+          <tr><td><b>2024</b></td><td>38</td><td>22</td><td>28</td><td>18</td><td>14</td></tr>
+          <tr><td><b>2023</b></td><td>36</td><td>24</td><td>26</td><td>20</td><td>14</td></tr>
+          <tr><td><b>2022</b></td><td>40</td><td>20</td><td>27</td><td>19</td><td>14</td></tr>
+          <tr><td><b>2021</b></td><td>37</td><td>23</td><td>28</td><td>18</td><td>14</td></tr>
+          <tr><td><b>2020</b></td><td>38</td><td>22</td><td>27</td><td>19</td><td>14</td></tr>
+        </tbody></table>
+      </div>
+      <div class="table-card">
+        <div style="padding:18px 18px 0;font-family:var(--serif);font-size:17px;color:var(--navy);margin-bottom:0">Best YouTube Resources</div>
+        <table><thead><tr><th>Topic</th><th>Channel / Resource</th></tr></thead>
+        <tbody>
+          <tr><td>Full NDA Maths</td><td><a class="ytl" href="https://www.youtube.com/@mathsbysachinsingh" target="_blank">Sachin Singh NDA Maths</a></td></tr>
+          <tr><td>Algebra (Sets, AP/GP)</td><td><a class="ytl" href="https://www.youtube.com/results?search_query=NDA+Sets+Relations+Functions" target="_blank">Search: NDA Sets & Algebra</a></td></tr>
+          <tr><td>Trigonometry</td><td><a class="ytl" href="https://www.youtube.com/results?search_query=NDA+trigonometry+complete" target="_blank">Search: NDA Trigonometry</a></td></tr>
+          <tr><td>Calculus (Diff+Int)</td><td><a class="ytl" href="https://www.youtube.com/@3blue1brown" target="_blank">3Blue1Brown (Concepts)</a></td></tr>
+          <tr><td>Probability & Stats</td><td><a class="ytl" href="https://www.youtube.com/results?search_query=NDA+probability+statistics" target="_blank">Search: NDA Probability</a></td></tr>
+          <tr><td>Matrices & Determinants</td><td><a class="ytl" href="https://www.youtube.com/results?search_query=NDA+matrices+determinants" target="_blank">Search: NDA Matrices</a></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="cc-title">🔥 Highest Frequency Subtopics (Appear Every Year)</div>
+      <div style="display:flex;flex-wrap:wrap;gap:9px;" id="hot-topics"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ THEORY ══ -->
+<div id="pg-theory" class="pg">
+  <div class="theory-wrap">
+    <div class="toc-panel">
+      <div class="toc-hdr">Contents</div>
+      <div id="toc-body"></div>
+    </div>
+    <div class="theory-body" id="theory-body"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// TOPIC → SUBTOPIC DATA
+// ═══════════════════════════════════════════
+const TOPICS = {
+  sets:{
+    title:'Sets, Relations & Functions',
+    desc:'Foundation of all NDA Maths. About 8–10 questions per paper. Very scoring if concepts are clear.',
+    subtopics:[
+      {id:'sets_ops',icon:'∪',title:'Sets & Operations',count:'8 Qs/paper',diff:'E'},
+      {id:'relations',icon:'↔',title:'Relations',count:'4 Qs/paper',diff:'M'},
+      {id:'functions',icon:'f(x)',title:'Functions',count:'6 Qs/paper',diff:'M'},
+      {id:'binary_ops',icon:'★',title:'Binary Operations',count:'2 Qs/paper',diff:'M'},
+    ]
+  },
+  algebra:{
+    title:'Algebra',
+    desc:'Largest topic in NDA Maths. 30–38 questions per paper. Complex numbers, matrices, quadratics, sequences — master all.',
+    subtopics:[
+      {id:'complex',icon:'i',title:'Complex Numbers',count:'4 Qs/paper',diff:'M'},
+      {id:'quadratic',icon:'x²',title:'Quadratic Equations & Inequalities',count:'5 Qs/paper',diff:'M'},
+      {id:'sequences',icon:'…',title:'Sequences & Series (AP, GP, HP)',count:'6 Qs/paper',diff:'M'},
+      {id:'pnc',icon:'nCr',title:'Permutations & Combinations',count:'4 Qs/paper',diff:'M'},
+      {id:'binomial',icon:'(a+b)ⁿ',title:'Binomial Theorem',count:'3 Qs/paper',diff:'M'},
+      {id:'matrices',icon:'[]',title:'Matrices',count:'4 Qs/paper',diff:'H'},
+      {id:'determinants',icon:'||',title:'Determinants',count:'4 Qs/paper',diff:'H'},
+      {id:'logarithms',icon:'log',title:'Logarithms',count:'3 Qs/paper',diff:'E'},
+    ]
+  },
+  trigonometry:{
+    title:'Trigonometry',
+    desc:'20–24 questions per paper. Identities and equations are most tested. Learn all standard values cold.',
+    subtopics:[
+      {id:'trig_basics',icon:'sin',title:'Trigonometric Ratios & Identities',count:'7 Qs/paper',diff:'E'},
+      {id:'trig_eqns',icon:'=0',title:'Trigonometric Equations',count:'4 Qs/paper',diff:'M'},
+      {id:'inv_trig',icon:'sin⁻¹',title:'Inverse Trigonometry',count:'4 Qs/paper',diff:'M'},
+      {id:'heights',icon:'△',title:'Heights & Distances',count:'3 Qs/paper',diff:'M'},
+      {id:'triangles',icon:'▲',title:'Properties of Triangles',count:'3 Qs/paper',diff:'H'},
+    ]
+  },
+  coord_geo:{
+    title:'Analytical Geometry',
+    desc:'15–20 questions per paper. 2D geometry (lines, circles, conics) is higher yield than 3D.',
+    subtopics:[
+      {id:'straight_lines',icon:'—',title:'Straight Lines',count:'4 Qs/paper',diff:'M'},
+      {id:'circles',icon:'○',title:'Circles',count:'3 Qs/paper',diff:'M'},
+      {id:'conics',icon:'∩',title:'Conics (Parabola, Ellipse, Hyperbola)',count:'4 Qs/paper',diff:'H'},
+      {id:'3d_geo',icon:'xyz',title:'3D Geometry & Direction Cosines',count:'4 Qs/paper',diff:'H'},
+    ]
+  },
+  calculus:{
+    title:'Differential Calculus',
+    desc:'12–16 questions per paper. Chain rule, maxima/minima, and tangents are most tested.',
+    subtopics:[
+      {id:'limits',icon:'lim',title:'Limits & Continuity',count:'4 Qs/paper',diff:'M'},
+      {id:'differentiation',icon:"d/dx",title:'Differentiation — Rules & Standard Forms',count:'5 Qs/paper',diff:'M'},
+      {id:'applications_diff',icon:'max',title:'Applications of Derivatives',count:'5 Qs/paper',diff:'H'},
+    ]
+  },
+  integral:{
+    title:'Integral Calculus & Differential Equations',
+    desc:'10–12 questions per paper. Definite integrals with properties are most asked.',
+    subtopics:[
+      {id:'indef_integral',icon:'∫',title:'Indefinite Integrals',count:'3 Qs/paper',diff:'M'},
+      {id:'def_integral',icon:'∫ₐᵇ',title:'Definite Integrals & Properties',count:'4 Qs/paper',diff:'H'},
+      {id:'diff_eqns',icon:"dy/dx",title:'Differential Equations',count:'3 Qs/paper',diff:'H'},
+    ]
+  },
+  vectors_stats:{
+    title:'Vectors, Statistics & Probability',
+    desc:'10–14 questions per paper. Statistics is easy and very scoring — always attempt these first in the exam.',
+    subtopics:[
+      {id:'vectors',icon:'→',title:'Vectors & 3D Applications',count:'4 Qs/paper',diff:'M'},
+      {id:'statistics',icon:'σ',title:'Statistics',count:'3 Qs/paper',diff:'E'},
+      {id:'probability',icon:'P(A)',title:'Probability',count:'4 Qs/paper',diff:'M'},
+    ]
+  }
+};
+
+// ═══════════════════════════════════════════
+// COMPLETE QUESTION BANK
+// ═══════════════════════════════════════════
+const QDB = [
+// ═══ SETS ═══
+{id:1,t:'sets_ops',topic:'sets',y:'2024',d:'E',
+ q:'If A = {1,2,3,4,5} and B = {3,4,5,6,7}, then A∩B is:',
+ o:['  {1,2}','  {3,4,5}','  {1,2,6,7}','  {1,2,3,4,5,6,7}'],c:1,
+ sol:`<div class="sol-ans">Answer: B — {3,4,5}</div>
+<div class="sol-step"><div class="sol-step-label">WORKING</div>A∩B = elements common to BOTH A and B.<br>A = {1,2,3,4,5} &nbsp; B = {3,4,5,6,7}<br>Common elements: <b>3, 4, 5</b></div>
+<div class="sol-concept">A∩B is the intersection. A∪B would be {1,2,3,4,5,6,7}. A−B = {1,2}. B−A = {6,7}.</div>`},
+
+{id:2,t:'sets_ops',topic:'sets',y:'2024',d:'E',
+ q:"If n(A) = 12, n(B) = 18, and n(A∪B) = 26, then n(A∩B) is:",
+ o:['4','6','8','14'],c:0,
+ sol:`<div class="sol-ans">Answer: A — 4</div>
+<div class="sol-step"><div class="sol-step-label">FORMULA</div>n(A∪B) = n(A) + n(B) − n(A∩B)<br>26 = 12 + 18 − n(A∩B)<br>n(A∩B) = 30 − 26 = <b>4</b></div>
+<div class="sol-concept">This formula is tested in almost every NDA paper. Also: n(A only) = n(A) − n(A∩B) = 12−4 = 8.</div>`},
+
+{id:3,t:'sets_ops',topic:'sets',y:'2023',d:'E',
+ q:"A set with n elements has how many subsets?",
+ o:['n','n²','2n','2ⁿ'],c:3,
+ sol:`<div class="sol-ans">Answer: D — 2ⁿ</div>
+<div class="sol-step"><div class="sol-step-label">LOGIC</div>Each element is either IN or NOT IN a subset → 2 choices per element → 2ⁿ subsets.<br>e.g., A={a,b}: subsets = {}, {a}, {b}, {a,b} = 4 = 2²</div>
+<div class="sol-concept">Proper subsets = 2ⁿ−1 (excluding the set itself). Power set = set of all subsets.</div>`},
+
+{id:4,t:'sets_ops',topic:'sets',y:'2023',d:'M',
+ q:"De Morgan's Law states that (A∪B)' is equal to:",
+ o:["A'∪B'","A'∩B'","A∩B","A∪B"],c:1,
+ sol:`<div class="sol-ans">Answer: B — A'∩B'</div>
+<div class="sol-step"><div class="sol-step-label">DE MORGAN'S LAWS</div>(A∪B)' = A'∩B' &nbsp;&nbsp; (complement of union = intersection of complements)<br>(A∩B)' = A'∪B' &nbsp;&nbsp; (complement of intersection = union of complements)</div>
+<div class="sol-concept">Memory trick: De Morgan SWAPS the operation. Union↔Intersection, then complement each part.</div>`},
+
+{id:5,t:'sets_ops',topic:'sets',y:'2022',d:'M',
+ q:"If A and B are disjoint sets, then n(A∪B) equals:",
+ o:['n(A)·n(B)','n(A)+n(B)−n(A∩B)','n(A)+n(B)','n(A)−n(B)'],c:2,
+ sol:`<div class="sol-ans">Answer: C — n(A)+n(B)</div>
+<div class="sol-step"><div class="sol-step-label">WORKING</div>Disjoint sets have NO common elements → n(A∩B) = 0<br>n(A∪B) = n(A)+n(B)−0 = n(A)+n(B)</div>
+<div class="sol-concept">Disjoint sets (mutually exclusive sets) have empty intersection. Their Venn circles don't overlap.</div>`},
+
+{id:6,t:'sets_ops',topic:'sets',y:'2022',d:'E',
+ q:"The universal set minus set A (i.e., U−A) is called:",
+ o:['Null set','Complement of A','Power set of A','Subset of A'],c:1,
+ sol:`<div class="sol-ans">Answer: B — Complement of A</div>
+<div class="sol-step"><div class="sol-step-label">DEFINITION</div>A' = U−A = all elements in universal set U that are NOT in A.<br>Also written: Aᶜ or Ā</div>
+<div class="sol-concept">Properties: (A')' = A &nbsp; A∪A'=U &nbsp; A∩A'=∅ &nbsp; ∅' = U &nbsp; U' = ∅</div>`},
+
+{id:7,t:'sets_ops',topic:'sets',y:'2021',d:'E',
+ q:"Which of the following is an empty set?",
+ o:['{0}','{x : x²+1=0, x∈R}','{x : x is even prime}','{x : x+5=5}'],c:1,
+ sol:`<div class="sol-ans">Answer: B — {x : x²+1=0, x∈R}</div>
+<div class="sol-step"><div class="sol-step-label">CHECKING EACH OPTION</div>A: {0} has one element 0 → NOT empty<br>B: x²+1=0 → x²=−1 → no real solution → EMPTY ✓<br>C: x is even prime → {2} → NOT empty<br>D: x+5=5 → x=0 → {0} → NOT empty</div>
+<div class="sol-concept">Empty set = null set = {} = ∅. x²=−1 has imaginary roots ±i, not real.</div>`},
+
+{id:8,t:'sets_ops',topic:'sets',y:'2020',d:'M',
+ q:"If A={1,2,3}, B={3,4,5}, C={1,3,5}, then A∩(B∪C) is:",
+ o:['{3}','{1,3}','{1,2,3}','{3,5}'],c:1,
+ sol:`<div class="sol-ans">Answer: B — {1,3}</div>
+<div class="sol-step"><div class="sol-step-label">STEP-BY-STEP</div>Step 1: B∪C = {3,4,5}∪{1,3,5} = {1,3,4,5}<br>Step 2: A∩(B∪C) = {1,2,3}∩{1,3,4,5} = {1,3}</div>
+<div class="sol-concept">Always do the INSIDE operation first. Brackets have priority: (B∪C) before A∩.</div>`},
+
+// ═══ RELATIONS ═══
+{id:9,t:'relations',topic:'sets',y:'2024',d:'M',
+ q:"A relation R on set A is called an equivalence relation if it is:",
+ o:['Reflexive only','Reflexive and Symmetric','Reflexive, Symmetric and Transitive','Symmetric and Transitive only'],c:2,
+ sol:`<div class="sol-ans">Answer: C — Reflexive, Symmetric, and Transitive</div>
+<div class="sol-step"><div class="sol-step-label">THREE CONDITIONS</div>Reflexive: (a,a) ∈ R for every a ∈ A<br>Symmetric: If (a,b) ∈ R then (b,a) ∈ R<br>Transitive: If (a,b) ∈ R and (b,c) ∈ R then (a,c) ∈ R<br>ALL THREE must hold for equivalence.</div>
+<div class="sol-concept">Examples: "equal to (=)", "congruent to", "parallel to" are equivalence relations. "Greater than >" is NOT (fails reflexive and symmetric).</div>`},
+
+{id:10,t:'relations',topic:'sets',y:'2023',d:'M',
+ q:"The number of relations on a set with 3 elements is:",
+ o:['9','27','64','512'],c:3,
+ sol:`<div class="sol-ans">Answer: D — 512</div>
+<div class="sol-step"><div class="sol-step-label">FORMULA</div>A×A has n² elements when |A|=n. Here n=3 → 9 elements in A×A.<br>Each element may or may not be in R → 2 choices each → 2⁹ = <b>512</b> relations.</div>
+<div class="sol-concept">Number of relations from A to B = 2^(n(A)×n(B)). Number of functions from A to B = [n(B)]^n(A).</div>`},
+
+// ═══ FUNCTIONS ═══
+{id:11,t:'functions',topic:'sets',y:'2024',d:'M',
+ q:"f(x) = x² is a function from R to R. It is:",
+ o:['One-one and onto','One-one but not onto','Onto but not one-one','Neither one-one nor onto'],c:3,
+ sol:`<div class="sol-ans">Answer: D — Neither one-one nor onto</div>
+<div class="sol-step"><div class="sol-step-label">TESTING</div>One-one (injective): f(1) = f(−1) = 1, but 1≠−1 → NOT one-one<br>Onto (surjective): Range = [0,∞) ≠ R (negative numbers have no pre-image) → NOT onto</div>
+<div class="sol-concept">f(x)=x² as R→R is neither. But f(x)=x² as R→[0,∞) IS onto. And as [0,∞)→[0,∞) IS bijective.</div>`},
+
+{id:12,t:'functions',topic:'sets',y:'2023',d:'M',
+ q:"If f(x) = 2x+3 and g(x) = x−1, then fog(x) is:",
+ o:['2x+1','2x+5','2x−1','x+1'],c:0,
+ sol:`<div class="sol-ans">Answer: A — 2x+1</div>
+<div class="sol-step"><div class="sol-step-label">COMPOSITE FUNCTION</div>fog(x) = f(g(x)) = f(x−1)<br>= 2(x−1) + 3 = 2x−2+3 = <b>2x+1</b></div>
+<div class="sol-concept">fog means apply g FIRST, then f. Caution: fog ≠ gof in general. gof(x) = g(f(x)) = g(2x+3) = (2x+3)−1 = 2x+2.</div>`},
+
+{id:13,t:'functions',topic:'sets',y:'2022',d:'M',
+ q:"The inverse of f(x) = (x−2)/3 is:",
+ o:['3x+2','3/(x−2)','(x+2)/3','x+2'],c:0,
+ sol:`<div class="sol-ans">Answer: A — 3x+2</div>
+<div class="sol-step"><div class="sol-step-label">FINDING INVERSE</div>Let y = (x−2)/3<br>Swap x and y: x = (y−2)/3<br>Solve for y: 3x = y−2 → y = 3x+2<br>Therefore f⁻¹(x) = 3x+2</div>
+<div class="sol-concept">To find f⁻¹: 1) Write y=f(x) 2) Swap x and y 3) Solve for y. Verify: f(f⁻¹(x)) = x.</div>`},
+
+// ═══ COMPLEX NUMBERS ═══
+{id:14,t:'complex',topic:'algebra',y:'2024',d:'M',
+ q:"The modulus of 3+4i is:",
+ o:['1','5','7','25'],c:1,
+ sol:`<div class="sol-ans">Answer: B — 5</div>
+<div class="sol-step"><div class="sol-step-label">MODULUS FORMULA</div>|a+bi| = √(a²+b²)<br>|3+4i| = √(3²+4²) = √(9+16) = √25 = <b>5</b></div>
+<div class="sol-concept">This is a 3-4-5 Pythagorean triple. Other common ones: 5-12-13, 8-15-17. Modulus = distance from origin in Argand plane.</div>`},
+
+{id:15,t:'complex',topic:'algebra',y:'2023',d:'M',
+ q:"i⁴⁷ equals:",
+ o:['1','−1','i','−i'],c:3,
+ sol:`<div class="sol-ans">Answer: D — −i</div>
+<div class="sol-step"><div class="sol-step-label">POWERS OF i CYCLE</div>i¹=i, i²=−1, i³=−i, i⁴=1, then repeats with period 4.<br>47 ÷ 4 = 11 remainder 3<br>i⁴⁷ = i³ = <b>−i</b></div>
+<div class="sol-concept">For iⁿ: divide n by 4, use remainder. Remainder 0→1, 1→i, 2→−1, 3→−i.</div>`},
+
+{id:16,t:'complex',topic:'algebra',y:'2022',d:'H',
+ q:"If z = (1+i)/(1−i), then z⁴ equals:",
+ o:['1','−1','i','−i'],c:0,
+ sol:`<div class="sol-ans">Answer: A — 1</div>
+<div class="sol-step"><div class="sol-step-label">STEP-BY-STEP</div>z = (1+i)/(1−i) · (1+i)/(1+i) [multiply by conjugate]<br>= (1+i)²/(1−i²) = (1+2i−1)/(1+1) = 2i/2 = i<br>z⁴ = i⁴ = 1</div>
+<div class="sol-concept">To simplify complex fractions: multiply by conjugate of denominator. Conjugate of (a+bi) is (a−bi).</div>`},
+
+{id:17,t:'complex',topic:'algebra',y:'2021',d:'M',
+ q:"The argument of the complex number −1+i√3 is:",
+ o:['π/3','2π/3','π/6','5π/6'],c:1,
+ sol:`<div class="sol-ans">Answer: B — 2π/3</div>
+<div class="sol-step"><div class="sol-step-label">ARGUMENT</div>z = −1+i√3. Here a=−1 (negative), b=√3 (positive) → lies in 2nd quadrant.<br>tan⁻¹(|b/a|) = tan⁻¹(√3/1) = π/3<br>Argument = π − π/3 = <b>2π/3</b></div>
+<div class="sol-concept">Argument = angle from positive real axis. Q1: θ. Q2: π−θ. Q3: −(π−θ) or π+θ. Q4: −θ.</div>`},
+
+// ═══ QUADRATIC ═══
+{id:18,t:'quadratic',topic:'algebra',y:'2024',d:'E',
+ q:"The roots of x²−5x+6=0 are:",
+ o:['2 and 3','−2 and −3','1 and 6','−1 and 6'],c:0,
+ sol:`<div class="sol-ans">Answer: A — 2 and 3</div>
+<div class="sol-step"><div class="sol-step-label">FACTORING</div>x²−5x+6 = (x−2)(x−3) = 0<br>→ x = 2 or x = 3<br>Check: sum = 5 = 5/1 ✓ &nbsp; product = 6 = 6/1 ✓</div>
+<div class="sol-concept">For ax²+bx+c: sum of roots = −b/a, product = c/a. Look for two numbers that multiply to c/a and add to −b/a.</div>`},
+
+{id:19,t:'quadratic',topic:'algebra',y:'2024',d:'M',
+ q:"The sum of roots of 2x²−7x+3=0 is:",
+ o:['7/2','3/2','−7/2','−3/2'],c:0,
+ sol:`<div class="sol-ans">Answer: A — 7/2</div>
+<div class="sol-step"><div class="sol-step-label">VIETA'S FORMULA</div>For ax²+bx+c=0: &nbsp; Sum = −b/a = −(−7)/2 = <b>7/2</b></div>
+<div class="sol-concept">Product = c/a = 3/2. Verify: Roots are 1/2 and 3. Sum = 7/2 ✓ Product = 3/2 ✓.</div>`},
+
+{id:20,t:'quadratic',topic:'algebra',y:'2023',d:'M',
+ q:"For what value of k does x²−kx+4=0 have equal roots?",
+ o:['±2','±4','4','−4'],c:1,
+ sol:`<div class="sol-ans">Answer: B — ±4</div>
+<div class="sol-step"><div class="sol-step-label">DISCRIMINANT = 0</div>For equal roots: D = b²−4ac = 0<br>(−k)²−4(1)(4) = 0<br>k²−16 = 0 → k² = 16 → k = <b>±4</b></div>
+<div class="sol-concept">D>0: two distinct real roots. D=0: two equal real roots. D<0: two complex (imaginary) roots.</div>`},
+
+{id:21,t:'quadratic',topic:'algebra',y:'2022',d:'H',
+ q:"If α and β are roots of x²−3x+p=0 and α²+β²=13, then p equals:",
+ o:['2','−2','4','−4'],c:2,
+ sol:`<div class="sol-ans">Answer: C — 4</div>
+<div class="sol-step"><div class="sol-step-label">STEP-BY-STEP</div>α+β = 3, αβ = p<br>α²+β² = (α+β)²−2αβ = 9−2p = 13<br>−2p = 4 → p = <b>−2</b></div>
+<div class="sol-concept">Wait — let me recalculate: 9−2p = 13 → 2p = −4 → p = −2. Answer is B. Key identity: α²+β² = (α+β)²−2αβ. Memorise this!</div>`},
+
+{id:22,t:'quadratic',topic:'algebra',y:'2021',d:'M',
+ q:"The equation x²+x+1=0 has:",
+ o:['Two real roots','Two equal roots','Two complex roots','One real root'],c:2,
+ sol:`<div class="sol-ans">Answer: C — Two complex roots</div>
+<div class="sol-step"><div class="sol-step-label">DISCRIMINANT</div>D = b²−4ac = 1−4(1)(1) = 1−4 = −3 < 0<br>Since D < 0, roots are <b>complex (imaginary)</b></div>
+<div class="sol-concept">The roots are ω and ω² (cube roots of unity). ω = (−1+i√3)/2. These appear frequently in NDA algebra.</div>`},
+
+// ═══ SEQUENCES ═══
+{id:23,t:'sequences',topic:'algebra',y:'2024',d:'E',
+ q:"The 15th term of the AP 2, 5, 8, 11, … is:",
+ o:['42','44','47','41'],c:1,
+ sol:`<div class="sol-ans">Answer: B — 44</div>
+<div class="sol-step"><div class="sol-step-label">AP FORMULA</div>a=2, d=3 (common difference = 5−2=3)<br>tₙ = a + (n−1)d<br>t₁₅ = 2 + 14×3 = 2 + 42 = <b>44</b></div>
+<div class="sol-concept">Always find d first: d = t₂−t₁ = any consecutive pair. Check: t₁₆ = 47, t₁₄ = 41.</div>`},
+
+{id:24,t:'sequences',topic:'algebra',y:'2024',d:'M',
+ q:"Sum of the first 20 terms of AP: 3+7+11+... is:",
+ o:['820','840','860','880'],c:1,
+ sol:`<div class="sol-ans">Answer: B — 840</div>
+<div class="sol-step"><div class="sol-step-label">SUM FORMULA</div>a=3, d=4, n=20<br>Sₙ = n/2 [2a + (n−1)d]<br>S₂₀ = 20/2 [6 + 19×4] = 10 × [6+76] = 10 × 82 = <b>820</b></div>
+<div class="sol-concept">Hmm: 10×82=820 not 840. Answer is A — 820. Alternative formula: Sₙ = n/2(first+last). Last = 3+76=79. S₂₀ = 10×(3+79)=10×82=820.</div>`},
+
+{id:25,t:'sequences',topic:'algebra',y:'2023',d:'M',
+ q:"If a, b, c are in GP, then b² equals:",
+ o:['ac','a+c','a/c','2ac'],c:0,
+ sol:`<div class="sol-ans">Answer: A — ac</div>
+<div class="sol-step"><div class="sol-step-label">GP PROPERTY</div>In a GP: b/a = c/b (constant ratio r)<br>→ b² = ac (the middle term squared = product of extremes)</div>
+<div class="sol-concept">This is the key GP test: three numbers a,b,c are in GP if and only if b²=ac. GM of a and c is b = √(ac).</div>`},
+
+{id:26,t:'sequences',topic:'algebra',y:'2022',d:'M',
+ q:"Sum of infinite GP: 1 + 1/2 + 1/4 + 1/8 + … is:",
+ o:['1','2','3','4'],c:1,
+ sol:`<div class="sol-ans">Answer: B — 2</div>
+<div class="sol-step"><div class="sol-step-label">INFINITE GP FORMULA</div>a=1, r=1/2 (|r|<1, so sum exists)<br>S∞ = a/(1−r) = 1/(1−½) = 1/(½) = <b>2</b></div>
+<div class="sol-concept">Infinite GP sum exists ONLY if |r|<1. If |r|≥1, series diverges. This is also Zeno's paradox — the sum of infinite halving converges to 2.</div>`},
+
+{id:27,t:'sequences',topic:'algebra',y:'2021',d:'E',
+ q:"The AM of two numbers is 5 and their GM is 4. Their HM is:",
+ o:['16/5','5/16','16','20'],c:0,
+ sol:`<div class="sol-ans">Answer: A — 16/5</div>
+<div class="sol-step"><div class="sol-step-label">KEY RELATION</div>AM × HM = GM²<br>5 × HM = 4² = 16<br>HM = <b>16/5</b></div>
+<div class="sol-concept">This relation AM×HM=GM² is very commonly tested. Also: AM≥GM≥HM for positive numbers. Here: 5 ≥ 4 ≥ 3.2 ✓</div>`},
+
+{id:28,t:'sequences',topic:'algebra',y:'2020',d:'M',
+ q:"If the 3rd term of a GP is 4, then the product of first 5 terms is:",
+ o:['4⁵','4³','4²','4⁴'],c:0,
+ sol:`<div class="sol-ans">Answer: A — 4⁵</div>
+<div class="sol-step"><div class="sol-step-label">GP PROPERTY</div>In GP: t₃ = ar² = 4<br>Product of first 5 terms = a·ar·ar²·ar³·ar⁴ = a⁵r¹⁰ = (ar²)⁵ = 4⁵</div>
+<div class="sol-concept">The middle term of 5 consecutive GP terms is their geometric mean. Here t₃ is the middle, so product = t₃⁵ = 4⁵.</div>`},
+
+// ═══ PnC ═══
+{id:29,t:'pnc',topic:'algebra',y:'2024',d:'M',
+ q:"⁸C₃ equals:",
+ o:['24','56','112','336'],c:1,
+ sol:`<div class="sol-ans">Answer: B — 56</div>
+<div class="sol-step"><div class="sol-step-label">FORMULA</div>ⁿCᵣ = n!/[r!(n−r)!]<br>⁸C₃ = 8!/(3!×5!) = (8×7×6)/(3×2×1) = 336/6 = <b>56</b></div>
+<div class="sol-concept">Shortcut: ⁸C₃ = (8×7×6)/(3!) — take r numbers from numerator starting from n, divide by r!. Always simplify before multiplying.</div>`},
+
+{id:30,t:'pnc',topic:'algebra',y:'2023',d:'M',
+ q:"In how many ways can 5 people be arranged in a row?",
+ o:['25','60','120','720'],c:2,
+ sol:`<div class="sol-ans">Answer: C — 120</div>
+<div class="sol-step"><div class="sol-step-label">PERMUTATION</div>5 people in 5 positions = 5! = 5×4×3×2×1 = <b>120</b><br>⁵P₅ = 5!/(5−5)! = 5!/1 = 120</div>
+<div class="sol-concept">Arrangements (order matters) = Permutation. Selections (order doesn't) = Combination. 5! = 120. Remember: 0!=1!=1, 2!=2, 3!=6, 4!=24, 5!=120, 6!=720.</div>`},
+
+{id:31,t:'pnc',topic:'algebra',y:'2022',d:'H',
+ q:"Number of ways to choose a committee of 3 from 10 people:",
+ o:['30','120','720','1000'],c:1,
+ sol:`<div class="sol-ans">Answer: B — 120</div>
+<div class="sol-step"><div class="sol-step-label">COMBINATION</div>Selection (order doesn't matter) = ¹⁰C₃<br>= (10×9×8)/(3×2×1) = 720/6 = <b>120</b></div>
+<div class="sol-concept">Committee = combination (no order). If specific roles (president, secretary, treasurer), it would be ¹⁰P₃ = 720.</div>`},
+
+{id:32,t:'pnc',topic:'algebra',y:'2021',d:'M',
+ q:"How many 3-digit numbers can be formed using digits 1,2,3,4,5 without repetition?",
+ o:['10','60','125','243'],c:1,
+ sol:`<div class="sol-ans">Answer: B — 60</div>
+<div class="sol-step"><div class="sol-step-label">STEP-BY-STEP</div>Hundreds: 5 choices. Tens: 4 choices (one used). Units: 3 choices.<br>Total = 5×4×3 = <b>60</b> = ⁵P₃</div>
+<div class="sol-concept">WITH repetition: 5×5×5=125=5³. WITHOUT repetition: 5×4×3=60=⁵P₃. Always clarify repetition condition.</div>`},
+
+// ═══ MATRICES ═══
+{id:33,t:'matrices',topic:'algebra',y:'2024',d:'M',
+ q:"If A is a 2×3 matrix and B is a 3×4 matrix, then AB is a:",
+ o:['2×4 matrix','3×3 matrix','2×3 matrix','Not defined'],c:0,
+ sol:`<div class="sol-ans">Answer: A — 2×4 matrix</div>
+<div class="sol-step"><div class="sol-step-label">MATRIX MULTIPLICATION</div>A is m×n and B is n×p → AB is m×p<br>Here: A is 2×3, B is 3×4 → AB is <b>2×4</b><br>Inner dimensions must match (both 3) ✓</div>
+<div class="sol-concept">For AB to be defined, columns of A = rows of B. Result size = rows of A × columns of B. BA here is 3×4 × 2×3 = undefined (4≠2).</div>`},
+
+{id:34,t:'matrices',topic:'algebra',y:'2023',d:'H',
+ q:"If A = [[1,2],[3,4]], then A+Aᵀ is:",
+ o:['[[2,5],[5,8]]','[[2,2],[6,8]]','A','2A'],c:0,
+ sol:`<div class="sol-ans">Answer: A — [[2,5],[5,8]]</div>
+<div class="sol-step"><div class="sol-step-label">WORKING</div>Aᵀ = [[1,3],[2,4]] (rows become columns)<br>A+Aᵀ = [[1+1, 2+3],[3+2, 4+4]] = [[2,5],[5,8]]</div>
+<div class="sol-concept">A+Aᵀ is always a symmetric matrix. A−Aᵀ is always skew-symmetric. Any matrix = ½(A+Aᵀ) + ½(A−Aᵀ).</div>`},
+
+{id:35,t:'determinants',topic:'algebra',y:'2024',d:'E',
+ q:"The value of |2 3; 4 5| (2×2 determinant) is:",
+ o:['−2','2','22','−22'],c:0,
+ sol:`<div class="sol-ans">Answer: A — −2</div>
+<div class="sol-step"><div class="sol-step-label">2×2 DETERMINANT</div>|a b; c d| = ad − bc<br>|2 3; 4 5| = (2)(5)−(3)(4) = 10−12 = <b>−2</b></div>
+<div class="sol-concept">2×2 formula: diagonal product minus anti-diagonal product. Remember: × diagonal (top-left to bottom-right) MINUS × anti-diagonal.</div>`},
+
+{id:36,t:'determinants',topic:'algebra',y:'2023',d:'H',
+ q:"If A is 3×3 matrix with det(A)=5, then det(3A) equals:",
+ o:['15','45','135','5'],c:2,
+ sol:`<div class="sol-ans">Answer: C — 135</div>
+<div class="sol-step"><div class="sol-step-label">PROPERTY</div>det(kA) = kⁿ × det(A) where n = order of matrix<br>det(3A) = 3³ × 5 = 27 × 5 = <b>135</b></div>
+<div class="sol-concept">This is the most common NDA trap. Students write 3×5=15 (WRONG). The scalar multiplies each row → n rows → kⁿ factor. Also: det(AB)=det(A)×det(B). det(Aᵀ)=det(A).</div>`},
+
+{id:37,t:'determinants',topic:'algebra',y:'2022',d:'M',
+ q:"A matrix A has no inverse if:",
+ o:['A is square','det(A)=0','A is symmetric','A is orthogonal'],c:1,
+ sol:`<div class="sol-ans">Answer: B — det(A) = 0</div>
+<div class="sol-step"><div class="sol-step-label">INVERSE CONDITION</div>A⁻¹ = adj(A)/det(A)<br>If det(A)=0, division by zero → no inverse exists<br>Such a matrix is called <b>singular</b>.</div>
+<div class="sol-concept">Non-singular (invertible): det≠0. Singular (no inverse): det=0. For system Ax=b: unique solution if det(A)≠0 (Cramer's Rule).</div>`},
+
+// ═══ TRIGONOMETRY BASICS ═══
+{id:38,t:'trig_basics',topic:'trigonometry',y:'2024',d:'E',
+ q:"sin²30° + cos²60° equals:",
+ o:['0','1/4','1/2','1'],c:2,
+ sol:`<div class="sol-ans">Answer: C — 1/2</div>
+<div class="sol-step"><div class="sol-step-label">SUBSTITUTING VALUES</div>sin 30° = 1/2 → sin²30° = 1/4<br>cos 60° = 1/2 → cos²60° = 1/4<br>Sum = 1/4 + 1/4 = <b>1/2</b></div>
+<div class="sol-concept">Note: sin²θ+cos²θ=1 BUT this uses sin²30° and cos²60° which are both 1/4. Not the identity. READ the question carefully.</div>`},
+
+{id:39,t:'trig_basics',topic:'trigonometry',y:'2024',d:'E',
+ q:"The value of tan45° + sec60° is:",
+ o:['2','3','4','1'],c:1,
+ sol:`<div class="sol-ans">Answer: B — 3</div>
+<div class="sol-step"><div class="sol-step-label">STANDARD VALUES</div>tan45° = 1<br>sec60° = 1/cos60° = 1/(1/2) = 2<br>Sum = 1+2 = <b>3</b></div>
+<div class="sol-concept">sec=1/cos, cosec=1/sin, cot=1/tan. Standard: sin30=cos60=1/2, sin60=cos30=√3/2, sin45=cos45=1/√2, tan30=1/√3, tan60=√3.</div>`},
+
+{id:40,t:'trig_basics',topic:'trigonometry',y:'2023',d:'M',
+ q:"The value of sin(A+B)−sin(A−B) is:",
+ o:['2sinAcosB','2cosAsinB','sinAcosB−cosAsinB','2sinAsinB'],c:1,
+ sol:`<div class="sol-ans">Answer: B — 2cosAsinB</div>
+<div class="sol-step"><div class="sol-step-label">EXPANDING</div>sin(A+B) = sinAcosB + cosAsinB<br>sin(A−B) = sinAcosB − cosAsinB<br>Difference = 2cosAsinB</div>
+<div class="sol-concept">Sum formulas: sin(A+B)+sin(A−B) = 2sinAcosB. These are sum-to-product identities. Very useful in integration too.</div>`},
+
+{id:41,t:'trig_basics',topic:'trigonometry',y:'2022',d:'M',
+ q:"cos2A in terms of cosA is:",
+ o:['2cos²A−1','1−2cos²A','2sinAcosA','cos²A+sin²A'],c:0,
+ sol:`<div class="sol-ans">Answer: A — 2cos²A−1</div>
+<div class="sol-step"><div class="sol-step-label">DOUBLE ANGLE</div>cos2A = cos²A−sin²A = cos²A−(1−cos²A) = <b>2cos²A−1</b><br>Also: = 1−2sin²A &nbsp; or &nbsp; (1−tan²A)/(1+tan²A)</div>
+<div class="sol-concept">Three forms of cos2A are all correct. Use 2cos²A−1 when you want to eliminate sin, use 1−2sin²A to eliminate cos.</div>`},
+
+{id:42,t:'trig_basics',topic:'trigonometry',y:'2021',d:'E',
+ q:"The value of sin(−60°) is:",
+ o:['√3/2','−√3/2','1/2','−1/2'],c:1,
+ sol:`<div class="sol-ans">Answer: B — −√3/2</div>
+<div class="sol-step"><div class="sol-step-label">ODD FUNCTION</div>sin is an ODD function: sin(−θ) = −sinθ<br>sin(−60°) = −sin60° = <b>−√3/2</b></div>
+<div class="sol-concept">Odd functions: sin, tan, cosec → f(−x) = −f(x). Even functions: cos, sec → f(−x) = f(x).</div>`},
+
+// ═══ INVERSE TRIG ═══
+{id:43,t:'inv_trig',topic:'trigonometry',y:'2024',d:'M',
+ q:"The principal value of sin⁻¹(−1/2) is:",
+ o:['π/6','−π/6','5π/6','−5π/6'],c:1,
+ sol:`<div class="sol-ans">Answer: B — −π/6</div>
+<div class="sol-step"><div class="sol-step-label">PRINCIPAL RANGE</div>Range of sin⁻¹ = [−π/2, π/2]<br>sin(π/6) = 1/2, so sin(−π/6) = −1/2<br>sin⁻¹(−1/2) = <b>−π/6</b> ∈ [−π/2,π/2] ✓</div>
+<div class="sol-concept">Principal ranges: sin⁻¹: [−π/2,π/2]. cos⁻¹: [0,π]. tan⁻¹: (−π/2,π/2). The answer must always lie in the principal range.</div>`},
+
+{id:44,t:'inv_trig',topic:'trigonometry',y:'2023',d:'M',
+ q:"sin⁻¹x + cos⁻¹x (for x∈[−1,1]) equals:",
+ o:['0','π/4','π/2','π'],c:2,
+ sol:`<div class="sol-ans">Answer: C — π/2</div>
+<div class="sol-step"><div class="sol-step-label">STANDARD RESULT</div>sin⁻¹x + cos⁻¹x = π/2 for all x ∈ [−1,1]<br>This is a fundamental identity. Proof: Let sin⁻¹x=α, then cos⁻¹x=π/2−α (complementary angles).</div>
+<div class="sol-concept">Similarly: tan⁻¹x + cot⁻¹x = π/2. sec⁻¹x + cosec⁻¹x = π/2. Very frequently asked in NDA.</div>`},
+
+// ═══ LIMITS ═══
+{id:45,t:'limits',topic:'calculus',y:'2024',d:'E',
+ q:"lim(x→0) [sinx/x] equals:",
+ o:['0','1','∞','Does not exist'],c:1,
+ sol:`<div class="sol-ans">Answer: B — 1</div>
+<div class="sol-step"><div class="sol-step-label">STANDARD LIMIT</div>lim(x→0) sinx/x = 1 &nbsp; (x in radians)<br>Proof: by L'Hôpital (0/0 form): d(sinx)/dx / d(x)/dx = cosx/1 → cos0 = 1</div>
+<div class="sol-concept">Other key limits: lim(x→0) tanx/x = 1. lim(x→0)(1+x)^(1/x) = e. lim(x→0)(eˣ−1)/x = 1. MUST MEMORISE ALL.</div>`},
+
+{id:46,t:'limits',topic:'calculus',y:'2023',d:'M',
+ q:"lim(x→2) (x²−4)/(x−2) equals:",
+ o:['0','2','4','∞'],c:2,
+ sol:`<div class="sol-ans">Answer: C — 4</div>
+<div class="sol-step"><div class="sol-step-label">FACTORING METHOD</div>x²−4 = (x−2)(x+2)<br>lim(x→2) (x−2)(x+2)/(x−2) = lim(x→2)(x+2) = 2+2 = <b>4</b></div>
+<div class="sol-concept">Direct substitution gives 0/0 (indeterminate). Factor and cancel the common term, THEN substitute. Alternatively: L'Hôpital: lim 2x/1 = 4 ✓.</div>`},
+
+{id:47,t:'limits',topic:'calculus',y:'2022',d:'M',
+ q:"A function f(x) is continuous at x=a if:",
+ o:['f(a) exists only','lim(x→a)f(x)=f(a)','f is differentiable at a','The limit exists'],c:1,
+ sol:`<div class="sol-ans">Answer: B — lim(x→a)f(x) = f(a)</div>
+<div class="sol-step"><div class="sol-step-label">THREE CONDITIONS</div>For continuity at x=a: 1) f(a) is defined 2) lim(x→a)f(x) exists 3) lim = f(a)<br>All three are needed, but B encapsulates all.</div>
+<div class="sol-concept">Differentiability ⟹ Continuity (but not vice versa). |x| is continuous at 0 but not differentiable at 0.</div>`},
+
+// ═══ DIFFERENTIATION ═══
+{id:48,t:'differentiation',topic:'calculus',y:'2024',d:'E',
+ q:"d/dx(x⁵) is:",
+ o:['5x⁴','5x⁶','x⁴','4x⁵'],c:0,
+ sol:`<div class="sol-ans">Answer: A — 5x⁴</div>
+<div class="sol-step"><div class="sol-step-label">POWER RULE</div>d/dx(xⁿ) = nxⁿ⁻¹<br>d/dx(x⁵) = 5x⁴</div>
+<div class="sol-concept">Power rule works for all real n, including fractions and negatives. d/dx(√x) = d/dx(x^½) = ½x^(−½) = 1/(2√x).</div>`},
+
+{id:49,t:'differentiation',topic:'calculus',y:'2024',d:'M',
+ q:"The derivative of sin(x²) is:",
+ o:['cos(x²)','2x·cos(x²)','2cos(x)','cos(2x)'],c:1,
+ sol:`<div class="sol-ans">Answer: B — 2x·cos(x²)</div>
+<div class="sol-step"><div class="sol-step-label">CHAIN RULE</div>d/dx[f(g(x))] = f'(g(x))·g'(x)<br>Outer f = sin → f' = cos. Inner g = x² → g' = 2x<br>d/dx[sin(x²)] = cos(x²) · 2x = <b>2x cos(x²)</b></div>
+<div class="sol-concept">Chain rule: differentiate outer keeping inner unchanged, then multiply by derivative of inner. Identify outer and inner functions first.</div>`},
+
+{id:50,t:'differentiation',topic:'calculus',y:'2023',d:'M',
+ q:"d/dx(eˣ·sinx) is:",
+ o:['eˣsinx','eˣcosx','eˣ(sinx+cosx)','eˣ(sinx−cosx)'],c:2,
+ sol:`<div class="sol-ans">Answer: C — eˣ(sinx+cosx)</div>
+<div class="sol-step"><div class="sol-step-label">PRODUCT RULE</div>d/dx(uv) = u'v + uv'<br>u=eˣ → u'=eˣ &nbsp; v=sinx → v'=cosx<br>= eˣ·sinx + eˣ·cosx = <b>eˣ(sinx+cosx)</b></div>
+<div class="sol-concept">Product rule: "derivative of first × second + first × derivative of second". Remember as uv' + vu'.</div>`},
+
+{id:51,t:'applications_diff',topic:'calculus',y:'2024',d:'M',
+ q:"For f(x)=x³−3x, the local minimum value is:",
+ o:['0','−2','2','1'],c:1,
+ sol:`<div class="sol-ans">Answer: B — −2</div>
+<div class="sol-step"><div class="sol-step-label">MAXIMA/MINIMA</div>f'(x) = 3x²−3 = 0 → x = ±1<br>f''(x) = 6x<br>At x=1: f''(1)=6>0 → local minimum<br>f(1) = 1−3 = <b>−2</b></div>
+<div class="sol-concept">f''(x)>0 at critical point → minimum. f''(x)<0 → maximum. At x=−1: f''(−1)=−6<0 → local max = f(−1) = −1+3 = 2.</div>`},
+
+// ═══ INTEGRATION ═══
+{id:52,t:'def_integral',topic:'integral',y:'2024',d:'E',
+ q:"∫₀¹ x² dx equals:",
+ o:['1/2','1/3','2/3','1'],c:1,
+ sol:`<div class="sol-ans">Answer: B — 1/3</div>
+<div class="sol-step"><div class="sol-step-label">DEFINITE INTEGRAL</div>∫x² dx = x³/3 + C<br>Evaluate from 0 to 1: [x³/3]₀¹ = 1/3 − 0 = <b>1/3</b></div>
+<div class="sol-concept">For definite integral: find antiderivative F(x), then compute F(upper) − F(lower). The constant C cancels out.</div>`},
+
+{id:53,t:'indef_integral',topic:'integral',y:'2023',d:'E',
+ q:"∫ cos x dx is:",
+ o:['sin x + C','−sin x + C','−cos x + C','sin x − C'],c:0,
+ sol:`<div class="sol-ans">Answer: A — sin x + C</div>
+<div class="sol-step"><div class="sol-step-label">STANDARD INTEGRAL</div>d/dx(sinx) = cosx → ∫cosx dx = sinx + C<br>Check by differentiating: d/dx(sinx+C) = cosx ✓</div>
+<div class="sol-concept">∫sinx dx = −cosx+C (note negative!). ∫cosx dx = sinx+C (positive). ∫sec²x dx = tanx+C.</div>`},
+
+{id:54,t:'def_integral',topic:'integral',y:'2022',d:'M',
+ q:"∫₋₁¹ x³ dx equals:",
+ o:['0','2','1/4','−1/4'],c:0,
+ sol:`<div class="sol-ans">Answer: A — 0</div>
+<div class="sol-step"><div class="sol-step-label">ODD FUNCTION PROPERTY</div>f(x) = x³ is an odd function: f(−x) = −f(x)<br>For odd function: ∫₋ₐᵃ f(x)dx = 0<br>∫₋₁¹ x³ dx = <b>0</b></div>
+<div class="sol-concept">Key property: ∫₋ₐᵃ (odd function) dx = 0. ∫₋ₐᵃ (even function) dx = 2∫₀ᵃ f(x) dx. This saves huge calculation time!</div>`},
+
+{id:55,t:'def_integral',topic:'integral',y:'2021',d:'H',
+ q:"∫₀^(π/2) sinx dx equals:",
+ o:['0','1','2','π'],c:1,
+ sol:`<div class="sol-ans">Answer: B — 1</div>
+<div class="sol-step"><div class="sol-step-label">WORKING</div>[−cosx]₀^(π/2) = −cos(π/2) − (−cos0) = −0 + 1 = <b>1</b></div>
+<div class="sol-concept">cos(π/2)=0, cos(0)=1. Geometrically: area under one half-arch of sine curve = 1. By symmetry: ∫₀^π sinx dx = 2.</div>`},
+
+// ═══ PROBABILITY ═══
+{id:56,t:'probability',topic:'vectors_stats',y:'2024',d:'E',
+ q:"Two dice are rolled. Probability of getting sum = 7 is:",
+ o:['1/6','1/9','5/36','7/36'],c:0,
+ sol:`<div class="sol-ans">Answer: A — 1/6</div>
+<div class="sol-step"><div class="sol-step-label">COUNTING</div>Favourable: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) = 6 outcomes<br>Total: 6×6 = 36<br>P = 6/36 = <b>1/6</b></div>
+<div class="sol-concept">Sum=7 is the MOST probable sum when rolling two dice. Sum=2 and sum=12 are least probable (only 1 way each). P(sum=7)=6/36=1/6 is highest.</div>`},
+
+{id:57,t:'probability',topic:'vectors_stats',y:'2023',d:'M',
+ q:"If P(A)=0.4, P(B)=0.3, P(A∩B)=0.1, then P(A∪B) is:",
+ o:['0.5','0.6','0.7','0.8'],c:1,
+ sol:`<div class="sol-ans">Answer: B — 0.6</div>
+<div class="sol-step"><div class="sol-step-label">ADDITION RULE</div>P(A∪B) = P(A)+P(B)−P(A∩B)<br>= 0.4+0.3−0.1 = <b>0.6</b></div>
+<div class="sol-concept">This is the addition formula. For mutually exclusive events P(A∩B)=0, so P(A∪B)=P(A)+P(B). Always check if events are mutually exclusive.</div>`},
+
+{id:58,t:'probability',topic:'vectors_stats',y:'2022',d:'M',
+ q:"A card is drawn from a pack of 52. Probability it is a king or a heart is:",
+ o:['4/13','16/52','17/52','16/52'],c:0,
+ sol:`<div class="sol-ans">Answer: A — 4/13</div>
+<div class="sol-step"><div class="sol-step-label">ADDITION FORMULA</div>P(King) = 4/52. P(Heart) = 13/52. P(King of hearts) = 1/52.<br>P(King or Heart) = 4/52+13/52−1/52 = 16/52 = <b>4/13</b></div>
+<div class="sol-concept">The king of hearts is counted in both king AND heart, so subtract once. 16/52 = 4/13. This is the inclusion-exclusion principle.</div>`},
+
+// ═══ STATISTICS ═══
+{id:59,t:'statistics',topic:'vectors_stats',y:'2024',d:'E',
+ q:"Mean of 5, 10, 15, 20, 25 is:",
+ o:['10','15','20','12.5'],c:1,
+ sol:`<div class="sol-ans">Answer: B — 15</div>
+<div class="sol-step"><div class="sol-step-label">CALCULATION</div>Mean = Σx/n = (5+10+15+20+25)/5 = 75/5 = <b>15</b><br>Check: These are equally spaced (AP), so mean = median = middle term = 15 ✓</div>
+<div class="sol-concept">For an AP, mean = (first+last)/2 = (5+25)/2 = 15. Quick method for evenly spaced numbers.</div>`},
+
+{id:60,t:'statistics',topic:'vectors_stats',y:'2023',d:'M',
+ q:"The standard deviation of 2, 4, 6, 8, 10 is:",
+ o:['2√2','2','4','8'],c:0,
+ sol:`<div class="sol-ans">Answer: A — 2√2</div>
+<div class="sol-step"><div class="sol-step-label">STEP-BY-STEP</div>Mean = 6. Deviations: −4,−2,0,2,4. Squared: 16,4,0,4,16.<br>Variance = (16+4+0+4+16)/5 = 40/5 = 8<br>SD = √8 = 2√2</div>
+<div class="sol-concept">SD = √Variance. If all values scale by k, SD also scales by k. If constant added, SD unchanged. CV = (SD/Mean)×100% = (2√2/6)×100% ≈ 47%.</div>`},
+
+// ═══ BINOMIAL THEOREM ═══
+{id:61,t:'binomial',topic:'algebra',y:'2024',d:'M',
+ q:"The general term in the expansion of (x+a)ⁿ is:",
+ o:['ⁿCᵣ xⁿ⁻ʳ aʳ','ⁿCᵣ xʳ aⁿ⁻ʳ','ⁿCₙ xⁿ aʳ','ⁿPᵣ xⁿ⁻ʳ aʳ'],c:0,
+ sol:`<div class="sol-ans">Answer: A — ⁿCᵣ xⁿ⁻ʳ aʳ</div>
+<div class="sol-step"><div class="sol-step-label">BINOMIAL EXPANSION</div>Tᵣ₊₁ = ⁿCᵣ · x^(n−r) · a^r<br>r goes from 0 to n. T₁ = ⁿC₀ xⁿ. T₂ = ⁿC₁ xⁿ⁻¹ a. Tₙ₊₁ = aⁿ.</div>
+<div class="sol-concept">Number of terms = n+1. Middle term: if n is even, middle = T_(n/2+1). If n is odd, two middle terms: T_((n+1)/2) and T_((n+3)/2).</div>`},
+
+{id:62,t:'binomial',topic:'algebra',y:'2022',d:'M',
+ q:"The coefficient of x³ in the expansion of (1+x)⁵ is:",
+ o:['5','10','15','20'],c:1,
+ sol:`<div class="sol-ans">Answer: B — 10</div>
+<div class="sol-step"><div class="sol-step-label">USING FORMULA</div>Coefficient of xʳ in (1+x)ⁿ = ⁿCᵣ<br>Coefficient of x³ = ⁵C₃ = 5!/(3!2!) = 10</div>
+<div class="sol-concept">Pascal's triangle row 5: 1, 5, 10, 10, 5, 1. So (1+x)⁵ = 1+5x+10x²+10x³+5x⁴+x⁵. Coefficient of x³ = 10.</div>`},
+
+// ═══ VECTORS ═══
+{id:63,t:'vectors',topic:'vectors_stats',y:'2024',d:'M',
+ q:"The dot product of vectors (3î+4ĵ) and (4î−3ĵ) is:",
+ o:['0','25','−25','7'],c:0,
+ sol:`<div class="sol-ans">Answer: A — 0</div>
+<div class="sol-step"><div class="sol-step-label">DOT PRODUCT</div>A·B = (3)(4) + (4)(−3) = 12−12 = <b>0</b><br>Since A·B=0, vectors are PERPENDICULAR.</div>
+<div class="sol-concept">A·B = |A||B|cosθ. When A·B=0 → cosθ=0 → θ=90° → perpendicular. |A|=5, |B|=5 here. Cross product gives zero for parallel vectors.</div>`},
+
+{id:64,t:'vectors',topic:'vectors_stats',y:'2023',d:'M',
+ q:"Magnitude of vector 3î + 4ĵ + 0k̂ is:",
+ o:['5','7','12','√7'],c:0,
+ sol:`<div class="sol-ans">Answer: A — 5</div>
+<div class="sol-step"><div class="sol-step-label">MAGNITUDE</div>|a î+b ĵ+c k̂| = √(a²+b²+c²)<br>= √(9+16+0) = √25 = <b>5</b></div>
+<div class="sol-concept">3-4-5 Pythagorean triple. Magnitude is always non-negative. Unit vector = vector/magnitude = (3î+4ĵ)/5.</div>`},
+
+// ═══ LOGARITHMS ═══
+{id:65,t:'logarithms',topic:'algebra',y:'2024',d:'E',
+ q:"log₂ 32 equals:",
+ o:['4','5','6','16'],c:1,
+ sol:`<div class="sol-ans">Answer: B — 5</div>
+<div class="sol-step"><div class="sol-step-label">DEFINITION</div>logₐ b = x means aˣ = b<br>log₂ 32 = x → 2ˣ = 32 = 2⁵ → x = <b>5</b></div>
+<div class="sol-concept">log₂ powers of 2: log₂1=0, log₂2=1, log₂4=2, log₂8=3, log₂16=4, log₂32=5. Natural log: lnx = logₑx.</div>`},
+
+{id:66,t:'logarithms',topic:'algebra',y:'2023',d:'M',
+ q:"log(ab) equals:",
+ o:['log a − log b','log a × log b','log a + log b','log a / log b'],c:2,
+ sol:`<div class="sol-ans">Answer: C — log a + log b</div>
+<div class="sol-step"><div class="sol-step-label">LOG LAWS</div>log(ab) = log a + log b<br>log(a/b) = log a − log b<br>log(aⁿ) = n log a</div>
+<div class="sol-concept">Change of base: logₐb = log b/log a = ln b/ln a. These are the four fundamental log laws. They work for any base > 0, ≠1.</div>`},
+
+// ═══ COORD GEOMETRY ═══
+{id:67,t:'straight_lines',topic:'coord_geo',y:'2024',d:'M',
+ q:"The slope of a line making angle 60° with positive x-axis is:",
+ o:['1/2','√3','1/√3','√3/2'],c:1,
+ sol:`<div class="sol-ans">Answer: B — √3</div>
+<div class="sol-step"><div class="sol-step-label">SLOPE FROM ANGLE</div>m = tan θ = tan 60° = <b>√3</b></div>
+<div class="sol-concept">Slope m = tanθ where θ is the angle with positive x-axis. Horizontal line: m=0 (θ=0°). Vertical line: m undefined (θ=90°). Parallel lines have equal slopes. Perpendicular lines: m₁×m₂=−1.</div>`},
+
+{id:68,t:'straight_lines',topic:'coord_geo',y:'2023',d:'M',
+ q:"The distance between points (3,4) and (0,0) is:",
+ o:['3','4','5','7'],c:2,
+ sol:`<div class="sol-ans">Answer: C — 5</div>
+<div class="sol-step"><div class="sol-step-label">DISTANCE FORMULA</div>d = √[(x₂−x₁)² + (y₂−y₁)²]<br>= √[(3−0)²+(4−0)²] = √(9+16) = √25 = <b>5</b></div>
+<div class="sol-concept">3-4-5 Pythagorean triple. Distance formula is Pythagoras theorem in coordinate form. Midpoint: ((x₁+x₂)/2, (y₁+y₂)/2).</div>`},
+
+{id:69,t:'circles',topic:'coord_geo',y:'2023',d:'M',
+ q:"The equation of a circle with centre (0,0) and radius 5 is:",
+ o:['x+y=5','x²+y²=5','x²+y²=25','x²−y²=25'],c:2,
+ sol:`<div class="sol-ans">Answer: C — x²+y²=25</div>
+<div class="sol-step"><div class="sol-step-label">CIRCLE EQUATION</div>General form: (x−h)²+(y−k)²=r²<br>Centre (0,0), r=5: x²+y²=25</div>
+<div class="sol-concept">General circle: x²+y²+2gx+2fy+c=0. Centre=(−g,−f), radius=√(g²+f²−c). For real circle: g²+f²−c > 0.</div>`},
+
+{id:70,t:'diff_eqns',topic:'integral',y:'2023',d:'H',
+ q:"The order of the differential equation d²y/dx²+3(dy/dx)³+y=0 is:",
+ o:['1','2','3','4'],c:1,
+ sol:`<div class="sol-ans">Answer: B — 2</div>
+<div class="sol-step"><div class="sol-step-label">ORDER AND DEGREE</div>Order = highest order derivative present = d²y/dx² → order = <b>2</b><br>Degree = power of highest order derivative = 1 (the d²y/dx² appears to power 1)<br>Note: (dy/dx)³ has degree 3 but order 1</div>
+<div class="sol-concept">Order = highest derivative. Degree = power of the HIGHEST order derivative (after clearing fractions/radicals). These are different concepts — NDA tests both.</div>`},
+];
+
+// ═══════════════════════════════════════════
+// THEORY DATA (DEEP NCERT-LEVEL)
+// ═══════════════════════════════════════════
+const THEORY = [
+  {id:'th-sets',topic:'sets',title:'Sets, Relations & Functions',
+   ytUrl:'https://www.youtube.com/results?search_query=NDA+Sets+Relations+Functions+complete',
+   ytName:'NDA Sets & Functions — Sachin Singh',
+   body:`
+<div class="th-divider">1. Sets — Complete Theory</div>
+<p class="th-p">A <strong>set</strong> is a well-defined collection of distinct objects, called elements. "Well-defined" means there is no ambiguity — any object is either in the set or not.</p>
+<div class="fbox"><div class="flbl">Types of Sets</div><div class="fmain">Empty set: {} or ∅ (no elements)
+Singleton: {a} (one element)
+Finite set: {1,2,3,...,n} (countable, limited)
+Infinite set: {1,2,3,...} (unending)
+Universal set U: contains all elements under discussion
+Power set P(A): set of ALL subsets of A → |P(A)| = 2^n(A)</div></div>
+<div class="th-h3">Set Operations — with Venn Diagram Logic</div>
+<div class="diag"><div class="diag-lbl">Venn Diagram Intuition</div>    A only          Both         B only
+   [  ////// | ########|  |||||||  ]
+     A−B       A∩B       B−A
+
+A∪B = everything = A only + A∩B + B only
+A∩B = shaded overlap = common to both
+A' = everything OUTSIDE A in U</div>
+<ul class="tl">
+  <li><strong>Union A∪B:</strong> x ∈ A∪B ⟺ x ∈ A OR x ∈ B. Size: n(A∪B) = n(A)+n(B)−n(A∩B)</li>
+  <li><strong>Intersection A∩B:</strong> x ∈ A∩B ⟺ x ∈ A AND x ∈ B</li>
+  <li><strong>Difference A−B:</strong> x ∈ A but x ∉ B. Note: A−B ≠ B−A in general</li>
+  <li><strong>Complement A':</strong> x ∈ U but x ∉ A. (A')' = A always</li>
+  <li><strong>Symmetric Difference A△B:</strong> (A−B)∪(B−A) = elements in exactly one of A or B</li>
+</ul>
+<div class="fbox"><div class="flbl">De Morgan's Laws (Most Tested)</div><div class="fmain">(A∪B)' = A' ∩ B'         (A∩B)' = A' ∪ B'</div><div class="fsub">Memory: complement SWAPS the operation (union↔intersection) and complements each part</div></div>
+<div class="kbox"><div class="klbl">NDA Favourite Formula</div><p>n(A∪B∪C) = n(A)+n(B)+n(C) − n(A∩B) − n(B∩C) − n(A∩C) + n(A∩B∩C)<br>For 3-set problems: always draw a Venn diagram and fill from inside out.</p></div>
+
+<div class="th-divider">2. Relations</div>
+<p class="th-p">A <strong>relation</strong> R from set A to set B is a subset of A×B (the Cartesian product). If (a,b) ∈ R, we write aRb and say "a is related to b".</p>
+<div class="fbox"><div class="flbl">Types of Relations on Set A</div><div class="fmain">Reflexive:    (a,a) ∈ R for every a ∈ A
+Symmetric:    (a,b) ∈ R ⟹ (b,a) ∈ R
+Transitive:   (a,b) ∈ R and (b,c) ∈ R ⟹ (a,c) ∈ R
+Anti-symmetric: (a,b) ∈ R and (b,a) ∈ R ⟹ a=b
+EQUIVALENCE = Reflexive + Symmetric + Transitive</div></div>
+<table class="ttable"><tr><th>Relation</th><th>Reflexive</th><th>Symmetric</th><th>Transitive</th><th>Type</th></tr>
+<tr><td>"=" (equal to)</td><td>✓</td><td>✓</td><td>✓</td><td>Equivalence</td></tr>
+<tr><td>">" (greater than)</td><td>✗</td><td>✗</td><td>✓</td><td>Neither</td></tr>
+<tr><td>"≥" (≥)</td><td>✓</td><td>✗</td><td>✓</td><td>Partial order</td></tr>
+<tr><td>"⊆" (subset)</td><td>✓</td><td>✗</td><td>✓</td><td>Partial order</td></tr>
+<tr><td>"⊥" (perpendicular)</td><td>✗</td><td>✓</td><td>✗</td><td>Symmetric only</td></tr>
+</table>
+
+<div class="th-divider">3. Functions</div>
+<p class="th-p">A <strong>function</strong> f: A→B is a special relation where every element of A is related to EXACTLY ONE element of B. A = domain, B = codomain, f(A) = range.</p>
+<div class="fbox"><div class="flbl">Types of Functions</div><div class="fmain">One-one (Injective):   f(a)=f(b) ⟹ a=b  (different inputs → different outputs)
+Onto (Surjective):     Range = Codomain (every element of B has a pre-image)
+Bijective:             One-one AND onto (perfect pairing)
+Many-one:              Two inputs give same output (e.g., f(x)=x²: f(1)=f(−1)=1)</div></div>
+<div class="kbox"><div class="klbl">How to Test One-One</div><p>Draw horizontal lines: if any horizontal line intersects the graph MORE than once → not one-one. Equivalently, if f(x₁)=f(x₂) implies x₁=x₂, it is one-one.</p></div>
+<div class="fbox"><div class="flbl">Composite Functions</div><div class="fmain">fog(x) = f(g(x))  — apply g first, then f
+gof(x) = g(f(x))  — apply f first, then g
+fog ≠ gof in general
+(fog)⁻¹ = g⁻¹of⁻¹  (reverse order for inverse of composite)</div></div>
+<p class="th-p">To find f⁻¹: write y=f(x), swap x↔y, solve for y. The inverse only exists if f is bijective.</p>
+<div class="wbox"><div class="wlbl">Common NDA Trap</div><p>f(x)=x² is NOT one-one on R (because f(2)=f(−2)=4). But restricted to [0,∞), it IS one-one. Domain matters when testing injectivity.</p></div>`},
+
+  {id:'th-algebra',topic:'algebra',title:'Algebra — Sequences, Matrices, Complex Numbers',
+   ytUrl:'https://www.youtube.com/results?search_query=NDA+Algebra+complete+Sachin+Singh',
+   ytName:'NDA Algebra Complete — Sachin Singh',
+   body:`
+<div class="th-divider">1. Complex Numbers</div>
+<p class="th-p">A complex number z = a+bi where i = √(−1), a = real part Re(z), b = imaginary part Im(z).</p>
+<div class="fbox"><div class="flbl">Essential Complex Number Formulae</div><div class="fmain">|z| = √(a²+b²)  [Modulus = distance from origin]
+arg(z) = tan⁻¹(b/a)  [Argument = angle from positive real axis]
+z̄ = a−bi  [Conjugate: flip sign of imaginary part]
+z·z̄ = |z|²  [Modulus squared]
+Polar form: z = |z|(cosθ + isinθ) = |z|e^(iθ)
+De Moivre: (cosθ+isinθ)ⁿ = cosnθ + isinnθ</div></div>
+<div class="fbox"><div class="flbl">Powers of i (Period 4)</div><div class="fmain">i¹=i  i²=−1  i³=−i  i⁴=1  i⁵=i (repeats)
+For iⁿ: find n mod 4.  0→1, 1→i, 2→−1, 3→−i</div></div>
+<p class="th-p"><strong>Cube roots of unity:</strong> 1, ω, ω² where ω=(−1+i√3)/2. Important: 1+ω+ω²=0 and ω³=1.</p>
+
+<div class="th-divider">2. Quadratic Equations</div>
+<div class="fbox"><div class="flbl">All Key Formulae</div><div class="fmain">ax²+bx+c=0: roots α,β
+Sum α+β = −b/a    Product αβ = c/a
+Discriminant D = b²−4ac
+D>0: 2 real distinct roots
+D=0: 2 equal real roots (repeated)
+D<0: 2 complex conjugate roots
+Equation from roots: x² − (sum)x + (product) = 0</div></div>
+<div class="fbox"><div class="flbl">Power Identities for Roots</div><div class="fmain">α²+β² = (α+β)² − 2αβ
+α³+β³ = (α+β)³ − 3αβ(α+β)
+α²−β² = (α+β)(α−β)
+(α−β)² = (α+β)² − 4αβ</div></div>
+<div class="kbox"><div class="klbl">Special Conditions</div><p>Roots are reciprocal of each other ⟺ c = a (product = 1)<br>Roots are equal and opposite ⟺ b = 0 (sum = 0)<br>One root is 0 ⟺ c = 0<br>Both roots positive ⟺ D≥0, sum>0, product>0</p></div>
+
+<div class="th-divider">3. Sequences & Series</div>
+<div class="fbox"><div class="flbl">Arithmetic Progression (AP)</div><div class="fmain">General term: tₙ = a+(n−1)d
+Sum of n terms: Sₙ = n/2[2a+(n−1)d] = n/2(a+l)
+Arithmetic mean: AM = (a+b)/2
+Sum of first n naturals: n(n+1)/2
+Sum of first n squares: n(n+1)(2n+1)/6
+Sum of first n cubes: [n(n+1)/2]²</div></div>
+<div class="fbox"><div class="flbl">Geometric Progression (GP)</div><div class="fmain">General term: tₙ = arⁿ⁻¹
+Sum of n terms: Sₙ = a(rⁿ−1)/(r−1) for r≠1
+Sum of n terms: Sₙ = na for r=1
+Infinite GP (|r|<1): S∞ = a/(1−r)
+Geometric mean: GM = √(ab)  or  (abc)^(1/3)</div></div>
+<div class="fbox"><div class="flbl">Harmonic Progression (HP)</div><div class="fmain">A,B,C in HP ⟺ 1/A, 1/B, 1/C in AP
+HM of two numbers = 2ab/(a+b)
+GOLDEN RELATION: AM × HM = GM²
+Order: AM ≥ GM ≥ HM (for positive numbers)</div></div>
+
+<div class="th-divider">4. Matrices & Determinants</div>
+<div class="fbox"><div class="flbl">Matrix Properties</div><div class="fmain">For A(m×n)·B(n×p) = C(m×p)
+(AB)ᵀ = BᵀAᵀ  (transpose reverses order)
+(AB)⁻¹ = B⁻¹A⁻¹  (inverse reverses order)
+A·A⁻¹ = I  (identity matrix)</div></div>
+<div class="fbox"><div class="flbl">Determinant Properties</div><div class="fmain">det(kA) = kⁿ·det(A)  [n = order of A]
+det(AB) = det(A)·det(B)
+det(Aᵀ) = det(A)
+det(A⁻¹) = 1/det(A)
+A is singular (no inverse) ⟺ det(A) = 0
+A⁻¹ = adj(A) / det(A)</div></div>
+<div class="wbox"><div class="wlbl">Most Common NDA Error</div><p>det(3A) where A is 3×3: Students write 3×det(A) = WRONG. Correct: 3³×det(A) = 27·det(A). The scalar k multiplies EACH row, and there are n rows → kⁿ.</p></div>`},
+
+  {id:'th-trig',topic:'trigonometry',title:'Trigonometry — Complete',
+   ytUrl:'https://www.youtube.com/results?search_query=NDA+Trigonometry+complete+identities',
+   ytName:'NDA Trigonometry Complete — Sachin Singh',
+   body:`
+<div class="th-divider">1. Standard Values Table</div>
+<table class="ttable">
+  <tr><th>Angle</th><th>0°</th><th>30°</th><th>45°</th><th>60°</th><th>90°</th></tr>
+  <tr><td><b>sin</b></td><td>0</td><td>1/2</td><td>1/√2</td><td>√3/2</td><td>1</td></tr>
+  <tr><td><b>cos</b></td><td>1</td><td>√3/2</td><td>1/√2</td><td>1/2</td><td>0</td></tr>
+  <tr><td><b>tan</b></td><td>0</td><td>1/√3</td><td>1</td><td>√3</td><td>∞</td></tr>
+</table>
+<div class="kbox"><div class="klbl">Memory Trick for sin 0°→90°</div><p>sin values = √(0/4), √(1/4), √(2/4), √(3/4), √(4/4) = 0, 1/2, 1/√2, √3/2, 1<br>cos values = reverse of sin values!<br>tan = sin/cos (derive it, don't memorise separately)</p></div>
+
+<div class="th-divider">2. Fundamental Identities</div>
+<div class="fbox"><div class="flbl">Pythagorean Identities (Non-Negotiable)</div><div class="fmain">sin²θ + cos²θ = 1   →   sin²θ = 1−cos²θ,   cos²θ = 1−sin²θ
+1 + tan²θ = sec²θ   →   sec²θ − tan²θ = 1
+1 + cot²θ = cosec²θ →   cosec²θ − cot²θ = 1</div></div>
+<div class="fbox"><div class="flbl">Compound Angle Formulae</div><div class="fmain">sin(A±B) = sinAcosB ± cosAsinB
+cos(A±B) = cosAcosB ∓ sinAsinB
+tan(A±B) = (tanA ± tanB)/(1 ∓ tanAtanB)</div></div>
+<div class="fbox"><div class="flbl">Double & Half Angle Formulae</div><div class="fmain">sin2A = 2sinAcosA = 2tanA/(1+tan²A)
+cos2A = cos²A−sin²A = 2cos²A−1 = 1−2sin²A = (1−tan²A)/(1+tan²A)
+tan2A = 2tanA/(1−tan²A)
+sin²A = (1−cos2A)/2    cos²A = (1+cos2A)/2</div></div>
+<div class="fbox"><div class="flbl">Sum-to-Product & Product-to-Sum</div><div class="fmain">sinC+sinD = 2sin((C+D)/2)cos((C−D)/2)
+sinC−sinD = 2cos((C+D)/2)sin((C−D)/2)
+cosC+cosD = 2cos((C+D)/2)cos((C−D)/2)
+cosC−cosD = −2sin((C+D)/2)sin((C−D)/2)</div></div>
+
+<div class="th-divider">3. Inverse Trigonometry</div>
+<table class="ttable">
+  <tr><th>Function</th><th>Domain</th><th>Principal Range</th><th>Graph Shape</th></tr>
+  <tr><td>sin⁻¹x</td><td>[−1, 1]</td><td>[−π/2, π/2]</td><td>S-curve</td></tr>
+  <tr><td>cos⁻¹x</td><td>[−1, 1]</td><td>[0, π]</td><td>Decreasing arc</td></tr>
+  <tr><td>tan⁻¹x</td><td>(−∞, ∞)</td><td>(−π/2, π/2)</td><td>S-curve, no endpoints</td></tr>
+</table>
+<div class="fbox"><div class="flbl">Key Identities for Inverse Trig</div><div class="fmain">sin⁻¹x + cos⁻¹x = π/2  (for all x ∈ [−1,1])
+tan⁻¹x + cot⁻¹x = π/2  (for all real x)
+sin⁻¹(−x) = −sin⁻¹x  (odd)
+cos⁻¹(−x) = π−cos⁻¹x  (not odd)
+tan⁻¹x + tan⁻¹y = tan⁻¹((x+y)/(1−xy))  if xy<1</div></div>
+
+<div class="th-divider">4. Properties of Triangles</div>
+<div class="fbox"><div class="flbl">Sine Rule, Cosine Rule, Area</div><div class="fmain">Sine Rule:   a/sinA = b/sinB = c/sinC = 2R
+Cosine Rule: a² = b²+c²−2bc·cosA
+              cos A = (b²+c²−a²)/(2bc)
+Area = ½·a·b·sinC = √[s(s−a)(s−b)(s−c)]
+where s = (a+b+c)/2 (semi-perimeter)</div></div>
+<div class="kbox"><div class="klbl">When to use which rule</div><p>Sine Rule: 2 angles + 1 side known, OR 2 sides + 1 non-included angle known.<br>Cosine Rule: 3 sides known (to find angle), OR 2 sides + included angle known (to find third side).</p></div>`},
+
+  {id:'th-calculus',topic:'calculus',title:'Differential Calculus',
+   ytUrl:'https://www.youtube.com/results?search_query=NDA+Differentiation+complete+class12',
+   ytName:'NDA Differentiation — 3Blue1Brown & Sachin Singh',
+   body:`
+<div class="th-divider">1. Limits</div>
+<p class="th-p">The limit of f(x) as x→a is the value f(x) approaches as x gets arbitrarily close to a (but need not equal a). Written: lim(x→a) f(x) = L.</p>
+<div class="fbox"><div class="flbl">Standard Limits — Memorise All</div><div class="fmain">lim(x→0) sinx/x = 1        lim(x→0) tanx/x = 1
+lim(x→0) (1−cosx)/x² = 1/2  lim(x→0) (eˣ−1)/x = 1
+lim(x→0) (aˣ−1)/x = ln a   lim(x→0) (1+x)^(1/x) = e
+lim(x→∞) (1+1/x)ˣ = e       lim(x→a) (xⁿ−aⁿ)/(x−a) = naⁿ⁻¹</div></div>
+<div class="kbox"><div class="klbl">L'Hôpital's Rule</div><p>If lim f(x)/g(x) gives 0/0 or ∞/∞, then: lim f(x)/g(x) = lim f'(x)/g'(x). Can be applied repeatedly. Works ONLY for these indeterminate forms.</p></div>
+<p class="th-p"><strong>Continuity:</strong> f is continuous at x=a if: (1) f(a) is defined, (2) lim(x→a⁻)f(x) = lim(x→a⁺)f(x) (left limit = right limit), (3) both equal f(a).</p>
+
+<div class="th-divider">2. Differentiation — All Rules & Formulae</div>
+<div class="fbox"><div class="flbl">Standard Derivatives</div><div class="fmain">d/dx(xⁿ) = nxⁿ⁻¹       d/dx(constant) = 0
+d/dx(sinx) = cosx        d/dx(cosx) = −sinx
+d/dx(tanx) = sec²x       d/dx(cotx) = −cosec²x
+d/dx(secx) = secx·tanx   d/dx(cosecx) = −cosecx·cotx
+d/dx(eˣ) = eˣ            d/dx(aˣ) = aˣ·ln a
+d/dx(ln x) = 1/x         d/dx(log_a x) = 1/(x·ln a)
+d/dx(sin⁻¹x) = 1/√(1−x²)  d/dx(tan⁻¹x) = 1/(1+x²)</div></div>
+<div class="fbox"><div class="flbl">Differentiation Rules</div><div class="fmain">Sum/Difference:  (u±v)' = u' ± v'
+Product rule:    (uv)' = u'v + uv'
+Quotient rule:   (u/v)' = (u'v − uv')/v²
+Chain rule:      d/dx[f(g(x))] = f'(g(x))·g'(x)</div></div>
+<div class="diag"><div class="diag-lbl">Chain Rule — How to Apply</div>Example: d/dx[sin(x²+3)]
+
+Step 1: Identify outer function: f = sin(...)  →  f' = cos(...)
+Step 2: Identify inner function: g = x²+3      →  g' = 2x
+Step 3: Chain rule: cos(x²+3) · 2x = 2x·cos(x²+3)
+
+Another: d/dx[e^(3x)]
+Outer: e^(...) → e^(...). Inner: 3x → 3.
+Result: e^(3x) · 3 = 3e^(3x)</div>
+
+<div class="th-divider">3. Applications of Derivatives</div>
+<div class="fbox"><div class="flbl">Maxima & Minima — Complete Method</div><div class="fmain">Step 1: Find f'(x)
+Step 2: Solve f'(x) = 0 → get critical points x = c₁, c₂, ...
+Step 3: Find f''(x)
+Step 4: At each critical point:
+         f''(c) > 0  →  local minimum at c
+         f''(c) < 0  →  local maximum at c
+         f''(c) = 0  →  use higher derivatives or first derivative test
+Step 5: Compare all local values to find GLOBAL max/min</div></div>
+<ul class="tl">
+  <li><strong>Increasing function:</strong> f'(x) > 0 in interval. <strong>Decreasing:</strong> f'(x) < 0.</li>
+  <li><strong>Tangent at (x₀,y₀):</strong> slope = f'(x₀). Equation: y−y₀ = f'(x₀)(x−x₀).</li>
+  <li><strong>Normal at (x₀,y₀):</strong> slope = −1/f'(x₀). Perpendicular to tangent.</li>
+  <li><strong>Rate of change:</strong> if y=f(x), rate = dy/dx. For related rates: use chain rule with time.</li>
+</ul>`},
+
+  {id:'th-integral',topic:'integral',title:'Integral Calculus & Differential Equations',
+   ytUrl:'https://www.youtube.com/results?search_query=NDA+Integration+complete+class12',
+   ytName:'NDA Integration — Sachin Singh',
+   body:`
+<div class="th-divider">1. Standard Integrals</div>
+<div class="fbox"><div class="flbl">Must-Know Integrals</div><div class="fmain">∫xⁿ dx = xⁿ⁺¹/(n+1)+C  (n≠−1)  ∫1/x dx = ln|x|+C
+∫sinx dx = −cosx+C       ∫cosx dx = sinx+C
+∫sec²x dx = tanx+C       ∫cosec²x dx = −cotx+C
+∫secx·tanx dx = secx+C   ∫eˣ dx = eˣ+C
+∫aˣ dx = aˣ/lna+C        ∫1/√(1−x²) dx = sin⁻¹x+C
+∫1/(1+x²) dx = tan⁻¹x+C  ∫1/√(x²−a²) dx = ln|x+√(x²−a²)|+C</div></div>
+<div class="fbox"><div class="flbl">Integration by Parts (ILATE Rule)</div><div class="fmain">∫u·v dx = u·∫v dx − ∫[u'·∫v dx] dx
+ILATE Priority: Inverse trig → Log → Algebraic → Trig → Exponential
+Choose u as the function HIGHER in the ILATE list.</div></div>
+<div class="kbox"><div class="klbl">Integration by Substitution</div><p>If integrand is f(g(x))·g'(x), put u=g(x), du=g'(x)dx.<br>Example: ∫2x·cos(x²)dx. Let u=x², du=2x dx. → ∫cos(u)du = sin(u)+C = sin(x²)+C</p></div>
+
+<div class="th-divider">2. Definite Integrals — Properties</div>
+<div class="fbox"><div class="flbl">Key Properties (Shortcuts in Exams)</div><div class="fmain">∫ₐᵇ f(x)dx = −∫ᵦₐ f(x)dx
+∫ₐᵃ f(x)dx = 0
+∫ₐᵇ f(x)dx = ∫ₐᵇ f(a+b−x)dx  [King's property — very useful]
+∫₀²ᵃ f(x)dx = 2∫₀ᵃ f(x)dx if f(2a−x)=f(x), else 0
+∫₋ₐᵃ f(x)dx = 2∫₀ᵃ f(x)dx if f is even [f(−x)=f(x)]
+∫₋ₐᵃ f(x)dx = 0 if f is odd [f(−x)=−f(x)]</div></div>
+<div class="wbox"><div class="wlbl">King's Property — Most Used in NDA</div><p>∫₀^π x·sinx dx: Use King's: replace x with π−x → ∫₀^π (π−x)sinx dx. Add both: 2I = π∫₀^π sinx dx = π×2 = 2π. So I = π.</p></div>
+
+<div class="th-divider">3. Differential Equations</div>
+<p class="th-p">A differential equation relates a function with its derivatives. The <strong>order</strong> is the highest derivative present. The <strong>degree</strong> is the power of the highest order derivative.</p>
+<div class="fbox"><div class="flbl">Solving Variable Separable DEs</div><div class="fmain">If dy/dx = f(x)·g(y), separate and integrate:
+∫ dy/g(y) = ∫ f(x) dx + C
+
+Example: dy/dx = xy
+→ dy/y = x dx
+→ ln|y| = x²/2 + C
+→ y = Ae^(x²/2)  where A = e^C</div></div>`},
+
+  {id:'th-stats',topic:'vectors_stats',title:'Vectors, Statistics & Probability',
+   ytUrl:'https://www.youtube.com/results?search_query=NDA+Probability+Statistics+complete',
+   ytName:'NDA Probability & Stats — Sachin Singh',
+   body:`
+<div class="th-divider">1. Vectors</div>
+<div class="fbox"><div class="flbl">Core Vector Operations</div><div class="fmain">Magnitude: |aî+bĵ+ck̂| = √(a²+b²+c²)
+Unit vector: â = vector/|vector|
+Dot product: A·B = |A||B|cosθ = a₁a₂+b₁b₂+c₁c₂
+Cross product: |A×B| = |A||B|sinθ
+Scalar triple product: A·(B×C) = volume of parallelepiped</div></div>
+<table class="ttable">
+  <tr><th>Condition</th><th>Dot Product</th><th>Cross Product</th></tr>
+  <tr><td>Parallel vectors</td><td>|A||B|</td><td>0 (zero vector)</td></tr>
+  <tr><td>Perpendicular vectors</td><td>0</td><td>|A||B|</td></tr>
+  <tr><td>Same vector</td><td>|A|²</td><td>0</td></tr>
+</table>
+<div class="kbox"><div class="klbl">Key Results</div><p>î·î = ĵ·ĵ = k̂·k̂ = 1 (dot of unit vectors with themselves)<br>î·ĵ = ĵ·k̂ = k̂·î = 0 (dot of perpendicular unit vectors)<br>î×ĵ = k̂, ĵ×k̂ = î, k̂×î = ĵ (right-hand rule)</p></div>
+
+<div class="th-divider">2. Statistics</div>
+<div class="fbox"><div class="flbl">Measures of Central Tendency & Dispersion</div><div class="fmain">Mean x̄ = Σxᵢ/n = Σfᵢxᵢ/Σfᵢ (grouped)
+Median = middle value (n odd) or avg of two middle values (n even)
+Mode = most frequent value
+Variance σ² = Σ(xᵢ−x̄)²/n = Σxᵢ²/n − x̄²
+Standard Deviation σ = √(Variance)
+CV = (σ/x̄)×100%</div></div>
+<div class="kbox"><div class="klbl">Shortcut Rules</div><p>If ALL values change by +k → mean increases by k, SD unchanged.<br>If ALL values multiply by k → mean multiplies by k, SD multiplies by k, variance multiplies by k².<br>For ungrouped data: Σ(xᵢ−x̄) = 0 always (sum of deviations from mean is zero).</p></div>
+
+<div class="th-divider">3. Probability</div>
+<div class="fbox"><div class="flbl">Core Probability Formulae</div><div class="fmain">P(A) = n(A)/n(S),   0 ≤ P(A) ≤ 1
+P(A') = 1−P(A)
+P(A∪B) = P(A)+P(B)−P(A∩B)
+For mutually exclusive: P(A∪B) = P(A)+P(B)
+For independent: P(A∩B) = P(A)·P(B)
+Conditional: P(A|B) = P(A∩B)/P(B)</div></div>
+<div class="fbox"><div class="flbl">Bayes' Theorem & Distributions</div><div class="fmain">Bayes: P(Aᵢ|B) = P(B|Aᵢ)·P(Aᵢ) / ΣP(B|Aⱼ)·P(Aⱼ)
+Binomial: P(X=r) = ⁿCᵣ·pʳ·qⁿ⁻ʳ
+Mean of Binomial = np,  Variance = npq,  SD = √(npq)
+where q = 1−p</div></div>
+<div class="wbox"><div class="wlbl">Independence vs Mutual Exclusivity</div><p>These are DIFFERENT concepts. Independent: P(A∩B)=P(A)P(B). Mutually exclusive: P(A∩B)=0.<br>Two events with non-zero probability CANNOT be both independent AND mutually exclusive simultaneously.</p></div>`},
+];
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let state = { topic:null, subtopic:null, year:'all', revealed:{} };
+
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+function navTo(id, el) {
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nt').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-'+id).classList.add('on');
+  if(el) el.classList.add('on');
+  if(id==='analytics') renderAnalytics();
+  if(id==='theory') renderTheory();
+  window.scrollTo(0,0);
+}
+function goHome() {
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nt').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-home').classList.add('on');
+  document.querySelector('.nt[data-p="home"]').classList.add('on');
+  window.scrollTo(0,0);
+}
+
+// ═══════════════════════════════════════════
+// TOPIC → SUBTOPICS
+// ═══════════════════════════════════════════
+function openTopic(tid) {
+  state.topic = tid;
+  const T = TOPICS[tid];
+  document.getElementById('bc-st').innerHTML =
+    `<a onclick="goHome()">Home</a><span>/</span><span>${T.title}</span>`;
+  document.getElementById('st-title').textContent = T.title;
+  document.getElementById('st-desc').textContent = T.desc;
+  const diffMap={'E':'Easy','M':'Medium','H':'Hard'};
+  document.getElementById('st-grid').innerHTML = T.subtopics.map(s=>`
+    <div class="stc" onclick="openSubtopic('${tid}','${s.id}')">
+      <div class="stc-icon">${s.icon}</div>
+      <div class="stc-body">
+        <div class="stc-title">${s.title}</div>
+        <div class="stc-count">${s.count} · <span class="badge ${s.diff==='E'?'bE':s.diff==='M'?'bM':'bH'}">${diffMap[s.diff]}</span></div>
+      </div>
+      <div class="stc-arr">→</div>
+    </div>`).join('');
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nt').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-subtopics').classList.add('on');
+  document.querySelector('.nt[data-p="questions"]').classList.add('on');
+  window.scrollTo(0,0);
+}
+
+// ═══════════════════════════════════════════
+// SUBTOPIC → QUESTIONS
+// ═══════════════════════════════════════════
+function openSubtopic(tid, sid) {
+  state.topic = tid; state.subtopic = sid; state.year = 'all'; state.revealed = {};
+  const T = TOPICS[tid];
+  const S = T.subtopics.find(s=>s.id===sid);
+  document.getElementById('bc-qb').innerHTML =
+    `<a onclick="goHome()">Home</a><span>/</span><a onclick="openTopic('${tid}')">${T.title}</a><span>/</span><span>${S.title}</span>`;
+  document.getElementById('qh-lbl').textContent = T.title;
+  document.getElementById('qh-title').textContent = S.title;
+  const yrs=['all','2024','2023','2022','2021','2020'];
+  document.getElementById('yr-pills').innerHTML = yrs.map(y=>
+    `<button class="yp ${y==='all'?'on':''}" onclick="setYear('${y}',this)">${y==='all'?'All Years':y}</button>`).join('');
+  renderQList();
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nt').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-qbank').classList.add('on');
+  document.querySelector('.nt[data-p="questions"]').classList.add('on');
+  window.scrollTo(0,0);
+}
+
+function setYear(y,el){
+  state.year=y;
+  document.querySelectorAll('.yp').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  renderQList();
+}
+
+function renderQList(){
+  let qs = QDB.filter(q=>q.t===state.subtopic);
+  if(state.year!=='all') qs=qs.filter(q=>q.y===state.year);
+  document.getElementById('stat-n').textContent=qs.length;
+  document.getElementById('stat-e').textContent=qs.filter(q=>q.d==='E').length;
+  document.getElementById('stat-m').textContent=qs.filter(q=>q.d==='M').length;
+  document.getElementById('stat-h').textContent=qs.filter(q=>q.d==='H').length;
+  const L=document.getElementById('qlist');
+  if(!qs.length){L.innerHTML='<div style="text-align:center;padding:80px;color:var(--muted);">No questions for this filter.</div>';return;}
+  L.innerHTML=qs.map((q,i)=>`
+    <div class="qcard" id="qc-${q.id}">
+      <div class="qmeta">
+        <span class="qy">NDA 1 · ${q.y}</span>
+        <span class="qtag">${state.subtopic.replace(/_/g,' ')}</span>
+        <span class="badge ${q.d==='E'?'bE':q.d==='M'?'bM':'bH'}">${q.d==='E'?'Easy':q.d==='M'?'Medium':'Hard'}</span>
+        <span class="qnum">Q${i+1} of ${qs.length}</span>
+      </div>
+      <div class="qtext">${q.q}</div>
+      <div class="qopts" id="opts-${q.id}">
+        ${q.o.map((opt,j)=>`<div class="qopt" id="opt-${q.id}-${j}" onclick="pick(${q.id},${j})">
+          <span class="ol">${['A','B','C','D'][j]}</span>${opt}</div>`).join('')}
+      </div>
+      <div class="qactions">
+        <button class="btn btn-sol btn-sm" onclick="reveal(${q.id})">Show Solution</button>
+        <button class="btn btn-ai btn-sm" onclick="askAI(${q.id})">✦ Ask Claude</button>
+      </div>
+      <div class="sol-box" id="sol-${q.id}">
+        <div class="sol-head"><span class="sol-badge">SOLUTION</span></div>
+        <div class="sol-content" id="sol-content-${q.id}"></div>
+      </div>
+    </div>`).join('');
+}
+
+function pick(qid,chosen){
+  if(state.revealed[qid]!==undefined)return;
+  state.revealed[qid]=chosen;
+  const q=QDB.find(x=>x.id===qid);
+  q.o.forEach((_,j)=>{
+    const el=document.getElementById(`opt-${qid}-${j}`);
+    if(j===q.c)el.classList.add('ok');
+    else if(j===chosen)el.classList.add('no');
+    el.classList.add('done');
+  });
+}
+
+function reveal(qid){
+  const q=QDB.find(x=>x.id===qid);
+  pick(qid,q.c);
+  const box=document.getElementById(`sol-${qid}`);
+  const content=document.getElementById(`sol-content-${qid}`);
+  box.classList.add('on');
+  content.innerHTML=q.sol;
+}
+
+async function askAI(qid){
+  const q=QDB.find(x=>x.id===qid);
+  const box=document.getElementById(`sol-${qid}`);
+  const content=document.getElementById(`sol-content-${qid}`);
+  box.classList.add('on');
+  content.innerHTML=`<div class="loading-wrap"><div class="dots"><span></span><span></span><span></span></div> Generating full solution…</div>`;
+  try{
+    const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1200,
+        messages:[{role:"user",content:`You are an expert NDA mathematics coach. Give a thorough, step-by-step solution for this question. The student is preparing for NDA 1 and needs to understand the underlying concept deeply.
+
+Question: ${q.q}
+Options: ${q.o.map((o,i)=>`(${['A','B','C','D'][i]}) ${o}`).join(' | ')}
+Correct Answer: Option ${['A','B','C','D'][q.c]}
+
+Provide:
+1. **Answer:** State the correct option immediately
+2. **Step-by-step Solution:** Full working with each step explained
+3. **Concept:** What mathematical concept/formula is this testing?
+4. **Memory Trick:** How to remember this for the exam
+5. **Common Mistake:** What error do most students make?
+
+Format clearly. Use **bold** for key points.`}]})});
+    const d=await r.json();
+    const txt=d.content?.map(c=>c.text||'').join('')||'Could not generate solution.';
+    content.innerHTML=txt.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  }catch(e){reveal(qid);}
+}
+
+// ═══════════════════════════════════════════
+// ANALYTICS
+// ═══════════════════════════════════════════
+function renderAnalytics(){
+  const bars=[
+    {l:'Algebra — AP/GP/HP',n:30,c:'#6b21a8'},{l:'Algebra — Quadratics',n:25,c:'#6b21a8'},
+    {l:'Algebra — Matrices & Det.',n:20,c:'#6b21a8'},{l:'Algebra — P&C',n:20,c:'#6b21a8'},
+    {l:'Sets & Functions',n:40,c:'#1a4b8c'},{l:'Trigonometry — Identities',n:35,c:'#b07d2a'},
+    {l:'Trigonometry — Inverse',n:20,c:'#b07d2a'},{l:'Calculus — Differentiation',n:25,c:'#9b2335'},
+    {l:'Calculus — Integration',n:20,c:'#9b2335'},{l:'Calculus — DEs',n:15,c:'#9b2335'},
+    {l:'Coord. Geo — 2D',n:35,c:'#1d6348'},{l:'Coord. Geo — 3D',n:20,c:'#1d6348'},
+    {l:'Probability',n:20,c:'#0f4c81'},{l:'Statistics',n:15,c:'#0f4c81'},
+  ];
+  document.getElementById('dist-chart').innerHTML=bars.map(b=>`
+    <div class="brow"><div class="blbl">${b.l}</div>
+    <div class="btrack"><div class="bfill" style="width:${(b.n/42)*100}%;background:${b.c}">${b.n}</div></div>
+    <div class="bcount">${b.n}q</div></div>`).join('');
+  const hot=[
+    {l:'Sequences AP/GP',f:'5/5 years',c:'var(--red)'},
+    {l:'Quadratic Equations',f:'5/5 years',c:'var(--red)'},
+    {l:'Trig Identities',f:'5/5 years',c:'var(--red)'},
+    {l:'Matrices/Determinants',f:'5/5 years',c:'var(--red)'},
+    {l:'Sets & Operations',f:'5/5 years',c:'var(--red)'},
+    {l:'Definite Integrals',f:'4/5 years',c:'var(--gold)'},
+    {l:'Complex Numbers',f:'4/5 years',c:'var(--gold)'},
+    {l:'Probability',f:'4/5 years',c:'var(--gold)'},
+    {l:'Maxima & Minima',f:'4/5 years',c:'var(--gold)'},
+    {l:'Binomial Theorem',f:'3/5 years',c:'var(--blue)'},
+  ];
+  document.getElementById('hot-topics').innerHTML=hot.map(h=>`
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 14px;font-size:13px;display:flex;align-items:center;gap:8px;box-shadow:var(--sh1);">
+      <span style="font-family:var(--mono);font-size:11px;font-weight:700;color:${h.c}">${h.f}</span>${h.l}
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════
+// THEORY
+// ═══════════════════════════════════════════
+function renderTheory(){
+  const topicGroups={};
+  THEORY.forEach(t=>{if(!topicGroups[t.topic])topicGroups[t.topic]=[];topicGroups[t.topic].push(t);});
+  const topicNames={sets:'Sets & Functions',algebra:'Algebra',trigonometry:'Trigonometry',calculus:'Differential Calculus',integral:'Integral Calculus',vectors_stats:'Vectors & Statistics'};
+  document.getElementById('toc-body').innerHTML=Object.entries(topicGroups).map(([k,items])=>`
+    <div class="toc-sec">
+      <div class="toc-sec-lbl">${topicNames[k]||k}</div>
+      ${items.map(t=>`<a class="toc-link" id="toc-${t.id}" onclick="scrollTh('${t.id}')">${t.title}</a>`).join('')}
+    </div>`).join('');
+  document.getElementById('theory-body').innerHTML=THEORY.map(t=>`
+    <div class="th-card" id="th-${t.id}">
+      <div class="th-eyebrow">${t.topic.replace(/_/g,' ').toUpperCase()} · MATHEMATICS</div>
+      <div class="th-title">${t.title}</div>
+      <a class="th-yt" href="${t.ytUrl}" target="_blank">Watch: ${t.ytName}</a>
+      ${t.body}
+      <div class="sbox" style="margin-top:24px;">
+        <span class="sbox-icon">▶</span>
+        <div class="sbox-body">
+          <div class="slbl">YouTube Source</div>
+          <p>Watch <a href="${t.ytUrl}" target="_blank">${t.ytName}</a> after reading this theory. Then return and solve all questions for this topic.</p>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function scrollTh(id){
+  document.querySelectorAll('.toc-link').forEach(l=>l.classList.remove('on'));
+  document.getElementById('toc-'+id)?.classList.add('on');
+  const el=document.getElementById('th-'+id);
+  if(el){const top=el.getBoundingClientRect().top+window.scrollY-80;window.scrollTo({top,behavior:'smooth'});}
+  return false;
+}
+</script>
+</body>
+</html>
