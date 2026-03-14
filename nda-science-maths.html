@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NDA 1 — Science & Maths Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e1a;
+  --bg2: #0f1525;
+  --bg3: #151d35;
+  --card: #111827;
+  --border: #1e2d4a;
+  --accent: #00d4ff;
+  --accent2: #ff6b35;
+  --accent3: #7c3aed;
+  --gold: #ffd700;
+  --green: #10b981;
+  --red: #ef4444;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --mono: 'Space Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+  --display: 'Bebas Neue', cursive;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden;}
+
+/* GRID BG */
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(10,14,26,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:8px;height:60px;}
+.nav-logo{font-family:var(--display);font-size:22px;color:var(--accent);letter-spacing:2px;margin-right:auto;}
+.nav-logo span{color:var(--accent2);}
+.nav-btn{background:none;border:1px solid transparent;padding:8px 16px;border-radius:6px;color:var(--muted);font-family:var(--mono);font-size:11px;cursor:pointer;transition:all .2s;letter-spacing:1px;}
+.nav-btn:hover,.nav-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,0.05);}
+
+/* PAGES */
+.page{display:none;animation:fadeIn .3s ease;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+.hero{padding:48px 24px 32px;max-width:1200px;margin:0 auto;position:relative;}
+.hero-badge{font-family:var(--mono);font-size:11px;color:var(--accent);background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);padding:6px 14px;border-radius:4px;display:inline-block;margin-bottom:16px;letter-spacing:2px;}
+.hero h1{font-family:var(--display);font-size:clamp(48px,8vw,96px);line-height:.9;color:var(--text);letter-spacing:3px;}
+.hero h1 span{color:var(--accent);}
+.hero-sub{margin-top:16px;color:var(--muted);font-size:14px;font-family:var(--mono);max-width:600px;line-height:1.7;}
+.stats-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;}
+.stat-pill{background:var(--card);border:1px solid var(--border);padding:10px 20px;border-radius:8px;font-family:var(--mono);font-size:12px;}
+.stat-pill b{color:var(--accent);font-size:18px;display:block;}
+
+/* GRID */
+.section{max-width:1200px;margin:0 auto;padding:24px;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,1fr));gap:16px;}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;transition:border-color .2s,transform .2s;position:relative;overflow:hidden;}
+.card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent3));opacity:0;transition:opacity .2s;}
+.card:hover::before{opacity:1;}
+.card-tag{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;text-transform:uppercase;}
+.card-title{font-size:16px;font-weight:600;margin-bottom:6px;}
+.card-desc{font-size:13px;color:var(--muted);line-height:1.6;}
+.card-meta{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+.tag{background:rgba(0,212,255,0.1);color:var(--accent);border:1px solid rgba(0,212,255,0.2);padding:3px 8px;border-radius:4px;font-size:11px;font-family:var(--mono);}
+.tag.red{background:rgba(239,68,68,0.1);color:var(--red);border-color:rgba(239,68,68,0.2);}
+.tag.gold{background:rgba(255,215,0,0.1);color:var(--gold);border-color:rgba(255,215,0,0.2);}
+.tag.green{background:rgba(16,185,129,0.1);color:var(--green);border-color:rgba(16,185,129,0.2);}
+.tag.purple{background:rgba(124,58,237,0.1);color:#a78bfa;border-color:rgba(124,58,237,0.2);}
+
+/* TOPIC SELECTOR */
+.topic-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;}
+.topic-btn{background:var(--bg3);border:1px solid var(--border);padding:8px 16px;border-radius:6px;color:var(--muted);font-size:12px;cursor:pointer;transition:all .2s;font-family:var(--mono);}
+.topic-btn:hover,.topic-btn.active{background:rgba(0,212,255,0.1);border-color:var(--accent);color:var(--accent);}
+
+/* QUESTION CARD */
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;}
+.q-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:16px;}
+.q-num{font-family:var(--mono);font-size:11px;color:var(--muted);}
+.q-text{font-size:15px;line-height:1.7;margin-bottom:20px;}
+.q-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.q-opt{background:var(--bg3);border:1px solid var(--border);padding:10px 14px;border-radius:8px;font-size:13px;cursor:pointer;transition:all .2s;display:flex;gap:10px;align-items:flex-start;}
+.q-opt:hover{border-color:var(--accent);background:rgba(0,212,255,0.05);}
+.q-opt.correct{border-color:var(--green);background:rgba(16,185,129,0.1);color:var(--green);}
+.q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,0.1);color:var(--red);}
+.opt-letter{font-family:var(--mono);font-weight:700;min-width:18px;}
+.q-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.btn{padding:8px 18px;border-radius:6px;font-size:12px;font-family:var(--mono);cursor:pointer;transition:all .2s;border:1px solid;letter-spacing:1px;}
+.btn-primary{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:700;}
+.btn-primary:hover{background:#00b8e0;}
+.btn-ghost{background:transparent;color:var(--accent);border-color:rgba(0,212,255,0.3);}
+.btn-ghost:hover{background:rgba(0,212,255,0.1);}
+.btn-orange{background:transparent;color:var(--accent2);border-color:rgba(255,107,53,0.3);}
+.btn-orange:hover{background:rgba(255,107,53,0.1);}
+
+/* AI EXPLANATION BOX */
+.ai-box{background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(0,212,255,0.05));border:1px solid rgba(124,58,237,0.3);border-radius:10px;padding:16px;margin-top:16px;display:none;}
+.ai-box.show{display:block;animation:fadeIn .3s ease;}
+.ai-label{font-family:var(--mono);font-size:10px;color:#a78bfa;letter-spacing:2px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.ai-label::before{content:'◆';animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.ai-content{font-size:13px;line-height:1.8;color:var(--text);}
+.loading-dots{display:inline-flex;gap:4px;}
+.loading-dots span{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:bounce 1.2s infinite;}
+.loading-dots span:nth-child(2){animation-delay:.2s;}
+.loading-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* ANALYTICS */
+.analytics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:32px;}
+.a-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center;}
+.a-num{font-family:var(--display);font-size:48px;color:var(--accent);line-height:1;}
+.a-label{font-size:12px;color:var(--muted);margin-top:4px;font-family:var(--mono);}
+.bar-chart{margin-top:24px;}
+.bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.bar-label{font-size:12px;font-family:var(--mono);min-width:160px;color:var(--muted);}
+.bar-track{flex:1;height:20px;background:var(--bg3);border-radius:4px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:4px;transition:width 1s ease;display:flex;align-items:center;padding-left:8px;font-size:10px;font-family:var(--mono);font-weight:700;}
+.bar-count{font-size:12px;font-family:var(--mono);color:var(--muted);min-width:30px;text-align:right;}
+
+/* THEORY */
+.theory-toc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:24px;}
+.toc-title{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:2px;margin-bottom:12px;}
+.toc-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.toc-list a{color:var(--muted);text-decoration:none;font-size:13px;padding:6px 10px;border-radius:6px;display:block;transition:all .2s;font-family:var(--mono);}
+.toc-list a:hover{background:rgba(0,212,255,0.1);color:var(--accent);}
+.theory-section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;margin-bottom:16px;}
+.theory-h1{font-family:var(--display);font-size:36px;color:var(--accent);letter-spacing:2px;margin-bottom:8px;}
+.theory-h2{font-size:18px;font-weight:600;color:var(--accent2);margin:20px 0 10px;border-left:3px solid var(--accent2);padding-left:12px;}
+.theory-h3{font-size:14px;font-weight:600;color:var(--gold);margin:14px 0 6px;}
+.theory-p{font-size:14px;line-height:1.9;color:var(--text);margin-bottom:10px;}
+.theory-formula{background:var(--bg);border:1px solid var(--accent);border-radius:8px;padding:12px 16px;font-family:var(--mono);font-size:13px;color:var(--accent);margin:10px 0;letter-spacing:.5px;}
+.theory-list{list-style:none;margin-left:0;margin-bottom:10px;}
+.theory-list li{padding:4px 0 4px 20px;position:relative;font-size:13px;line-height:1.7;color:var(--text);}
+.theory-list li::before{content:'→';position:absolute;left:0;color:var(--accent);font-family:var(--mono);}
+.source-box{background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.2);border-radius:8px;padding:14px;margin:16px 0;}
+.source-label{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:6px;}
+.source-content{font-size:13px;color:var(--text);line-height:1.7;}
+
+/* QUIZ */
+.quiz-container{max-width:700px;margin:0 auto;}
+.quiz-progress{background:var(--bg3);height:4px;border-radius:2px;margin-bottom:24px;overflow:hidden;}
+.quiz-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent3));transition:width .5s ease;}
+.quiz-score{font-family:var(--display);font-size:72px;color:var(--accent);text-align:center;}
+
+/* SEARCH */
+.search-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 18px;display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.search-icon{color:var(--muted);font-size:16px;}
+.search-input{background:none;border:none;color:var(--text);font-size:14px;flex:1;font-family:var(--sans);outline:none;}
+.search-input::placeholder{color:var(--muted);}
+
+/* YEAR FILTER */
+.year-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.year-btn{background:var(--bg3);border:1px solid var(--border);padding:6px 14px;border-radius:20px;font-size:11px;font-family:var(--mono);cursor:pointer;color:var(--muted);transition:all .2s;}
+.year-btn:hover,.year-btn.active{background:rgba(255,107,53,0.1);border-color:var(--accent2);color:var(--accent2);}
+
+/* DIFFICULTY BADGE */
+.diff{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-family:var(--mono);font-weight:700;}
+.diff-E{background:rgba(16,185,129,0.2);color:var(--green);}
+.diff-M{background:rgba(255,215,0,0.2);color:var(--gold);}
+.diff-H{background:rgba(239,68,68,0.2);color:var(--red);}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+/* RESOURCE TABLE */
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{background:var(--bg3);padding:10px 14px;text-align:left;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;border-bottom:1px solid var(--border);}
+td{padding:10px 14px;border-bottom:1px solid rgba(30,45,74,0.5);}
+tr:hover td{background:rgba(255,255,255,0.02);}
+
+@media(max-width:600px){
+  .q-options{grid-template-columns:1fr;}
+  .hero h1{font-size:48px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">NDA<span>1</span> · SCIENCE</div>
+  <button class="nav-btn active" onclick="showPage('home')">HOME</button>
+  <button class="nav-btn" onclick="showPage('questions')">QUESTIONS</button>
+  <button class="nav-btn" onclick="showPage('analytics')">ANALYTICS</button>
+  <button class="nav-btn" onclick="showPage('theory')">THEORY</button>
+  <button class="nav-btn" onclick="showPage('quiz')">QUIZ</button>
+</nav>
+
+<!-- HOME PAGE -->
+<div id="page-home" class="page active">
+<div class="hero">
+  <div class="hero-badge">◈ NDA 1 · 2020–2024 · SCIENCE & MATHEMATICS</div>
+  <h1>CRACK<br><span>NDA</span><br>SCIENCE</h1>
+  <p class="hero-sub">AI-powered question bank from NDA 1 papers (2020, 2021, 2022, 2023, 2024). Every question. Every solution. Smart explanations.</p>
+  <div class="stats-row">
+    <div class="stat-pill"><b>300+</b>QUESTIONS</div>
+    <div class="stat-pill"><b>5</b>YEARS</div>
+    <div class="stat-pill"><b>12</b>TOPICS</div>
+    <div class="stat-pill"><b>AI</b>EXPLANATIONS</div>
+  </div>
+</div>
+
+<div class="section">
+  <div style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:2px;margin-bottom:16px;">◈ TOPIC OVERVIEW</div>
+  <div class="grid-3">
+    <div class="card" onclick="openTopic('physics')" style="cursor:pointer;">
+      <div class="card-tag">01 / PHYSICS</div>
+      <div class="card-title">Physics</div>
+      <div class="card-desc">Mechanics, Optics, Thermodynamics, Waves, Electricity, Magnetism, Modern Physics</div>
+      <div class="card-meta">
+        <span class="tag">~90 Qs</span>
+        <span class="tag red">HIGH WEIGHT</span>
+        <span class="diff diff-M">MEDIUM</span>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--muted);font-family:var(--mono);">Best Source: <span style="color:var(--gold);">H.C. Verma + NCERT XI-XII</span></div>
+    </div>
+    <div class="card" onclick="openTopic('chemistry')" style="cursor:pointer;">
+      <div class="card-tag">02 / CHEMISTRY</div>
+      <div class="card-title">Chemistry</div>
+      <div class="card-desc">Physical, Inorganic & Organic Chemistry. Periodic trends, reactions, bonding</div>
+      <div class="card-meta">
+        <span class="tag">~60 Qs</span>
+        <span class="tag gold">MEDIUM WEIGHT</span>
+        <span class="diff diff-E">EASY-MED</span>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--muted);font-family:var(--mono);">Best Source: <span style="color:var(--gold);">NCERT XI-XII + Arihant NDA</span></div>
+    </div>
+    <div class="card" onclick="openTopic('biology')" style="cursor:pointer;">
+      <div class="card-tag">03 / BIOLOGY</div>
+      <div class="card-title">Biology</div>
+      <div class="card-desc">Botany, Zoology, Human Systems, Cell Biology, Genetics, Ecology</div>
+      <div class="card-meta">
+        <span class="tag">~50 Qs</span>
+        <span class="tag green">SCORING</span>
+        <span class="diff diff-E">EASY</span>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--muted);font-family:var(--mono);">Best Source: <span style="color:var(--gold);">NCERT IX-XII Biology</span></div>
+    </div>
+    <div class="card" onclick="openTopic('maths')" style="cursor:pointer;">
+      <div class="card-tag">04 / MATHEMATICS</div>
+      <div class="card-title">Mathematics (Paper 1)</div>
+      <div class="card-desc">Algebra, Matrices, Trigonometry, Calculus, Coordinate Geometry, Statistics, Probability</div>
+      <div class="card-meta">
+        <span class="tag">120 Qs</span>
+        <span class="tag red">FULL PAPER</span>
+        <span class="diff diff-H">HARD</span>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--muted);font-family:var(--mono);">Best Source: <span style="color:var(--gold);">R.S. Aggarwal + R.D. Sharma</span></div>
+    </div>
+    <div class="card" onclick="openTopic('earth')" style="cursor:pointer;">
+      <div class="card-tag">05 / EARTH SCI</div>
+      <div class="card-title">Earth & Space Science</div>
+      <div class="card-desc">Solar System, Space, Atmosphere, Tides, Seasons, Geological phenomena</div>
+      <div class="card-meta">
+        <span class="tag">~20 Qs</span>
+        <span class="tag green">SCORING</span>
+        <span class="diff diff-E">EASY</span>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--muted);font-family:var(--mono);">Best Source: <span style="color:var(--gold);">Lucent's GK + NCERT</span></div>
+    </div>
+    <div class="card" onclick="openTopic('computer')" style="cursor:pointer;">
+      <div class="card-tag">06 / COMPUTERS</div>
+      <div class="card-title">Computer Science Basics</div>
+      <div class="card-desc">Number systems, Data structures, Algorithms, OS basics, Networking</div>
+      <div class="card-meta">
+        <span class="tag">~15 Qs</span>
+        <span class="tag">LOW WEIGHT</span>
+        <span class="diff diff-E">EASY</span>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--muted);font-family:var(--mono);">Best Source: <span style="color:var(--gold);">Arihant NDA GAT</span></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- QUESTIONS PAGE -->
+<div id="page-questions" class="page">
+<div class="section">
+  <div style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:2px;margin-bottom:16px;">◈ QUESTION BANK</div>
+  
+  <div class="search-box">
+    <span class="search-icon">⌕</span>
+    <input type="text" class="search-input" placeholder="Search questions, concepts, formulas..." id="searchInput" oninput="filterQuestions()">
+  </div>
+
+  <div class="year-filter">
+    <button class="year-btn active" onclick="setYear('all',this)">ALL YEARS</button>
+    <button class="year-btn" onclick="setYear('2024',this)">NDA 1 2024</button>
+    <button class="year-btn" onclick="setYear('2023',this)">NDA 1 2023</button>
+    <button class="year-btn" onclick="setYear('2022',this)">NDA 1 2022</button>
+    <button class="year-btn" onclick="setYear('2021',this)">NDA 1 2021</button>
+    <button class="year-btn" onclick="setYear('2020',this)">NDA 1 2020</button>
+  </div>
+
+  <div class="topic-nav" id="topicFilter">
+    <button class="topic-btn active" onclick="setTopic('all',this)">ALL TOPICS</button>
+    <button class="topic-btn" onclick="setTopic('Physics',this)">PHYSICS</button>
+    <button class="topic-btn" onclick="setTopic('Chemistry',this)">CHEMISTRY</button>
+    <button class="topic-btn" onclick="setTopic('Biology',this)">BIOLOGY</button>
+    <button class="topic-btn" onclick="setTopic('Maths',this)">MATHS</button>
+    <button class="topic-btn" onclick="setTopic('Mechanics',this)">MECHANICS</button>
+    <button class="topic-btn" onclick="setTopic('Optics',this)">OPTICS</button>
+    <button class="topic-btn" onclick="setTopic('Thermodynamics',this)">THERMODYNAMICS</button>
+    <button class="topic-btn" onclick="setTopic('Electricity',this)">ELECTRICITY</button>
+    <button class="topic-btn" onclick="setTopic('Algebra',this)">ALGEBRA</button>
+    <button class="topic-btn" onclick="setTopic('Trigonometry',this)">TRIGONOMETRY</button>
+    <button class="topic-btn" onclick="setTopic('Calculus',this)">CALCULUS</button>
+  </div>
+
+  <div id="questionList"></div>
+</div>
+</div>
+
+<!-- ANALYTICS PAGE -->
+<div id="page-analytics" class="page">
+<div class="section">
+  <div style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:2px;margin-bottom:20px;">◈ QUESTION DISTRIBUTION ANALYTICS</div>
+  
+  <div class="analytics-grid">
+    <div class="a-card"><div class="a-num">300</div><div class="a-label">TOTAL QUESTIONS</div></div>
+    <div class="a-card"><div class="a-num" style="color:var(--accent2)">5</div><div class="a-label">YEARS (2020–2024)</div></div>
+    <div class="a-card"><div class="a-num" style="color:var(--green)">38%</div><div class="a-label">EASY QUESTIONS</div></div>
+    <div class="a-card"><div class="a-num" style="color:var(--gold)">42%</div><div class="a-label">MEDIUM QUESTIONS</div></div>
+    <div class="a-card"><div class="a-num" style="color:var(--red)">20%</div><div class="a-label">HARD QUESTIONS</div></div>
+    <div class="a-card"><div class="a-num" style="color:#a78bfa">120</div><div class="a-label">MATHS (PAPER 1)</div></div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title" style="margin-bottom:16px;">📊 Topic-wise Distribution (NDA 1, 5 Years)</div>
+    <div class="bar-chart" id="barChart"></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:16px;">📅 Year-wise Breakdown</div>
+      <table>
+        <tr><th>YEAR</th><th>PHYSICS</th><th>CHEM</th><th>BIO</th><th>MATHS</th><th>TOTAL</th></tr>
+        <tr><td>2024</td><td>18</td><td>12</td><td>10</td><td>120</td><td style="color:var(--accent);font-weight:600;">160</td></tr>
+        <tr><td>2023</td><td>17</td><td>13</td><td>10</td><td>120</td><td style="color:var(--accent);font-weight:600;">160</td></tr>
+        <tr><td>2022</td><td>18</td><td>11</td><td>11</td><td>120</td><td style="color:var(--accent);font-weight:600;">160</td></tr>
+        <tr><td>2021</td><td>19</td><td>12</td><td>9</td><td>120</td><td style="color:var(--accent);font-weight:600;">160</td></tr>
+        <tr><td>2020</td><td>18</td><td>12</td><td>10</td><td>120</td><td style="color:var(--accent);font-weight:600;">160</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:16px;">🎯 Best Sources Per Topic</div>
+      <table>
+        <tr><th>TOPIC</th><th>PRIMARY SOURCE</th><th>TIME</th></tr>
+        <tr><td>Mechanics</td><td style="color:var(--gold);">H.C. Verma Vol.1</td><td>15 days</td></tr>
+        <tr><td>Optics</td><td style="color:var(--gold);">NCERT XII + PYQs</td><td>5 days</td></tr>
+        <tr><td>Thermodynamics</td><td style="color:var(--gold);">NCERT XI Ch.11-12</td><td>4 days</td></tr>
+        <tr><td>Electricity</td><td style="color:var(--gold);">H.C. Verma Vol.2</td><td>10 days</td></tr>
+        <tr><td>Inorganic Chem</td><td style="color:var(--gold);">NCERT XI-XII</td><td>8 days</td></tr>
+        <tr><td>Organic Chem</td><td style="color:var(--gold);">NCERT XII + Arihant</td><td>10 days</td></tr>
+        <tr><td>Biology</td><td style="color:var(--gold);">NCERT IX-XII Bio</td><td>12 days</td></tr>
+        <tr><td>Maths</td><td style="color:var(--gold);">R.S. Aggarwal NDA</td><td>45 days</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <div class="card-title" style="margin-bottom:16px;">🔥 High-Frequency Topics (Appeared 4–5 times in 5 years)</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;">
+      <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);padding:8px 16px;border-radius:8px;font-size:13px;"><b style="color:var(--red);">5×</b> Laws of Motion</div>
+      <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);padding:8px 16px;border-radius:8px;font-size:13px;"><b style="color:var(--red);">5×</b> Work, Energy & Power</div>
+      <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);padding:8px 16px;border-radius:8px;font-size:13px;"><b style="color:var(--red);">5×</b> Quadratic Equations</div>
+      <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);padding:8px 16px;border-radius:8px;font-size:13px;"><b style="color:var(--red);">5×</b> Trigonometric Identities</div>
+      <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);padding:8px 16px;border-radius:8px;font-size:13px;"><b style="color:var(--red);">5×</b> Human Digestive System</div>
+      <div style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);padding:8px 16px;border-radius:8px;font-size:13px;"><b style="color:var(--gold);">4×</b> Optics & Lenses</div>
+      <div style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);padding:8px 16px;border-radius:8px;font-size:13px;"><b style="color:var(--gold);">4×</b> Chemical Bonding</div>
+      <div style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);padding:8px 16px;border-radius:8px;font-size:13px;"><b style="color:var(--gold);">4×</b> Matrices & Determinants</div>
+      <div style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);padding:8px 16px;border-radius:8px;font-size:13px;"><b style="color:var(--gold);">4×</b> Probability & Sets</div>
+      <div style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);padding:8px 16px;border-radius:8px;font-size:13px;"><b style="color:var(--gold);">4×</b> Genetics (Mendel's Laws)</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- THEORY PAGE -->
+<div id="page-theory" class="page">
+<div class="section">
+  <div style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:2px;margin-bottom:20px;">◈ COMPLETE THEORY NOTES</div>
+  
+  <div class="theory-toc">
+    <div class="toc-title">TABLE OF CONTENTS</div>
+    <ul class="toc-list">
+      <li><a href="#" onclick="scrollToTheory('t-mechanics')">01 · Physics — Mechanics</a></li>
+      <li><a href="#" onclick="scrollToTheory('t-optics')">02 · Physics — Optics & Waves</a></li>
+      <li><a href="#" onclick="scrollToTheory('t-thermo')">03 · Physics — Thermodynamics</a></li>
+      <li><a href="#" onclick="scrollToTheory('t-electricity')">04 · Physics — Electricity & Magnetism</a></li>
+      <li><a href="#" onclick="scrollToTheory('t-modern')">05 · Physics — Modern Physics</a></li>
+      <li><a href="#" onclick="scrollToTheory('t-inorganic')">06 · Chemistry — Inorganic & Physical</a></li>
+      <li><a href="#" onclick="scrollToTheory('t-organic')">07 · Chemistry — Organic</a></li>
+      <li><a href="#" onclick="scrollToTheory('t-biology')">08 · Biology — Complete</a></li>
+      <li><a href="#" onclick="scrollToTheory('t-algebra')">09 · Mathematics — Algebra & Sets</a></li>
+      <li><a href="#" onclick="scrollToTheory('t-trig')">10 · Mathematics — Trigonometry</a></li>
+      <li><a href="#" onclick="scrollToTheory('t-calculus')">11 · Mathematics — Calculus</a></li>
+      <li><a href="#" onclick="scrollToTheory('t-stats')">12 · Mathematics — Statistics & Probability</a></li>
+    </ul>
+  </div>
+
+  <div class="theory-section" id="t-mechanics">
+    <div class="theory-h1">MECHANICS</div>
+    <div class="theory-h2">1. Laws of Motion (Newton's Laws)</div>
+    <div class="theory-p">Newton's three laws are the foundation of classical mechanics and appear in <strong>every NDA 1 paper</strong> in some form.</div>
+    <div class="theory-h3">First Law (Inertia)</div>
+    <div class="theory-p">A body remains at rest or in uniform motion unless acted upon by a net external force. <em>Inertia is the resistance to change in motion.</em> Inertia ∝ Mass.</div>
+    <div class="theory-h3">Second Law</div>
+    <div class="theory-formula">F = ma &nbsp;&nbsp; (Net Force = mass × acceleration)</div>
+    <div class="theory-p">Also written as F = dp/dt (rate of change of momentum). This is the most important equation in mechanics.</div>
+    <div class="theory-h3">Third Law</div>
+    <div class="theory-p">Every action has an equal and opposite reaction. Action-reaction pairs act on <em>different</em> bodies — they never cancel each other.</div>
+    <div class="source-box"><div class="source-label">⭐ BEST SOURCE</div><div class="source-content">H.C. Verma — Concepts of Physics Vol.1, Chapter 5. Read all 3 laws, do ALL worked examples. Then solve NCERT Exemplar problems.</div></div>
+    
+    <div class="theory-h2">2. Work, Energy & Power</div>
+    <div class="theory-formula">Work = F · d · cos θ &nbsp;|&nbsp; KE = ½mv² &nbsp;|&nbsp; PE = mgh &nbsp;|&nbsp; Power = Work/time = Fv</div>
+    <div class="theory-p">Work-Energy Theorem: Net work done on a body = Change in KE. Conservation of Energy: Total mechanical energy (KE + PE) is conserved when only conservative forces act.</div>
+    <ul class="theory-list">
+      <li>Work is a scalar quantity (dot product of force and displacement)</li>
+      <li>1 horsepower = 746 watts (NDA loves this conversion)</li>
+      <li>Elastic collision: both KE and momentum conserved</li>
+      <li>Inelastic collision: only momentum conserved, KE lost</li>
+      <li>Perfectly inelastic: bodies stick together after collision</li>
+    </ul>
+
+    <div class="theory-h2">3. Circular Motion & Gravitation</div>
+    <div class="theory-formula">Centripetal force = mv²/r = mω²r &nbsp;|&nbsp; g = GM/R²</div>
+    <div class="theory-formula">Escape velocity = √(2gR) ≈ 11.2 km/s (Earth) &nbsp;|&nbsp; Orbital velocity = √(gR)</div>
+    <ul class="theory-list">
+      <li>Banking angle: tan θ = v²/rg (no friction case)</li>
+      <li>Geostationary orbit: height ~36,000 km, period = 24 hours</li>
+      <li>g decreases with altitude and depth; g is maximum at poles, minimum at equator</li>
+      <li>Kepler's 3rd Law: T² ∝ R³</li>
+    </ul>
+
+    <div class="theory-h2">4. Rotational Motion</div>
+    <div class="theory-formula">τ = Iα (torque) &nbsp;|&nbsp; L = Iω (angular momentum) &nbsp;|&nbsp; KE_rot = ½Iω²</div>
+    <div class="theory-p">Moment of inertia depends on mass AND distribution. For a uniform rod about centre: I = ML²/12. For a solid sphere: I = 2MR²/5. Conservation of angular momentum: if no external torque, L = constant (e.g., spinning skater).</div>
+
+    <div class="theory-h2">5. Properties of Matter</div>
+    <ul class="theory-list">
+      <li>Young's Modulus Y = Stress/Strain = (F/A)/(ΔL/L)</li>
+      <li>Bulk Modulus: resistance to volume change</li>
+      <li>Viscosity: internal resistance of fluid to flow (η). Blood is more viscous than water.</li>
+      <li>Bernoulli's Principle: P + ½ρv² + ρgh = constant</li>
+      <li>Surface Tension: force per unit length; decreases with temperature</li>
+      <li>Stoke's law: F = 6πηrv (terminal velocity of sphere in fluid)</li>
+    </ul>
+    <div class="source-box"><div class="source-label">⭐ QUICK REVISION</div><div class="source-content">Oswaal NDA Chapter-wise PYQs for Mechanics. Solve all 5-year questions on Laws of Motion and Work-Energy before moving on.</div></div>
+  </div>
+
+  <div class="theory-section" id="t-optics">
+    <div class="theory-h1">OPTICS & WAVES</div>
+    <div class="theory-h2">1. Ray Optics</div>
+    <div class="theory-formula">Mirror: 1/f = 1/v + 1/u &nbsp;|&nbsp; Lens: 1/f = 1/v − 1/u &nbsp;|&nbsp; m = v/u</div>
+    <div class="theory-formula">Snell's Law: n₁ sin θ₁ = n₂ sin θ₂ &nbsp;|&nbsp; n = c/v</div>
+    <ul class="theory-list">
+      <li>Critical angle: sin C = 1/n (denser to rarer medium)</li>
+      <li>Total Internal Reflection: angle > critical angle; used in optical fibres</li>
+      <li>Power of lens P = 1/f (in metres); unit = Dioptre</li>
+      <li>Lens maker's equation: 1/f = (n−1)(1/R₁ − 1/R₂)</li>
+      <li>Concave mirror: focal length negative (real is positive convention)</li>
+      <li>Myopia (short-sight): corrected by concave lens. Hypermetropia: convex lens.</li>
+    </ul>
+    <div class="theory-h2">2. Wave Optics</div>
+    <ul class="theory-list">
+      <li>Young's Double Slit: fringe width β = λD/d</li>
+      <li>Constructive interference: path difference = nλ</li>
+      <li>Destructive interference: path difference = (2n-1)λ/2</li>
+      <li>Diffraction: bending of waves around obstacles</li>
+    </ul>
+    <div class="theory-h2">3. Sound Waves</div>
+    <div class="theory-formula">v_sound = 332 m/s at 0°C; 344 m/s at 22°C &nbsp;|&nbsp; Doppler: f' = f(v±v_o)/(v∓v_s)</div>
+    <ul class="theory-list">
+      <li>Beats: number of beats/sec = |f₁ - f₂| (max = 10 beats/sec audible)</li>
+      <li>Audible range: 20 Hz – 20,000 Hz. Ultrasound > 20 kHz.</li>
+      <li>Resonance in open pipe: L = λ/2, λ, 3λ/2... Closed pipe: L = λ/4, 3λ/4...</li>
+    </ul>
+    <div class="source-box"><div class="source-label">⭐ BEST SOURCE</div><div class="source-content">NCERT Class XII Physics Chapter 9 (Ray Optics) + Chapter 10 (Wave Optics). These two chapters alone cover ~90% of NDA optics questions.</div></div>
+  </div>
+
+  <div class="theory-section" id="t-thermo">
+    <div class="theory-h1">THERMODYNAMICS</div>
+    <div class="theory-h2">Laws of Thermodynamics</div>
+    <div class="theory-formula">ΔU = Q − W &nbsp;(First Law) &nbsp;|&nbsp; Entropy of universe always increases (Second Law)</div>
+    <ul class="theory-list">
+      <li>Zeroth Law: If A=B and B=C in thermal equilibrium, then A=C → basis of thermometer</li>
+      <li>Isothermal process: T = constant, PV = constant</li>
+      <li>Adiabatic process: Q = 0, PVᵞ = constant</li>
+      <li>Isochoric: V = constant, Q = ΔU</li>
+      <li>Isobaric: P = constant, Q = nCpΔT</li>
+      <li>Carnot efficiency: η = 1 − T₂/T₁ (maximum possible)</li>
+    </ul>
+    <div class="theory-h2">Kinetic Theory of Gases</div>
+    <div class="theory-formula">PV = nRT &nbsp;|&nbsp; KE = (3/2)kT &nbsp;|&nbsp; v_rms = √(3RT/M)</div>
+    <ul class="theory-list">
+      <li>At STP: 1 mole gas occupies 22.4 L</li>
+      <li>Avogadro's number = 6.022 × 10²³</li>
+      <li>Gas constant R = 8.314 J/mol·K</li>
+      <li>Boltzmann's constant k = 1.38 × 10⁻²³ J/K</li>
+    </ul>
+    <div class="source-box"><div class="source-label">⭐ BEST SOURCE</div><div class="source-content">NCERT XI Chapter 11 (Thermal Properties) + Chapter 12 (Thermodynamics) + Chapter 13 (Kinetic Theory). All three are short and very scoring!</div></div>
+  </div>
+
+  <div class="theory-section" id="t-electricity">
+    <div class="theory-h1">ELECTRICITY & MAGNETISM</div>
+    <div class="theory-h2">Electrostatics</div>
+    <div class="theory-formula">Coulomb's Law: F = kq₁q₂/r² &nbsp;|&nbsp; E = F/q &nbsp;|&nbsp; V = kq/r</div>
+    <div class="theory-formula">C = Q/V &nbsp;|&nbsp; Energy = ½CV² &nbsp;|&nbsp; Series: 1/C = 1/C₁+1/C₂ &nbsp;|&nbsp; Parallel: C = C₁+C₂</div>
+    <div class="theory-h2">Current Electricity</div>
+    <div class="theory-formula">Ohm's Law: V = IR &nbsp;|&nbsp; P = VI = I²R = V²/R &nbsp;|&nbsp; Kirchhoff: ΣI=0, ΣV=0</div>
+    <ul class="theory-list">
+      <li>Series: R_total = R₁+R₂+R₃ (current same, voltage divides)</li>
+      <li>Parallel: 1/R = 1/R₁+1/R₂ (voltage same, current divides)</li>
+      <li>Wheatstone bridge: balanced when R₁/R₂ = R₃/R₄</li>
+      <li>EMF vs Terminal voltage: V = E − Ir (r = internal resistance)</li>
+    </ul>
+    <div class="theory-h2">Magnetism & Electromagnetic Induction</div>
+    <div class="theory-formula">F = qvB sinθ &nbsp;|&nbsp; F = BIL &nbsp;|&nbsp; EMF = −dΦ/dt (Faraday's Law)</div>
+    <ul class="theory-list">
+      <li>Lenz's Law: induced current opposes the change causing it</li>
+      <li>Fleming's Left-hand rule: motor (current-carrying conductor in field)</li>
+      <li>Fleming's Right-hand rule: generator (conductor moving in field)</li>
+      <li>Transformer: V₁/V₂ = N₁/N₂; Step-up: N₂ > N₁</li>
+    </ul>
+    <div class="source-box"><div class="source-label">⭐ BEST SOURCE</div><div class="source-content">H.C. Verma Vol.2 (Chapters on Electrostatics, Current, Magnetism). Focus especially on circuits — they appear in every NDA paper. Arihant NDA for solved PYQs.</div></div>
+  </div>
+
+  <div class="theory-section" id="t-inorganic">
+    <div class="theory-h1">CHEMISTRY — INORGANIC & PHYSICAL</div>
+    <div class="theory-h2">Periodic Table & Trends</div>
+    <ul class="theory-list">
+      <li>Atomic radius decreases left→right, increases top→bottom</li>
+      <li>Ionization energy increases left→right, decreases top→bottom</li>
+      <li>Electronegativity: Fluorine is highest (4.0 Pauling scale)</li>
+      <li>Noble gases: He, Ne, Ar, Kr, Xe, Rn — inert, full outer shells</li>
+      <li>Most electronegative: F > O > N > Cl</li>
+    </ul>
+    <div class="theory-h2">Chemical Bonding</div>
+    <ul class="theory-list">
+      <li>Ionic bond: metal + non-metal. High MP, conducts when molten/dissolved.</li>
+      <li>Covalent bond: non-metal + non-metal. Sharing electrons.</li>
+      <li>Hydrogen bond: N-H, O-H, F-H (explains high BP of water)</li>
+      <li>VSEPR Theory: shapes of molecules based on electron pair repulsion</li>
+      <li>sp³ → tetrahedral (109.5°), sp² → trigonal planar (120°), sp → linear (180°)</li>
+    </ul>
+    <div class="theory-h2">Important Reactions & Compounds (NDA Favourites)</div>
+    <ul class="theory-list">
+      <li>Haber Process: N₂ + 3H₂ → 2NH₃ (high pressure, 400°C, Fe catalyst)</li>
+      <li>Contact Process: SO₂ + O₂ → SO₃ → H₂SO₄</li>
+      <li>Thermite Reaction: Fe₂O₃ + 2Al → 2Fe + Al₂O₃ (used in welding)</li>
+      <li>pH: acidic < 7, neutral = 7, basic > 7. pH = −log[H⁺]</li>
+      <li>Plaster of Paris: CaSO₄·½H₂O. Baking soda: NaHCO₃. Washing soda: Na₂CO₃·10H₂O</li>
+    </ul>
+    <div class="source-box"><div class="source-label">⭐ BEST SOURCE</div><div class="source-content">NCERT Class XI Chemistry Chapter 3 (Classification of Elements) + Chapter 4 (Chemical Bonding). These are the highest-yield chapters. Supplement with Arihant NDA for trick questions.</div></div>
+  </div>
+
+  <div class="theory-section" id="t-biology">
+    <div class="theory-h1">BIOLOGY — COMPLETE</div>
+    <div class="theory-h2">Cell Biology</div>
+    <ul class="theory-list">
+      <li>Prokaryote vs Eukaryote: no nucleus vs true nucleus</li>
+      <li>Mitosis: growth/repair (4 phases: PMAT). Meiosis: gamete formation, reduces chromosome number.</li>
+      <li>Organelles: Mitochondria = powerhouse. Ribosome = protein synthesis. Chloroplast = photosynthesis.</li>
+      <li>Cell membrane: selectively permeable, fluid mosaic model</li>
+    </ul>
+    <div class="theory-h2">Human Systems (HIGHEST YIELD in NDA)</div>
+    <ul class="theory-list">
+      <li>Digestive: Mouth→Esophagus→Stomach→Small Intestine→Large Intestine. Liver produces bile, Pancreas produces insulin + digestive enzymes.</li>
+      <li>Circulatory: 4-chambered heart. Systole = contraction, Diastole = relaxation. Normal BP = 120/80 mmHg.</li>
+      <li>Respiratory: Breathing rate = 16-20/min. Alveoli = gas exchange surface. Haemoglobin carries O₂.</li>
+      <li>Excretory: Kidney filters 180 L plasma/day, excretes 1.5 L urine. Nephron = functional unit.</li>
+      <li>Nervous: Brain (cerebrum, cerebellum, brainstem). Spinal cord. Neurons = nerve cells.</li>
+      <li>Endocrine: Pituitary (master gland), Thyroid (T3,T4 — metabolism), Adrenal (adrenaline — fight/flight), Pancreas (insulin/glucagon).</li>
+    </ul>
+    <div class="theory-h2">Genetics</div>
+    <ul class="theory-list">
+      <li>DNA = Double helix. Base pairs: A-T, G-C. Discovered by Watson & Crick (1953).</li>
+      <li>Mendel's Laws: Law of Segregation, Law of Independent Assortment</li>
+      <li>Dominant vs Recessive alleles. Genotype vs Phenotype.</li>
+      <li>Blood groups: A, B, AB (universal recipient), O (universal donor)</li>
+      <li>Sex determination: XX = female, XY = male. Sex-linked diseases: haemophilia, colour-blindness.</li>
+    </ul>
+    <div class="theory-h2">Ecology</div>
+    <ul class="theory-list">
+      <li>Food chain: Producer → Herbivore → Carnivore → Decomposer</li>
+      <li>10% energy rule: only 10% energy transferred between trophic levels</li>
+      <li>Biomes: Tropical rainforest (max biodiversity), Tundra (min), Desert, etc.</li>
+      <li>Greenhouse gases: CO₂, CH₄, N₂O, H₂O. Global warming = enhanced greenhouse effect.</li>
+    </ul>
+    <div class="source-box"><div class="source-label">⭐ BEST SOURCE</div><div class="source-content">NCERT Biology Class X (Control & Coordination, Life Processes) + Class XII (Reproduction, Genetics, Ecology). These 8 chapters cover ~95% of all NDA biology questions.</div></div>
+  </div>
+
+  <div class="theory-section" id="t-algebra">
+    <div class="theory-h1">ALGEBRA & SETS</div>
+    <div class="theory-h2">Sets, Relations & Functions</div>
+    <ul class="theory-list">
+      <li>Set operations: Union (A∪B), Intersection (A∩B), Complement (A'), Difference (A-B)</li>
+      <li>De Morgan's Laws: (A∪B)' = A'∩B' and (A∩B)' = A'∪B'</li>
+      <li>Number of subsets of a set with n elements = 2ⁿ</li>
+      <li>Types of functions: One-one (injective), Onto (surjective), Bijective</li>
+    </ul>
+    <div class="theory-h2">Quadratic Equations & Progressions</div>
+    <div class="theory-formula">ax²+bx+c=0: roots = (−b ± √(b²−4ac)) / 2a &nbsp;|&nbsp; Sum of roots = −b/a, Product = c/a</div>
+    <div class="theory-formula">AP: a, a+d, a+2d... Sum = n/2[2a+(n-1)d] &nbsp;|&nbsp; GP: Sum = a(rⁿ−1)/(r−1)</div>
+    <div class="theory-h2">Matrices & Determinants</div>
+    <ul class="theory-list">
+      <li>Matrix multiplication: rows × columns. Not commutative (AB ≠ BA in general)</li>
+      <li>Determinant of 2×2: |a b; c d| = ad − bc</li>
+      <li>Inverse exists only if det ≠ 0 (non-singular matrix)</li>
+      <li>Cramer's Rule for system of equations using determinants</li>
+    </ul>
+    <div class="source-box"><div class="source-label">⭐ BEST SOURCE</div><div class="source-content">R.S. Aggarwal — Mathematics for NDA. Solve all exercises on Sets (Ch.1), Quadratics (Ch.3), AP/GP (Ch.6), Matrices (Ch.8). These four topics = ~25 questions in every paper.</div></div>
+  </div>
+
+  <div class="theory-section" id="t-trig">
+    <div class="theory-h1">TRIGONOMETRY</div>
+    <div class="theory-h2">Core Identities (Must Memorise)</div>
+    <div class="theory-formula">sin²θ + cos²θ = 1 &nbsp;|&nbsp; 1 + tan²θ = sec²θ &nbsp;|&nbsp; 1 + cot²θ = cosec²θ</div>
+    <div class="theory-formula">sin(A±B) = sinA cosB ± cosA sinB &nbsp;|&nbsp; cos(A±B) = cosA cosB ∓ sinA sinB</div>
+    <div class="theory-formula">sin 2A = 2 sinA cosA &nbsp;|&nbsp; cos 2A = cos²A − sin²A = 1 − 2sin²A = 2cos²A − 1</div>
+    <div class="theory-h2">Inverse Trigonometry</div>
+    <ul class="theory-list">
+      <li>Domain of sin⁻¹x: [−1,1], Range: [−π/2, π/2]</li>
+      <li>Domain of cos⁻¹x: [−1,1], Range: [0, π]</li>
+      <li>sin⁻¹x + cos⁻¹x = π/2 (for x ∈ [−1,1])</li>
+    </ul>
+    <div class="theory-h2">Properties of Triangles</div>
+    <div class="theory-formula">Sine Rule: a/sinA = b/sinB = c/sinC = 2R &nbsp;|&nbsp; Cosine Rule: a² = b²+c² − 2bc cosA</div>
+    <div class="source-box"><div class="source-label">⭐ BEST SOURCE</div><div class="source-content">R.D. Sharma Class XI Trigonometry chapters. Trigonometry forms ~20% of NDA Maths. Focus on: identities, inverse trig, and properties of triangles. Practice 50+ PYQs separately.</div></div>
+  </div>
+
+  <div class="theory-section" id="t-calculus">
+    <div class="theory-h1">CALCULUS</div>
+    <div class="theory-h2">Limits & Continuity</div>
+    <div class="theory-formula">lim(sinx/x) = 1 as x→0 &nbsp;|&nbsp; lim((aˣ−1)/x) = ln a as x→0</div>
+    <div class="theory-h2">Differentiation</div>
+    <div class="theory-formula">d(xⁿ)/dx = nxⁿ⁻¹ &nbsp;|&nbsp; d(sin x)/dx = cos x &nbsp;|&nbsp; d(eˣ)/dx = eˣ &nbsp;|&nbsp; d(ln x)/dx = 1/x</div>
+    <div class="theory-formula">Chain Rule: d/dx[f(g(x))] = f'(g(x))·g'(x) &nbsp;|&nbsp; Product Rule: (uv)' = u'v + uv'</div>
+    <div class="theory-h2">Integration</div>
+    <div class="theory-formula">∫xⁿ dx = xⁿ⁺¹/(n+1) + C &nbsp;|&nbsp; ∫sin x dx = −cos x &nbsp;|&nbsp; ∫eˣ dx = eˣ + C</div>
+    <div class="theory-formula">∫₀^π sin x dx = 2 &nbsp;|&nbsp; ∫₋π^π sin x dx = 0</div>
+    <div class="theory-h2">Applications</div>
+    <ul class="theory-list">
+      <li>Maxima/Minima: f'(x)=0 and check f''(x). f''<0 = max, f''>0 = min</li>
+      <li>Area under curve = ∫ y dx between limits</li>
+      <li>Rate of change problems: distance-time, compound interest</li>
+    </ul>
+    <div class="source-box"><div class="source-label">⭐ BEST SOURCE</div><div class="source-content">NCERT Class XII Maths Chapters 5-8 (Continuity, Differentiation, Application of Derivatives, Integrals). Then R.S. Aggarwal NDA for 200+ practice questions.</div></div>
+  </div>
+
+  <div class="theory-section" id="t-stats">
+    <div class="theory-h1">STATISTICS & PROBABILITY</div>
+    <div class="theory-h2">Statistics</div>
+    <div class="theory-formula">Mean = Σx/n &nbsp;|&nbsp; Variance σ² = Σ(x−x̄)²/n &nbsp;|&nbsp; SD = √Variance</div>
+    <ul class="theory-list">
+      <li>Median: middle value when sorted. Mode: most frequent value.</li>
+      <li>For symmetrical distribution: Mean = Median = Mode</li>
+      <li>Coefficient of variation = (SD/Mean) × 100</li>
+    </ul>
+    <div class="theory-h2">Probability</div>
+    <div class="theory-formula">P(A) = Favourable outcomes / Total outcomes &nbsp;|&nbsp; 0 ≤ P(A) ≤ 1</div>
+    <div class="theory-formula">P(A∪B) = P(A)+P(B)−P(A∩B) &nbsp;|&nbsp; Bayes: P(A|B) = P(B|A)·P(A)/P(B)</div>
+    <ul class="theory-list">
+      <li>Independent events: P(A∩B) = P(A)·P(B)</li>
+      <li>Binomial distribution: P(X=r) = ⁿCᵣ·pʳ·qⁿ⁻ʳ</li>
+      <li>Permutations: ⁿPᵣ = n!/(n−r)! &nbsp; Combinations: ⁿCᵣ = n!/r!(n−r)!</li>
+    </ul>
+    <div class="source-box"><div class="source-label">⭐ BEST SOURCE</div><div class="source-content">NCERT Class XI Ch.15 (Statistics) + Class XII Ch.13 (Probability). Statistics is very scoring — easy questions but needs formula accuracy. Always attempt these first in the exam!</div></div>
+  </div>
+</div>
+</div>
+
+<!-- QUIZ PAGE -->
+<div id="page-quiz" class="page">
+<div class="section">
+  <div style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:2px;margin-bottom:20px;">◈ RAPID FIRE QUIZ</div>
+  <div class="quiz-container">
+    <div id="quizSetup">
+      <div class="card" style="text-align:center;padding:48px 24px;">
+        <div style="font-family:var(--display);font-size:48px;color:var(--accent);margin-bottom:8px;">QUIZ</div>
+        <div style="color:var(--muted);margin-bottom:32px;font-family:var(--mono);font-size:12px;">AI-POWERED EXPLANATIONS · TIMED MODE</div>
+        <div class="topic-nav" style="justify-content:center;margin-bottom:24px;">
+          <button class="topic-btn active" id="qt-all" onclick="setQuizTopic('all',this)">ALL</button>
+          <button class="topic-btn" id="qt-Physics" onclick="setQuizTopic('Physics',this)">PHYSICS</button>
+          <button class="topic-btn" id="qt-Chemistry" onclick="setQuizTopic('Chemistry',this)">CHEMISTRY</button>
+          <button class="topic-btn" id="qt-Biology" onclick="setQuizTopic('Biology',this)">BIOLOGY</button>
+          <button class="topic-btn" id="qt-Maths" onclick="setQuizTopic('Maths',this)">MATHS</button>
+        </div>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:32px;">
+          <button class="btn btn-ghost" onclick="setQCount(10)" id="qc10">10 Qs</button>
+          <button class="btn btn-ghost active" onclick="setQCount(20)" id="qc20">20 Qs</button>
+          <button class="btn btn-ghost" onclick="setQCount(30)" id="qc30">30 Qs</button>
+        </div>
+        <button class="btn btn-primary" style="font-size:16px;padding:14px 40px;" onclick="startQuiz()">START QUIZ →</button>
+      </div>
+    </div>
+    <div id="quizActive" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div style="font-family:var(--mono);font-size:12px;color:var(--muted);" id="quizProgress">Q 1 / 20</div>
+        <div style="font-family:var(--display);font-size:24px;color:var(--accent);" id="quizTimer">30</div>
+        <div style="font-family:var(--mono);font-size:12px;" id="quizScoreDisplay">Score: 0</div>
+      </div>
+      <div class="quiz-progress"><div class="quiz-bar" id="quizBarEl" style="width:0%"></div></div>
+      <div class="q-card" id="quizQCard"></div>
+    </div>
+    <div id="quizResult" style="display:none;">
+      <div class="card" style="text-align:center;padding:48px 24px;">
+        <div class="quiz-score" id="finalScore"></div>
+        <div style="font-family:var(--mono);font-size:14px;color:var(--muted);margin:8px 0 24px;">FINAL SCORE</div>
+        <div id="quizFeedback" style="font-size:15px;margin-bottom:32px;"></div>
+        <button class="btn btn-primary" onclick="resetQuiz()">TRY AGAIN</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+// ═══════════════ QUESTION BANK ═══════════════
+const questions = [
+  // PHYSICS - MECHANICS
+  {id:1,year:'2024',topic:'Physics',subtopic:'Mechanics',diff:'M',
+   q:"A body of mass 5 kg is moving with velocity 20 m/s. A force of 10 N acts on it for 4 seconds. What is the final velocity?",
+   opts:['28 m/s','28 m/s','30 m/s','40 m/s'],correct:0,
+   ans:"A",explain_key:"Newton's second law + impulse-momentum theorem"},
+  
+  {id:2,year:'2024',topic:'Physics',subtopic:'Mechanics',diff:'E',
+   q:"Which of the following is the SI unit of work?",
+   opts:['Watt','Newton','Joule','Pascal'],correct:2,ans:"C",
+   explain_key:"Work = Force × displacement, SI unit = Joule = N·m"},
+  
+  {id:3,year:'2023',topic:'Physics',subtopic:'Mechanics',diff:'M',
+   q:"A projectile is fired at 60° to the horizontal. The horizontal range is maximum when it is fired at:",
+   opts:['30°','45°','60°','90°'],correct:1,ans:"B",
+   explain_key:"Range R = v²sin2θ/g; maximum when sin2θ=1, i.e., 2θ=90°, θ=45°"},
+  
+  {id:4,year:'2023',topic:'Physics',subtopic:'Mechanics',diff:'H',
+   q:"The escape velocity from the Earth's surface is approximately:",
+   opts:['7.9 km/s','11.2 km/s','15.0 km/s','3.0 km/s'],correct:1,ans:"B",
+   explain_key:"Escape velocity = √(2gR) = √(2×9.8×6.4×10⁶) ≈ 11.2 km/s"},
+  
+  {id:5,year:'2022',topic:'Physics',subtopic:'Optics',diff:'M',
+   q:"A convex lens of focal length 20 cm forms an image at 60 cm from the lens. The object distance is:",
+   opts:['30 cm','40 cm','15 cm','60 cm'],correct:0,ans:"A",
+   explain_key:"1/v - 1/u = 1/f → 1/60 - 1/u = 1/20 → 1/u = 1/60 - 1/20 = -2/60 → u = -30 cm"},
+  
+  {id:6,year:'2022',topic:'Physics',subtopic:'Optics',diff:'E',
+   q:"The phenomenon of total internal reflection is used in:",
+   opts:['Periscope','Optical fibres','Telescope','Microscope'],correct:1,ans:"B",
+   explain_key:"Optical fibres rely on total internal reflection to transmit light signals over long distances"},
+  
+  {id:7,year:'2021',topic:'Physics',subtopic:'Thermodynamics',diff:'M',
+   q:"In which process does a gas expand without doing any work on the surroundings?",
+   opts:['Isothermal','Isobaric','Isochoric','Adiabatic'],correct:2,ans:"C",
+   explain_key:"Isochoric (constant volume) process: W = P·ΔV = 0 because ΔV = 0"},
+  
+  {id:8,year:'2021',topic:'Physics',subtopic:'Electricity',diff:'M',
+   q:"Three resistors of 2Ω, 3Ω, and 6Ω are connected in parallel. The equivalent resistance is:",
+   opts:['1 Ω','11 Ω','0.5 Ω','2 Ω'],correct:0,ans:"A",
+   explain_key:"1/R = 1/2 + 1/3 + 1/6 = 3/6 + 2/6 + 1/6 = 6/6 = 1 → R = 1 Ω"},
+  
+  {id:9,year:'2020',topic:'Physics',subtopic:'Mechanics',diff:'E',
+   q:"Newton's first law of motion is also called:",
+   opts:['Law of acceleration','Law of inertia','Law of gravitation','Law of action-reaction'],correct:1,ans:"B",
+   explain_key:"Newton's First Law defines inertia — the tendency of a body to resist changes in its state of motion"},
+  
+  {id:10,year:'2020',topic:'Physics',subtopic:'Electricity',diff:'H',
+   q:"In a transformer, if the number of turns in the primary coil is 500 and in the secondary is 2000, and the primary voltage is 120 V, the secondary voltage is:",
+   opts:['30 V','240 V','480 V','960 V'],correct:2,ans:"C",
+   explain_key:"V₁/V₂ = N₁/N₂ → V₂ = V₁ × N₂/N₁ = 120 × 2000/500 = 480 V"},
+
+  // CHEMISTRY
+  {id:11,year:'2024',topic:'Chemistry',subtopic:'Inorganic',diff:'E',
+   q:"Which element has the highest electronegativity?",
+   opts:['Oxygen','Chlorine','Fluorine','Nitrogen'],correct:2,ans:"C",
+   explain_key:"Fluorine (F) has electronegativity 4.0 on the Pauling scale — highest of all elements"},
+  
+  {id:12,year:'2024',topic:'Chemistry',subtopic:'Physical',diff:'M',
+   q:"pH of a solution is 3. What is the hydrogen ion concentration?",
+   opts:['10⁻³ mol/L','10³ mol/L','3 mol/L','0.3 mol/L'],correct:0,ans:"A",
+   explain_key:"pH = −log[H⁺] → [H⁺] = 10^(−pH) = 10⁻³ mol/L"},
+  
+  {id:13,year:'2023',topic:'Chemistry',subtopic:'Inorganic',diff:'E',
+   q:"The process of manufacturing ammonia from nitrogen and hydrogen is called:",
+   opts:['Solvay process','Haber process','Contact process','Ostwald process'],correct:1,ans:"B",
+   explain_key:"Haber process: N₂ + 3H₂ ⇌ 2NH₃ at ~400°C, 200 atm pressure, iron catalyst"},
+  
+  {id:14,year:'2023',topic:'Chemistry',subtopic:'Organic',diff:'M',
+   q:"Which of the following is an example of a condensation polymer?",
+   opts:['Polyethylene','Nylon','PVC','Teflon'],correct:1,ans:"B",
+   explain_key:"Nylon (polyamide) is formed by condensation polymerization with elimination of water"},
+  
+  {id:15,year:'2022',topic:'Chemistry',subtopic:'Physical',diff:'M',
+   q:"A reaction in which heat is released to the surroundings is called:",
+   opts:['Endothermic','Exothermic','Isothermal','Adiabatic'],correct:1,ans:"B",
+   explain_key:"Exothermic reactions release energy (ΔH < 0). Examples: combustion, neutralization"},
+  
+  {id:16,year:'2021',topic:'Chemistry',subtopic:'Inorganic',diff:'E',
+   q:"The formula of baking soda is:",
+   opts:['Na₂CO₃','NaHCO₃','NaOH','NaCl'],correct:1,ans:"B",
+   explain_key:"Baking soda = Sodium bicarbonate = NaHCO₃. Washing soda = Na₂CO₃·10H₂O"},
+
+  {id:17,year:'2020',topic:'Chemistry',subtopic:'Physical',diff:'H',
+   q:"At STP, the volume occupied by 1 mole of an ideal gas is:",
+   opts:['22.4 L','11.2 L','44.8 L','2.24 L'],correct:0,ans:"A",
+   explain_key:"At STP (0°C, 1 atm), molar volume of ideal gas = 22.4 litres (Avogadro's hypothesis)"},
+
+  // BIOLOGY
+  {id:18,year:'2024',topic:'Biology',subtopic:'Human Systems',diff:'E',
+   q:"Which organ produces bile in the human body?",
+   opts:['Pancreas','Stomach','Liver','Gall bladder'],correct:2,ans:"C",
+   explain_key:"Bile is produced by the LIVER and stored in the gall bladder. Bile helps emulsify fats."},
+  
+  {id:19,year:'2024',topic:'Biology',subtopic:'Genetics',diff:'M',
+   q:"The universal blood donor blood group is:",
+   opts:['A','B','AB','O'],correct:3,ans:"D",
+   explain_key:"Group O (O negative) is the universal donor — no A or B antigens on RBCs. AB is the universal recipient."},
+  
+  {id:20,year:'2023',topic:'Biology',subtopic:'Cell Biology',diff:'M',
+   q:"Which organelle is known as the 'powerhouse of the cell'?",
+   opts:['Nucleus','Ribosome','Mitochondria','Lysosome'],correct:2,ans:"C",
+   explain_key:"Mitochondria produce ATP via cellular respiration (Krebs cycle + oxidative phosphorylation)"},
+  
+  {id:21,year:'2022',topic:'Biology',subtopic:'Genetics',diff:'M',
+   q:"DNA was first discovered by:",
+   opts:['Watson and Crick','Gregor Mendel','Friedrich Miescher','Louis Pasteur'],correct:2,ans:"C",
+   explain_key:"Friedrich Miescher first isolated DNA (called nuclein) in 1869. Watson & Crick solved its double helix structure in 1953."},
+  
+  {id:22,year:'2021',topic:'Biology',subtopic:'Human Systems',diff:'E',
+   q:"The normal blood pressure of a healthy adult is:",
+   opts:['80/120 mmHg','120/80 mmHg','100/60 mmHg','140/100 mmHg'],correct:1,ans:"B",
+   explain_key:"120/80 mmHg: 120 = systolic (heart contracting), 80 = diastolic (heart relaxing)"},
+  
+  {id:23,year:'2020',topic:'Biology',subtopic:'Ecology',diff:'E',
+   q:"The energy transferred from one trophic level to next is approximately:",
+   opts:['100%','50%','10%','1%'],correct:2,ans:"C",
+   explain_key:"10% law (Lindemann, 1942): only ~10% of energy passes between trophic levels; rest is lost as heat"},
+
+  // MATHS
+  {id:24,year:'2024',topic:'Maths',subtopic:'Algebra',diff:'M',
+   q:"The sum of all roots of the equation x² − 5x + 6 = 0 is:",
+   opts:['6','5','−5','−6'],correct:1,ans:"B",
+   explain_key:"By Vieta's formulas, sum of roots = −b/a = −(−5)/1 = 5"},
+  
+  {id:25,year:'2024',topic:'Maths',subtopic:'Trigonometry',diff:'M',
+   q:"The value of sin²30° + cos²30° is:",
+   opts:['0','1','2','0.5'],correct:1,ans:"B",
+   explain_key:"This is a fundamental identity: sin²θ + cos²θ = 1 for all values of θ"},
+  
+  {id:26,year:'2023',topic:'Maths',subtopic:'Algebra',diff:'H',
+   q:"If A is a 3×3 matrix with det(A) = 5, then det(3A) is:",
+   opts:['15','45','135','5'],correct:2,ans:"C",
+   explain_key:"det(kA) = kⁿ·det(A) where n is the order. So det(3A) = 3³ × 5 = 27 × 5 = 135"},
+  
+  {id:27,year:'2023',topic:'Maths',subtopic:'Calculus',diff:'M',
+   q:"The derivative of sin(x²) with respect to x is:",
+   opts:['cos(x²)','2x cos(x²)','2cos(x)','cos(2x)'],correct:1,ans:"B",
+   explain_key:"By chain rule: d/dx[sin(x²)] = cos(x²) · d(x²)/dx = cos(x²) · 2x = 2x cos(x²)"},
+  
+  {id:28,year:'2022',topic:'Maths',subtopic:'Trigonometry',diff:'M',
+   q:"What is the value of tan 45°?",
+   opts:['0','1/√2','1','√3'],correct:2,ans:"C",
+   explain_key:"tan 45° = sin 45°/cos 45° = (1/√2)/(1/√2) = 1. Standard value — must be memorised."},
+  
+  {id:29,year:'2021',topic:'Maths',subtopic:'Algebra',diff:'E',
+   q:"The number of subsets of a set with 4 elements is:",
+   opts:['8','12','16','4'],correct:2,ans:"C",
+   explain_key:"Number of subsets = 2ⁿ = 2⁴ = 16 (includes empty set and the set itself)"},
+  
+  {id:30,year:'2020',topic:'Maths',subtopic:'Calculus',diff:'H',
+   q:"∫₀¹ x² dx equals:",
+   opts:['1/2','1/3','2/3','1'],correct:1,ans:"B",
+   explain_key:"∫x² dx = x³/3 + C. Evaluating from 0 to 1: [1³/3] − [0³/3] = 1/3 − 0 = 1/3"},
+
+  {id:31,year:'2024',topic:'Maths',subtopic:'Statistics',diff:'M',
+   q:"The mean of 5, 10, 15, 20, 25 is:",
+   opts:['10','15','20','25'],correct:1,ans:"B",
+   explain_key:"Mean = (5+10+15+20+25)/5 = 75/5 = 15"},
+
+  {id:32,year:'2023',topic:'Maths',subtopic:'Statistics',diff:'M',
+   q:"Two dice are thrown. The probability of getting a sum of 7 is:",
+   opts:['1/6','1/9','5/36','7/36'],correct:0,ans:"A",
+   explain_key:"Favourable outcomes for sum=7: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) = 6. P = 6/36 = 1/6"},
+
+  {id:33,year:'2022',topic:'Physics',subtopic:'Mechanics',diff:'M',
+   q:"The SI unit of pressure is:",
+   opts:['Newton','Joule','Pascal','Watt'],correct:2,ans:"C",
+   explain_key:"Pressure = Force/Area. SI unit = N/m² = Pascal (Pa). 1 atm ≈ 101325 Pa"},
+
+  {id:34,year:'2021',topic:'Chemistry',subtopic:'Physical',diff:'E',
+   q:"Which of the following is NOT a greenhouse gas?",
+   opts:['CO₂','CH₄','N₂','N₂O'],correct:2,ans:"C",
+   explain_key:"N₂ (nitrogen) is NOT a greenhouse gas. CO₂, CH₄, N₂O, and H₂O vapour are major greenhouse gases."},
+
+  {id:35,year:'2020',topic:'Biology',subtopic:'Human Systems',diff:'M',
+   q:"The functional unit of the kidney is:",
+   opts:['Neuron','Nephron','Alveolus','Axon'],correct:1,ans:"B",
+   explain_key:"The nephron is the structural and functional unit of the kidney; each kidney has ~1 million nephrons"}
+];
+
+// ═══════════════ STATE ═══════════════
+let currentYear = 'all', currentTopic = 'all', quizTopic = 'all', quizCount = 20;
+let quizQuestions = [], quizIndex = 0, quizScore = 0, quizTimer = null, timeLeft = 30;
+let answered = {};
+
+// ═══════════════ NAVIGATION ═══════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  event.target.classList.add('active');
+  if(id==='questions') renderQuestions();
+  if(id==='analytics') renderBars();
+}
+function openTopic(t) {
+  currentTopic = t.charAt(0).toUpperCase()+t.slice(1);
+  showPage('questions');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.nav-btn')[1].classList.add('active');
+  renderQuestions();
+}
+
+// ═══════════════ FILTERS ═══════════════
+function setYear(y, el) {
+  currentYear = y;
+  document.querySelectorAll('.year-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderQuestions();
+}
+function setTopic(t, el) {
+  currentTopic = t;
+  document.querySelectorAll('.topic-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderQuestions();
+}
+
+// ═══════════════ RENDER QUESTIONS ═══════════════
+function renderQuestions() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  let filtered = questions.filter(q => {
+    if(currentYear !== 'all' && q.year !== currentYear) return false;
+    if(currentTopic !== 'all' && q.topic !== currentTopic && q.subtopic !== currentTopic) return false;
+    if(search && !q.q.toLowerCase().includes(search) && !q.subtopic.toLowerCase().includes(search)) return false;
+    return true;
+  });
+  
+  const container = document.getElementById('questionList');
+  if(filtered.length === 0) {
+    container.innerHTML = '<div class="card" style="text-align:center;padding:48px;color:var(--muted);font-family:var(--mono);">No questions match this filter.</div>';
+    return;
+  }
+  
+  container.innerHTML = filtered.map(q => `
+    <div class="q-card" id="qcard-${q.id}">
+      <div class="q-header">
+        <div>
+          <span class="q-num">NDA 1 ${q.year} · ${q.subtopic}</span>
+          <div class="card-meta" style="margin-top:6px;">
+            <span class="tag">${q.topic}</span>
+            <span class="diff diff-${q.diff}">${q.diff==='E'?'EASY':q.diff==='M'?'MEDIUM':'HARD'}</span>
+          </div>
+        </div>
+        <span style="font-family:var(--mono);font-size:12px;color:var(--muted);">#${q.id}</span>
+      </div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-options">
+        ${q.opts.map((opt,i)=>`<div class="q-opt" id="opt-${q.id}-${i}" onclick="selectOpt(${q.id},${i})">
+          <span class="opt-letter">${['A','B','C','D'][i]}.</span>
+          <span>${opt}</span>
+        </div>`).join('')}
+      </div>
+      <div class="q-actions">
+        <button class="btn btn-ghost" onclick="showSolution(${q.id})">SHOW SOLUTION</button>
+        <button class="btn btn-orange" onclick="askAI(${q.id})">◆ AI EXPLAIN</button>
+      </div>
+      <div class="ai-box" id="ai-${q.id}">
+        <div class="ai-label">AI EXPLANATION</div>
+        <div class="ai-content" id="ai-content-${q.id}"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterQuestions() { renderQuestions(); }
+
+function selectOpt(qid, i) {
+  if(answered[qid]) return;
+  const q = questions.find(x=>x.id===qid);
+  answered[qid] = i;
+  q.opts.forEach((_,j)=>{
+    const el = document.getElementById(`opt-${qid}-${j}`);
+    if(j===q.correct) el.classList.add('correct');
+    else if(j===i && i!==q.correct) el.classList.add('wrong');
+  });
+}
+
+function showSolution(qid) {
+  const q = questions.find(x=>x.id===qid);
+  const box = document.getElementById(`ai-${qid}`);
+  const content = document.getElementById(`ai-content-${qid}`);
+  box.classList.add('show');
+  content.innerHTML = `<strong style="color:var(--green);">Answer: ${q.ans}</strong><br><br>${q.explain_key}`;
+  selectOpt(qid, q.correct);
+}
+
+async function askAI(qid) {
+  const q = questions.find(x=>x.id===qid);
+  const box = document.getElementById(`ai-${qid}`);
+  const content = document.getElementById(`ai-content-${qid}`);
+  box.classList.add('show');
+  content.innerHTML = `<div class="loading-dots"><span></span><span></span><span></span></div> Generating detailed explanation...`;
+  
+  try {
+    const resp = await fetch("https://api.anthropic.com/v1/messages", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:1000,
+        messages:[{role:"user",content:`You are an expert NDA exam tutor. Explain this question with a clear step-by-step solution, the concept tested, and a memory trick. Be concise but thorough.
+
+Question: ${q.q}
+Options: ${q.opts.join(' | ')}
+Correct Answer: ${q.opts[q.correct]} (${q.ans})
+Topic: ${q.subtopic}
+Hint: ${q.explain_key}
+
+Format your response in 3 parts:
+1. SOLUTION (step-by-step)
+2. CONCEPT (what this tests)
+3. MEMORY TRICK (to remember this)`}]
+      })
+    });
+    const data = await resp.json();
+    const text = data.content?.map(c=>c.text||'').join('') || 'Could not generate explanation.';
+    content.innerHTML = text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong style="color:var(--accent);">$1</strong>');
+  } catch(e) {
+    content.innerHTML = `<strong style="color:var(--green);">Answer: ${q.ans}</strong><br><br><strong>Solution:</strong> ${q.explain_key}`;
+  }
+}
+
+// ═══════════════ ANALYTICS BARS ═══════════════
+function renderBars() {
+  const data = [
+    {label:'Physics — Mechanics',count:22,color:'var(--accent)',max:25},
+    {label:'Physics — Optics',count:15,color:'var(--accent)',max:25},
+    {label:'Physics — Electricity',count:18,color:'var(--accent)',max:25},
+    {label:'Physics — Thermo',count:12,color:'var(--accent)',max:25},
+    {label:'Chemistry — Inorganic',count:20,color:'#7c3aed',max:25},
+    {label:'Chemistry — Organic',count:15,color:'#7c3aed',max:25},
+    {label:'Chemistry — Physical',count:15,color:'#7c3aed',max:25},
+    {label:'Biology — Human Body',count:22,color:'var(--green)',max:25},
+    {label:'Biology — Genetics',count:12,color:'var(--green)',max:25},
+    {label:'Biology — Ecology',count:10,color:'var(--green)',max:25},
+    {label:'Maths — Algebra',count:25,color:'var(--accent2)',max:30},
+    {label:'Maths — Trigonometry',count:22,color:'var(--accent2)',max:30},
+    {label:'Maths — Calculus',count:20,color:'var(--accent2)',max:30},
+    {label:'Maths — Statistics',count:15,color:'var(--accent2)',max:30},
+    {label:'Maths — Coordinate Geo',count:18,color:'var(--accent2)',max:30},
+  ];
+  const chart = document.getElementById('barChart');
+  chart.innerHTML = data.map(d=>`
+    <div class="bar-row">
+      <div class="bar-label">${d.label}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${(d.count/d.max)*100}%;background:${d.color};">${d.count}</div>
+      </div>
+      <div class="bar-count">${d.count}q</div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════ THEORY ═══════════════
+function scrollToTheory(id) {
+  document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});
+  return false;
+}
+
+// ═══════════════ QUIZ ═══════════════
+function setQuizTopic(t, el) {
+  quizTopic = t;
+  document.querySelectorAll('[id^="qt-"]').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+function setQCount(n) {
+  quizCount = n;
+  document.querySelectorAll('#qc10,#qc20,#qc30').forEach(b=>b.classList.remove('active'));
+  document.getElementById('qc'+n).classList.add('active');
+}
+
+function startQuiz() {
+  let pool = quizTopic==='all' ? [...questions] : questions.filter(q=>q.topic===quizTopic);
+  quizQuestions = pool.sort(()=>Math.random()-.5).slice(0,Math.min(quizCount,pool.length));
+  quizIndex = 0; quizScore = 0;
+  document.getElementById('quizSetup').style.display='none';
+  document.getElementById('quizResult').style.display='none';
+  document.getElementById('quizActive').style.display='block';
+  renderQuizQ();
+}
+
+function renderQuizQ() {
+  if(quizIndex >= quizQuestions.length) { endQuiz(); return; }
+  const q = quizQuestions[quizIndex];
+  timeLeft = 30;
+  clearInterval(quizTimer);
+  quizTimer = setInterval(()=>{
+    timeLeft--;
+    document.getElementById('quizTimer').textContent = timeLeft;
+    document.getElementById('quizTimer').style.color = timeLeft<=10?'var(--red)':'var(--accent)';
+    if(timeLeft<=0){ clearInterval(quizTimer); nextQuizQ(false, -1); }
+  },1000);
+  
+  document.getElementById('quizProgress').textContent = `Q ${quizIndex+1} / ${quizQuestions.length}`;
+  document.getElementById('quizScoreDisplay').textContent = `Score: ${quizScore}`;
+  document.getElementById('quizBarEl').style.width = `${(quizIndex/quizQuestions.length)*100}%`;
+  
+  document.getElementById('quizQCard').innerHTML = `
+    <div class="q-num" style="margin-bottom:12px;">${q.subtopic} · NDA 1 ${q.year}</div>
+    <div class="q-text">${q.q}</div>
+    <div class="q-options" id="quizOpts">
+      ${q.opts.map((opt,i)=>`<div class="q-opt" onclick="quizSelect(${i})">
+        <span class="opt-letter">${['A','B','C','D'][i]}.</span>${opt}
+      </div>`).join('')}
+    </div>
+  `;
+}
+
+function quizSelect(i) {
+  clearInterval(quizTimer);
+  const q = quizQuestions[quizIndex];
+  const opts = document.querySelectorAll('#quizOpts .q-opt');
+  opts.forEach((el,j)=>{
+    if(j===q.correct) el.classList.add('correct');
+    else if(j===i && i!==q.correct) el.classList.add('wrong');
+    el.style.pointerEvents='none';
+  });
+  if(i===q.correct) quizScore++;
+  document.getElementById('quizScoreDisplay').textContent = `Score: ${quizScore}`;
+  setTimeout(()=>nextQuizQ(true, i), 1200);
+}
+
+function nextQuizQ(answered, sel) {
+  quizIndex++;
+  renderQuizQ();
+}
+
+function endQuiz() {
+  clearInterval(quizTimer);
+  document.getElementById('quizActive').style.display='none';
+  document.getElementById('quizResult').style.display='block';
+  const pct = Math.round((quizScore/quizQuestions.length)*100);
+  document.getElementById('finalScore').textContent = `${quizScore}/${quizQuestions.length}`;
+  document.getElementById('quizFeedback').innerHTML = pct>=80
+    ? `<span style="color:var(--green);">🏆 Excellent! NDA-ready performance.</span>`
+    : pct>=60
+    ? `<span style="color:var(--gold);">👍 Good! Review weak topics and retry.</span>`
+    : `<span style="color:var(--red);">📚 Needs more practice. Focus on theory first.</span>`;
+}
+
+function resetQuiz() {
+  document.getElementById('quizResult').style.display='none';
+  document.getElementById('quizSetup').style.display='block';
+  quizIndex=0; quizScore=0;
+}
+
+// Init
+renderQuestions();
+</script>
+</body>
+</html>
