@@ -102,6 +102,7 @@ function addTapListener(element, handler) {
         handler(e);
     }, { passive: true });
     element.addEventListener('click', (e) => {
+        if (Date.now() - lastTouch < 500) return;
         e.stopPropagation();
         handler(e);
     });
