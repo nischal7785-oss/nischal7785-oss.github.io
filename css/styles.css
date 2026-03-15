@@ -462,3 +462,8 @@ button:active:not(:disabled) {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+/* Eliminate 300ms touch delay on mobile for all interactive elements */
+button, a, input, select, label, [role="button"] {
+    touch-action: manipulation;
+}
