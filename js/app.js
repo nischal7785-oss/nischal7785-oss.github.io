@@ -107,15 +107,6 @@ function addTapListener(element, handler) {
         handler(e);
     });
 }
-    element.addEventListener('touchstart', () => { touchMoved = false; }, { passive: true });
-    element.addEventListener('touchmove', () => { touchMoved = true; }, { passive: true });
-    element.addEventListener('touchend', (e) => {
-        if (!touchMoved) {
-            e.preventDefault();
-            e.stopPropagation();
-            handler(e);
-        }
-    });
     element.addEventListener('click', (e) => {
         e.stopPropagation();
         handler(e);
