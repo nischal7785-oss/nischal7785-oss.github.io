@@ -95,7 +95,7 @@ function navigateTo(targetView) {
 }
 
 function addTapListener(element, handler) {
-    element.addEventListener('click', handler);
+    if (element) element.addEventListener('click', handler);
 }
 
 navButtons.forEach(btn => {
@@ -488,21 +488,60 @@ function updateQuizModeUI() {
 quizTypeRadios.forEach(radio => { radio.addEventListener('change', updateQuizModeUI); });
 updateQuizModeUI();
 
-// Reset topic when subject changes so stale topic values don't cause empty results
+// Reset topic when subject changes and repopulate with relevant options
 const quizSubjectSelect = document.getElementById('quiz-subject');
+const quizTopicSelect   = document.getElementById('quiz-topic');
+
+function getTopicsForSubject(subject) {
+    const mathTopicsList = ['Algebra','Matrices & Determinants','Trigonometry','Calculus',
+        'Statistics & Probability','Analytical Geometry (2D & 3D)','Vector Algebra',
+        'Number System','Simplification','Average','Percentage','Profit Loss',
+        'Ratio Proportion','Time Work','Time Speed Distance','SI CI','Geometry',
+        'Mensuration','Matrices','Vectors','Statistics','Probability',
+        'Coordinate Geometry','Sequences','Number Theory','Time Speed','Set Theory',
+        'Differential Equations','Permutation','Combination','Binomial',
+        'Logarithm','Complex Numbers','3D Geometry','Ratio','Mixture'];
+    if (!ndaData || !ndaData.quizBank) return [];
+    const topics = new Set();
+    ndaData.quizBank.forEach(q => {
+        if (!q.topic) return;
+        if (subject === 'all') { topics.add(q.topic); return; }
+        if (subject === 'Mathematics') {
+            if ((q.subject && q.subject === 'Mathematics') || (!q.subject && mathTopicsList.includes(q.topic)))
+                topics.add(q.topic);
+            return;
+        }
+        // GAT and specific GAT sub-subjects
+        if (q.subject && q.subject === subject) { topics.add(q.topic); return; }
+        if (!q.subject && !mathTopicsList.includes(q.topic)) topics.add(q.topic);
+    });
+    return [...topics].sort();
+}
+
+function populateTopicDropdown(subject) {
+    if (!quizTopicSelect) return;
+    const topics = getTopicsForSubject(subject);
+    quizTopicSelect.innerHTML = '<option value="all">All Topics</option>';
+    topics.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t; opt.textContent = t;
+        quizTopicSelect.appendChild(opt);
+    });
+}
+
 if (quizSubjectSelect) {
     quizSubjectSelect.addEventListener('change', () => {
-        const topicEl = document.getElementById('quiz-topic');
-        if (topicEl) topicEl.value = 'all';
+        populateTopicDropdown(quizSubjectSelect.value);
     });
+    populateTopicDropdown(quizSubjectSelect.value || 'all'); // populate on page load
 }
 
 addTapListener(startQuizBtn, () => {
     const quizType = document.querySelector('input[name="quiz-type"]:checked').value;
     state.quizType = quizType;
-    const topicSelect      = document.getElementById('quiz-topic').value;
-    const subjectSelect    = document.getElementById('quiz-subject').value;
-    const difficultySelect = document.getElementById('quiz-difficulty').value;
+    const topicSelect      = document.getElementById('quiz-topic')?.value || 'all';
+    const subjectSelect    = document.getElementById('quiz-subject')?.value || 'all';
+    const difficultySelect = document.getElementById('quiz-difficulty')?.value || 'all';
     currentQuestionIndex   = 0;
 
     // Helper: shuffle array in place (Fisher-Yates)
@@ -542,6 +581,7 @@ addTapListener(startQuizBtn, () => {
             filtered = filtered.filter(q => {
                 if (q.subject) return q.subject === subjectSelect;
                 if (subjectSelect === 'Mathematics') return mathTopics.includes(q.topic);
+                if (subjectSelect === 'GAT') return !mathTopics.includes(q.topic);
                 return false;
             });
         }
@@ -614,6 +654,9 @@ function setupMockUI(durationInSeconds) {
     document.getElementById('timer-container').classList.remove('hidden');
     document.getElementById('timer-container').classList.add('flex');
     document.getElementById('quiz-main-card').classList.remove('mx-auto', 'max-w-3xl');
+    // Show progress bar for mock exams too
+    const pbContainer = document.getElementById('quiz-progress-bar-container');
+    if (pbContainer) pbContainer.classList.remove('hidden');
     startTimer(durationInSeconds);
 }
 
@@ -633,6 +676,7 @@ function updateTimerDisplay() {
     const m = Math.floor((state.timeRemaining % 3600) / 60);
     const s = state.timeRemaining % 60;
     const timerElem = document.getElementById('quiz-timer');
+    if (!timerElem) return;
     timerElem.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
     if (state.timeRemaining < 300) { timerElem.classList.remove('text-emerald-400'); timerElem.classList.add('text-rose-500'); }
     else { timerElem.classList.add('text-emerald-400'); timerElem.classList.remove('text-rose-500'); }
@@ -661,9 +705,10 @@ function renderQuizQuestion() {
 
     const isLast = currentQuestionIndex === currentQuizQuestions.length - 1;
     const progress = ((currentQuestionIndex + 1) / currentQuizQuestions.length) * 100;
-
-    document.getElementById('quiz-progress-bar').style.width = `${progress}%`;
-    document.getElementById('quiz-counter').textContent = `Question ${currentQuestionIndex + 1} of ${currentQuizQuestions.length}`;
+    const progressBar = document.getElementById('quiz-progress-bar');
+    const counterEl   = document.getElementById('quiz-counter');
+    if (progressBar) progressBar.style.width = `${progress}%`;
+    if (counterEl)   counterEl.textContent = `Question ${currentQuestionIndex + 1} of ${currentQuizQuestions.length}`;
 
     const diffColors = { 'Easy': 'text-emerald-500 bg-emerald-50', 'Medium': 'text-amber-500 bg-amber-50', 'Hard': 'text-rose-500 bg-rose-50' };
     const diffTag = q.difficulty ? `<span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${diffColors[q.difficulty] || 'text-slate-500 bg-slate-100'}">${q.difficulty}</span>` : '';
@@ -671,18 +716,18 @@ function renderQuizQuestion() {
     const html = `
         <div class="mb-8">
             <div class="flex items-center gap-3 mb-4">
-                <span class="text-xs font-semibold text-slate-400 bg-slate-100 px-2 py-1 rounded">${q.topic}</span>
+                <span class="text-xs font-semibold text-slate-400 bg-slate-100 px-2 py-1 rounded">${q.topic || ''}</span>
                 ${diffTag}
             </div>
             <h2 class="text-xl md:text-2xl font-bold text-slate-800 leading-relaxed">${formatMath(q.question)}</h2>
         </div>
         <div class="space-y-4 mb-8">
-            ${q.options.map((opt, i) => `
+            ${(q.options || []).map((opt, i) => `
                 <button class="quiz-option w-full text-left p-5 border-2 rounded-2xl transition-all duration-200 flex items-center gap-4 group ${userAnswers[currentQuestionIndex] === i ? 'border-indigo-500 bg-indigo-50 shadow-sm selected' : 'border-slate-100 hover:border-slate-300 bg-white'}" data-index="${i}">
-                    <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold shrink-0 ${userAnswers[currentQuestionIndex] === i ? 'bg-indigo-500 border-indigo-600 text-white' : 'border-slate-200 text-slate-400 group-hover:border-indigo-400 group-hover:text-indigo-400'}">
+                    <div class="option-badge w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold shrink-0 ${userAnswers[currentQuestionIndex] === i ? 'bg-indigo-500 border-indigo-600 text-white' : 'border-slate-200 text-slate-400 group-hover:border-indigo-400 group-hover:text-indigo-400'}">
                         ${String.fromCharCode(65 + i)}
                     </div>
-                    <span class="flex-1 font-medium ${userAnswers[currentQuestionIndex] === i ? 'text-indigo-900' : 'text-slate-700'}">${formatMath(opt)}</span>
+                    <span class="option-text flex-1 font-medium ${userAnswers[currentQuestionIndex] === i ? 'text-indigo-900' : 'text-slate-700'}">${formatMath(opt)}</span>
                 </button>
             `).join('')}
         </div>
@@ -700,22 +745,28 @@ function renderQuizQuestion() {
 
     document.querySelectorAll('.quiz-option').forEach(btn => {
         addTapListener(btn, () => {
+            // Reset all options to unselected state
             document.querySelectorAll('.quiz-option').forEach(el => {
                 el.classList.remove('selected', 'border-indigo-500', 'bg-indigo-50', 'shadow-sm');
-                el.classList.add('border-slate-100', 'hover:border-slate-300');
-                const badge = el.querySelector('.w-8');
-                badge.classList.remove('bg-indigo-500', 'border-indigo-600', 'text-white');
-                badge.classList.add('border-slate-200', 'text-slate-400');
-                el.querySelector('span:last-child').classList.remove('text-indigo-900');
-                el.querySelector('span:last-child').classList.add('text-slate-700');
+                el.classList.add('border-slate-100', 'hover:border-slate-300', 'bg-white');
+                const badge = el.querySelector('.option-badge');
+                if (badge) {
+                    badge.classList.remove('bg-indigo-500', 'border-indigo-600', 'text-white');
+                    badge.classList.add('border-slate-200', 'text-slate-400');
+                }
+                const text = el.querySelector('.option-text');
+                if (text) { text.classList.remove('text-indigo-900'); text.classList.add('text-slate-700'); }
             });
+            // Mark clicked option as selected
             btn.classList.add('selected', 'border-indigo-500', 'bg-indigo-50', 'shadow-sm');
-            btn.classList.remove('border-slate-100', 'hover:border-slate-300');
-            const activeBadge = btn.querySelector('.w-8');
-            activeBadge.classList.add('bg-indigo-500', 'border-indigo-600', 'text-white');
-            activeBadge.classList.remove('border-slate-200', 'text-slate-400');
-            btn.querySelector('span:last-child').classList.add('text-indigo-900');
-            btn.querySelector('span:last-child').classList.remove('text-slate-700');
+            btn.classList.remove('border-slate-100', 'hover:border-slate-300', 'bg-white');
+            const activeBadge = btn.querySelector('.option-badge');
+            if (activeBadge) {
+                activeBadge.classList.add('bg-indigo-500', 'border-indigo-600', 'text-white');
+                activeBadge.classList.remove('border-slate-200', 'text-slate-400');
+            }
+            const activeText = btn.querySelector('.option-text');
+            if (activeText) { activeText.classList.add('text-indigo-900'); activeText.classList.remove('text-slate-700'); }
             userAnswers[currentQuestionIndex] = parseInt(btn.dataset.index);
             renderQuestionGrid();
         });
@@ -761,9 +812,10 @@ function finishQuiz() {
     });
 
     const finalScore = score.toFixed(2);
-    const percentage = Math.round((Math.max(0, finalScore) / totalMarks) * 100);
+    const percentage = Math.round((Math.max(0, parseFloat(finalScore)) / totalMarks) * 100);
     state.quizzesCompleted++;
-    document.getElementById('dash-quizzes-done').textContent = state.quizzesCompleted;
+    const dashDoneEl = document.getElementById('dash-quizzes-done');
+    if (dashDoneEl) dashDoneEl.textContent = state.quizzesCompleted;
 
     const topicLabel = state.quizType === 'topic' ? (document.getElementById('quiz-topic')?.value || 'Mixed Topics') : null;
     document.dispatchEvent(new CustomEvent('defendx:quizFinished', {
@@ -827,11 +879,11 @@ function finishQuiz() {
                     <div class="flex items-center gap-2">
                         <span class="text-slate-500 w-24">Your Answer:</span>
                         <span class="font-medium px-2 py-0.5 rounded ${isCorrect ? 'bg-emerald-100 text-emerald-800' : (isUnattempted ? 'bg-slate-100 text-slate-600' : 'bg-rose-100 text-rose-800')}">
-                            ${!isUnattempted ? (q.options[userAnswers[i]] || 'Skipped') : 'Skipped / Unattempted'}
+                            ${!isUnattempted ? ((q.options && q.options[userAnswers[i]]) || 'Unknown') : 'Skipped / Unattempted'}
                         </span>
                     </div>
-                    ${!isCorrect ? `<div class="flex items-center gap-2"><span class="text-slate-500 w-24">Correct Answer:</span><span class="font-medium bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">${q.options[q.correctIndex]}</span></div>` : ''}
-                    <div class="mt-3 pt-3 border-t border-slate-100"><p class="text-indigo-900 leading-relaxed"><strong class="text-indigo-500">Explanation:</strong> ${q.explanation}</p></div>
+                    ${!isCorrect ? `<div class="flex items-center gap-2"><span class="text-slate-500 w-24">Correct Answer:</span><span class="font-medium bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">${(q.options && q.options[q.correctIndex]) || 'N/A'}</span></div>` : ''}
+                    <div class="mt-3 pt-3 border-t border-slate-100"><p class="text-indigo-900 leading-relaxed"><strong class="text-indigo-500">Explanation:</strong> ${q.explanation || 'No explanation available.'}</p></div>
                 </div>
             </div>`;
     });
@@ -984,7 +1036,16 @@ function loadQuizHistory() {
     try { const saved = localStorage.getItem('defendx_quiz_history'); return saved ? JSON.parse(saved) : []; }
     catch(e) { return []; }
 }
-function saveQuizHistory(h) { localStorage.setItem('defendx_quiz_history', JSON.stringify(h)); }
+function saveQuizHistory(h) {
+    try {
+        localStorage.setItem('defendx_quiz_history', JSON.stringify(h));
+    } catch (e) {
+        // localStorage quota exceeded — trim to last 50 entries and retry
+        console.warn('localStorage quota exceeded, trimming quiz history to last 50 entries.');
+        const trimmed = h.slice(-50);
+        try { localStorage.setItem('defendx_quiz_history', JSON.stringify(trimmed)); } catch (_) {}
+    }
+}
 function getInitials(name) {
     if (!name || !name.trim()) return 'NA';
     const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -1155,7 +1216,7 @@ function openQuizReviewModal(historyIndex) {
                             <span class="text-slate-400 mr-2">Q${i+1}.</span>${formatMath(q.question)}
                         </p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
-                            ${q.options.map((opt, optIdx) => {
+                            ${(q.options || []).map((opt, optIdx) => {
                                 let optClass = 'border-slate-100 bg-slate-50 text-slate-600';
                                 if (optIdx === q.correctIndex) optClass = 'border-emerald-200 bg-emerald-100 text-emerald-800 font-bold';
                                 else if (optIdx === userAnswer && !isCorrect) optClass = 'border-rose-200 bg-rose-100 text-rose-800 font-bold';
@@ -1167,7 +1228,7 @@ function openQuizReviewModal(historyIndex) {
                             }).join('')}
                         </div>
                         <div class="bg-white/60 backdrop-blur-sm p-4 rounded-xl border border-slate-100 text-sm">
-                            <p class="text-indigo-900 leading-relaxed"><strong class="text-indigo-600">Explanation:</strong> ${formatMath(q.explanation)}</p>
+                            <p class="text-indigo-900 leading-relaxed"><strong class="text-indigo-600">Explanation:</strong> ${formatMath(q.explanation || 'No explanation available.')}</p>
                         </div>
                     </div>
                 </div>
@@ -1240,7 +1301,15 @@ document.addEventListener('defendx:quizFinished', (e) => {
     const attempted = correct + incorrect;
     const accuracy = attempted > 0 ? Math.round((correct / (attempted + unattempted)) * 100) : 0;
 
-    // Store deep copy of questions and answers for detailed review
+    // Save a lightweight copy to avoid hitting localStorage quota on large mock exams
+    const lightQuestions = currentQuizQuestions.map(q => ({
+        question:     q.question,
+        options:      q.options,
+        correctIndex: q.correctIndex,
+        explanation:  q.explanation || '',
+        topic:        q.topic || ''
+    }));
+
     const historyEntry = {
         date: new Date().toISOString(),
         type: quizType,
@@ -1251,7 +1320,7 @@ document.addEventListener('defendx:quizFinished', (e) => {
         incorrect,
         unattempted,
         accuracy,
-        questions: JSON.parse(JSON.stringify(currentQuizQuestions)),
+        questions: lightQuestions,
         answers: [...userAnswers]
     };
 
