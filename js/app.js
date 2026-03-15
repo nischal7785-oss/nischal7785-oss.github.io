@@ -5,6 +5,8 @@ lucide.createIcons();
 
 // 3D Tilt effect on hover for .tilt-card elements
 document.addEventListener('mousemove', (e) => {
+    // Skip on touch devices - touch fires fake mousemove events causing bugs
+    if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) return;
     document.querySelectorAll('.tilt-card').forEach(card => {
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;
