@@ -540,8 +540,10 @@ function fisherYatesShuffle(arr) {
 }
 
 function generateMockQuestions(sourceArray, count) {
+    // Filter out any malformed questions first
+    const clean = sourceArray.filter(q => q && q.options && Array.isArray(q.options) && typeof q.correctIndex === 'number');
     let result = [];
-    while (result.length < count) result = result.concat(fisherYatesShuffle(sourceArray));
+    while (result.length < count) result = result.concat(fisherYatesShuffle(clean));
     return result.slice(0, count);
 }
 
@@ -665,10 +667,7 @@ function renderQuizQuestion() {
     });
 
     addTapListener(document.getElementById('next-submit-btn'), () => {
-        if (state.quizType === 'topic' && userAnswers[currentQuestionIndex] === null) {
-            alert("Please select an answer to continue the practice.");
-            return;
-        }
+        // Allow skipping questions freely
         if (isLast) {
             if (confirm(state.quizType === 'topic' ? "Finish this practice quiz?" : "Are you sure you want to submit the final exam?")) finishQuiz();
         } else {
@@ -697,6 +696,7 @@ function finishQuiz() {
     else if (state.quizType === 'gat-mock') { posMarks = 4; negMarks = 1.333; totalMarks = 600; }
 
     currentQuizQuestions.forEach((q, i) => {
+        if (!q || typeof q.correctIndex === 'undefined') return;
         if (userAnswers[i] === null) unattemptedCount++;
         else if (userAnswers[i] === q.correctIndex) { correctCount++; score += posMarks; }
         else { incorrectCount++; score -= negMarks; }
