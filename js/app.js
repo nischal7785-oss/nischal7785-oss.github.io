@@ -93,16 +93,9 @@ function navigateTo(targetView) {
     if (targetView === 'profile') renderProfilePage();
 }
 
-// Use a single unified event handler that works on both desktop and mobile
+// Simple click handler - touch-action: manipulation in CSS removes 300ms delay
 function addTapListener(element, handler) {
-    let lastTouch = 0;
-    element.addEventListener('touchend', (e) => {
-        lastTouch = Date.now();
-        e.stopPropagation();
-        handler(e);
-    }, { passive: true });
     element.addEventListener('click', (e) => {
-        if (Date.now() - lastTouch < 500) return;
         e.stopPropagation();
         handler(e);
     });
@@ -110,7 +103,7 @@ function addTapListener(element, handler) {
 
 navButtons.forEach(btn => {
     addTapListener(btn, (e) => {
-        if (e.currentTarget.dataset.target) {
+        if (e.currentTarget.closest('aside') && e.currentTarget.dataset.target) {
             navigateTo(e.currentTarget.dataset.target);
         }
     });
