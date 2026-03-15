@@ -389,7 +389,7 @@ function renderSubTheory(topicId, subId) {
     subHtml += `</div>`;
     theoryContent.innerHTML = subHtml;
     lucide.createIcons();
-    if (window.MathJax) MathJax.typesetPromise([theoryContent]).catch((err) => console.log(err.message));
+    if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([theoryContent]).catch((err) => console.log(err.message));
 
     document.querySelectorAll('.view-pyq-btn').forEach(btn => {
         addTapListener(btn, (e) => {
@@ -440,7 +440,7 @@ function openPyqModal(topicId, subId) {
 
     pyqModal.classList.remove('hidden');
     lucide.createIcons();
-    if (window.MathJax) MathJax.typesetPromise([contentBox]).catch((err) => console.log(err.message));
+    if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([contentBox]).catch((err) => console.log(err.message));
 }
 
 renderTopicsList();
@@ -634,7 +634,7 @@ function renderQuizQuestion() {
 
     const questionContainer = document.getElementById('quiz-question-content');
     questionContainer.innerHTML = html;
-    if (window.MathJax) MathJax.typesetPromise([questionContainer]).catch((err) => console.log(err.message));
+    if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([questionContainer]).catch((err) => console.log(err.message));
     lucide.createIcons();
 
     document.querySelectorAll('.quiz-option').forEach(btn => {
@@ -786,7 +786,7 @@ function finishQuiz() {
         </div>`;
 
     activeQuizView.innerHTML = html;
-    if (window.MathJax) MathJax.typesetPromise([activeQuizView]).catch((err) => console.log(err.message));
+    if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([activeQuizView]).catch((err) => console.log(err.message));
     lucide.createIcons();
 
     addTapListener(document.getElementById('return-setup-btn'), () => {
