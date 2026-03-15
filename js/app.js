@@ -95,12 +95,9 @@ function navigateTo(targetView) {
     if (targetView === 'profile') renderProfilePage();
 }
 
-// Simple click handler - touch-action: manipulation in CSS removes 300ms delay
+// Simple wrapper - just uses click events
 function addTapListener(element, handler) {
-    element.addEventListener('click', (e) => {
-        e.stopPropagation();
-        handler(e);
-    });
+    element.addEventListener('click', handler);
 }
 
 navButtons.forEach(btn => {
