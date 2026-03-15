@@ -75,37 +75,38 @@ const state = {
 const navButtons = document.querySelectorAll('.nav-btn');
 const views = document.querySelectorAll('.view-section');
 
+function navigateTo(targetView) {
+    navButtons.forEach(b => b.classList.remove('active-nav'));
+    const activeBtn = document.querySelector(`.nav-btn[data-target="${targetView}"]`);
+    if (activeBtn) activeBtn.classList.add('active-nav');
+    views.forEach(v => {
+        if (v.id === targetView) {
+            v.classList.remove('hidden');
+            v.classList.add('active');
+        } else {
+            v.classList.add('hidden');
+            v.classList.remove('active');
+        }
+    });
+    if (window.innerWidth < 768) {
+        document.querySelector('aside').classList.add('hidden');
+    }
+    if (targetView === 'dashboard') initCharts();
+    if (targetView === 'profile') renderProfilePage();
+}
+
 navButtons.forEach(btn => {
     btn.addEventListener('click', (e) => {
-        // Only fire if the click target is the nav button itself or its direct icon/text child
-        // This prevents bubbled clicks from inside the main content triggering navigation
-        if (!e.target.closest('.view-section') && e.currentTarget.dataset.target) {
-            const targetView = e.currentTarget.dataset.target;
-            
-            // Update active nav button styling
-            navButtons.forEach(b => b.classList.remove('active-nav'));
-            e.currentTarget.classList.add('active-nav');
-            
-            // Switch views
-            views.forEach(v => {
-                if (v.id === targetView) {
-                    v.classList.remove('hidden');
-                    v.classList.add('active');
-                } else {
-                    v.classList.add('hidden');
-                    v.classList.remove('active');
-                }
-            });
-
-            // Close mobile menu if open
-            if (window.innerWidth < 768) {
-                document.querySelector('aside').classList.add('hidden');
-            }
-
-            // Re-render charts if dashboard
-            if (targetView === 'dashboard') {
-                initCharts();
-            }
+        if (e.currentTarget.closest('aside') && e.currentTarget.dataset.target) {
+            e.stopPropagation();
+            navigateTo(e.currentTarget.dataset.target);
+        }
+    });
+    btn.addEventListener('touchend', (e) => {
+        if (e.currentTarget.closest('aside') && e.currentTarget.dataset.target) {
+            e.preventDefault();
+            e.stopPropagation();
+            navigateTo(e.currentTarget.dataset.target);
         }
     });
 });
@@ -836,9 +837,10 @@ function renderQuizQuestion() {
 
     // Attach listeners
     document.querySelectorAll('.quiz-option').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        function handleOptionSelect(e) {
             e.stopPropagation();
-            const btnEl = e.currentTarget;
+            e.preventDefault();
+            const btnEl = btn;
             document.querySelectorAll('.quiz-option').forEach(el => {
                 el.classList.remove('selected', 'border-indigo-500', 'bg-indigo-50', 'shadow-sm');
                 el.classList.add('border-slate-200', 'hover:border-slate-300', 'hover:bg-slate-50');
@@ -861,7 +863,9 @@ function renderQuizQuestion() {
             
             // Re-render grid for all modes
             renderQuestionGrid();
-        });
+        }
+        btn.addEventListener('click', handleOptionSelect);
+        btn.addEventListener('touchend', handleOptionSelect);
     });
 
     document.getElementById('prev-btn').addEventListener('click', (e) => {
@@ -1325,10 +1329,13 @@ syncSidebar();
 // Sidebar card click → navigate to profile view
 const sidebarProfileCard = document.getElementById('sidebar-profile-card');
 if (sidebarProfileCard) {
-    sidebarProfileCard.addEventListener('click', () => {
-        const profileBtn = document.querySelector('.nav-btn[data-target="profile"]');
-        if (profileBtn) profileBtn.click();
-    });
+    function goToProfile(e) {
+        e.stopPropagation();
+        navigateTo('profile');
+        renderProfilePage();
+    }
+    sidebarProfileCard.addEventListener('click', goToProfile);
+    sidebarProfileCard.addEventListener('touchend', goToProfile);
 }
 
 // --- Render full Profile page ---
@@ -1455,12 +1462,7 @@ function renderQuizHistorySection() {
     lucide.createIcons();
 }
 
-// Render profile when nav button is clicked
-navButtons.forEach(btn => {
-    if (btn.dataset.target === 'profile') {
-        btn.addEventListener('click', renderProfilePage);
-    }
-});
+// Render profile when nav button is clicked - handled inside navigateTo
 
 // --- Edit Profile Modal ---
 const editProfileModal    = document.getElementById('edit-profile-modal');
