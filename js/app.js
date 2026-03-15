@@ -95,7 +95,18 @@ function navigateTo(targetView) {
 
 // Use a single unified event handler that works on both desktop and mobile
 function addTapListener(element, handler) {
-    let touchMoved = false;
+    let lastTouch = 0;
+    element.addEventListener('touchend', (e) => {
+        lastTouch = Date.now();
+        e.stopPropagation();
+        handler(e);
+    }, { passive: true });
+    element.addEventListener('click', (e) => {
+        if (Date.now() - lastTouch < 500) return;
+        e.stopPropagation();
+        handler(e);
+    });
+}
     element.addEventListener('touchstart', () => { touchMoved = false; }, { passive: true });
     element.addEventListener('touchmove', () => { touchMoved = true; }, { passive: true });
     element.addEventListener('touchend', (e) => {
