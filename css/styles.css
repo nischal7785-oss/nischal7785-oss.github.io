@@ -466,4 +466,8 @@ button:active:not(:disabled) {
 /* Eliminate 300ms touch delay on mobile for all interactive elements */
 button, a, input, select, label, [role="button"] {
     touch-action: manipulation;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd

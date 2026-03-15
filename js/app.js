@@ -490,6 +490,7 @@ function updateQuizModeUI() {
 quizTypeRadios.forEach(radio => { radio.addEventListener('change', updateQuizModeUI); });
 updateQuizModeUI();
 
+<<<<<<< HEAD
 // Reset topic when subject changes so stale topic values don't cause empty results
 const quizSubjectSelect = document.getElementById('quiz-subject');
 if (quizSubjectSelect) {
@@ -566,6 +567,23 @@ addTapListener(startQuizBtn, () => {
         const topicLabel   = topicSelect !== 'all' ? topicSelect : 'Mixed Topics';
         const diffLabel    = difficultySelect !== 'all' ? ` (${difficultySelect})` : '';
         document.getElementById('quiz-mode-badge').textContent = `Practice — ${subjectLabel}${topicLabel}${diffLabel}`;
+=======
+addTapListener(startQuizBtn, () => {
+    const quizType = document.querySelector('input[name="quiz-type"]:checked').value;
+    state.quizType = quizType;
+    const topicSelect = document.getElementById('quiz-topic').value;
+    currentQuestionIndex = 0;
+
+    if (quizType === 'topic') {
+        let pool = topicSelect === 'all' ? [...ndaData.quizBank] : ndaData.quizBank.filter(q => q.topic === topicSelect);
+        if (pool.length === 0) { alert("Not enough questions for this topic yet!"); return; }
+        for (let i = pool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+        currentQuizQuestions = pool.slice(0, Math.min(20, pool.length));
+        document.getElementById('quiz-mode-badge').textContent = 'Practice Mode - ' + (topicSelect === 'all' ? 'Mix' : topicSelect);
+>>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
         document.getElementById('quiz-mode-badge').className = 'text-xs font-bold uppercase tracking-wider text-indigo-500 bg-indigo-50 px-2 py-1 rounded';
         document.getElementById('quiz-nav-sidebar').classList.remove('hidden');
         document.getElementById('quiz-nav-sidebar').classList.add('lg:block');
@@ -573,6 +591,7 @@ addTapListener(startQuizBtn, () => {
         document.getElementById('quiz-main-card').classList.remove('mx-auto', 'max-w-3xl');
 
     } else if (quizType === 'math-mock') {
+<<<<<<< HEAD
         let mathPool = pool.filter(q =>
             (q.subject === 'Mathematics') || (!q.subject && mathTopics.includes(q.topic))
         );
@@ -591,6 +610,19 @@ addTapListener(startQuizBtn, () => {
         if (gatPool.length === 0) { alert('Not enough GAT questions for this difficulty. Try "Any Difficulty".'); return; }
         currentQuizQuestions = pickN(gatPool, 150);
         document.getElementById('quiz-mode-badge').textContent = 'NDA GAT Mock' + (difficultySelect !== 'all' ? ` (${difficultySelect})` : '');
+=======
+        const mathTopicsList = ['Algebra','Matrices & Determinants','Trigonometry','Calculus','Statistics & Probability','Analytical Geometry (2D & 3D)','Vector Algebra'];
+        const src = ndaData.quizBank.filter(q => mathTopicsList.includes(q.topic));
+        currentQuizQuestions = generateMockQuestions(src.length > 0 ? src : ndaData.quizBank, 120);
+        document.getElementById('quiz-mode-badge').textContent = 'NDA Math Mock (Paper I)';
+        document.getElementById('quiz-mode-badge').className = 'text-xs font-bold uppercase tracking-wider text-blue-500 bg-blue-50 px-2 py-1 rounded';
+        setupMockUI(150 * 60);
+    } else if (quizType === 'gat-mock') {
+        const mathTopicsList = ['Algebra','Matrices & Determinants','Trigonometry','Calculus','Statistics & Probability','Analytical Geometry (2D & 3D)','Vector Algebra'];
+        const src = ndaData.quizBank.filter(q => !mathTopicsList.includes(q.topic));
+        currentQuizQuestions = generateMockQuestions(src.length > 0 ? src : ndaData.quizBank, 150);
+        document.getElementById('quiz-mode-badge').textContent = 'NDA GAT Mock (Paper II)';
+>>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
         document.getElementById('quiz-mode-badge').className = 'text-xs font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-1 rounded';
         setupMockUI(150 * 60);
     }
@@ -672,6 +704,7 @@ function renderQuizQuestion() {
     const isLast = currentQuestionIndex === currentQuizQuestions.length - 1;
     const progress = ((currentQuestionIndex + 1) / currentQuizQuestions.length) * 100;
 
+<<<<<<< HEAD
     document.getElementById('quiz-progress-bar').style.width = `${progress}%`;
     document.getElementById('quiz-counter').textContent = `Question ${currentQuestionIndex + 1} of ${currentQuizQuestions.length}`;
 
@@ -683,6 +716,34 @@ function renderQuizQuestion() {
             <div class="flex items-center gap-3 mb-4">
                 <span class="text-xs font-semibold text-slate-400 bg-slate-100 px-2 py-1 rounded">${q.topic}</span>
                 ${diffTag}
+=======
+    let html = `
+        <div class="mb-6">
+            <div class="flex justify-between text-sm font-medium text-slate-500 mb-2">
+                <span>Question ${currentQuestionIndex + 1} of ${currentQuizQuestions.length}</span>
+                <span class="text-indigo-600">${q.topic}</span>
+            </div>
+            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden mb-6">
+                <div class="bg-indigo-500 h-full transition-all duration-300" style="width: ${progress}%"></div>
+            </div>
+            <h3 class="text-xl font-bold text-slate-800 mb-8">${q.question}</h3>
+            <div class="space-y-3" id="options-container">`;
+
+    q.options.forEach((opt, index) => {
+        const isSelected = userAnswers[currentQuestionIndex] === index;
+        html += `
+            <button class="quiz-option w-full text-left p-4 rounded-xl border transition-all ${isSelected ? 'selected border-indigo-500 bg-indigo-50 shadow-sm' : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'} font-medium" data-index="${index}">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded border flex items-center justify-center shrink-0 ${isSelected ? 'bg-indigo-500 border-indigo-600 text-white' : 'bg-slate-100 border-slate-200 text-slate-500'} font-bold">
+                        ${String.fromCharCode(65 + index)}
+                    </div>
+                    <span class="${isSelected ? 'text-indigo-900' : 'text-slate-700'}">${opt}</span>
+                </div>
+            </button>`;
+    });
+
+    html += `
+>>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
             </div>
             <h2 class="text-xl md:text-2xl font-bold text-slate-800 leading-relaxed">${formatMath(q.question)}</h2>
         </div>
@@ -1071,17 +1132,22 @@ function renderQuizHistorySection() {
         container.innerHTML = `<div class="text-center text-slate-400 py-8 flex flex-col items-center gap-3"><i data-lucide="clipboard-list" class="w-12 h-12 opacity-40"></i><p class="text-sm">No quizzes completed yet. Start practising!</p></div>`;
         lucide.createIcons(); return;
     }
+<<<<<<< HEAD
     
     // Sort history to show most recent first
     const sortedHistory = [...history].reverse();
     
     container.innerHTML = sortedHistory.slice(0, 10).map((q, idx) => {
+=======
+    container.innerHTML = [...history].reverse().slice(0, 5).map(q => {
+>>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
         let scoreColor = 'text-amber-600 bg-amber-50 border-amber-200', icon = 'minus-circle';
         if (q.accuracy >= 60) { scoreColor = 'text-emerald-700 bg-emerald-50 border-emerald-200'; icon = 'check-circle-2'; }
         if (q.accuracy < 30) { scoreColor = 'text-rose-700 bg-rose-50 border-rose-200'; icon = 'x-circle'; }
         const typeLabel = { topic: 'Practice', 'math-mock': 'Math Mock', 'gat-mock': 'GAT Mock' }[q.type] || 'Practice';
         const typeBadge = { topic: 'bg-indigo-50 text-indigo-700 border-indigo-200', 'math-mock': 'bg-blue-50 text-blue-700 border-blue-200', 'gat-mock': 'bg-rose-50 text-rose-700 border-rose-200' }[q.type] || 'bg-indigo-50 text-indigo-700 border-indigo-200';
         const dateStr = new Date(q.date).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+<<<<<<< HEAD
         
         // Use the original index from the 'history' array (not sortedHistory) for the data-index
         const originalIndex = history.length - 1 - idx;
@@ -1099,6 +1165,14 @@ function renderQuizHistorySection() {
                 <button class="review-quiz-btn px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all text-xs font-bold flex items-center gap-1.5 border border-indigo-100" data-index="${originalIndex}">
                     <i data-lucide="eye" class="w-3.5 h-3.5"></i> Review
                 </button>` : ''}
+=======
+        return `<div class="quiz-history-row">
+            <div class="w-9 h-9 rounded-xl ${scoreColor} border flex items-center justify-center shrink-0"><i data-lucide="${icon}" class="w-5 h-5"></i></div>
+            <div class="flex-1 min-w-0"><p class="font-semibold text-slate-800 text-sm truncate">${q.topic && q.topic !== 'all' ? q.topic : 'Mixed Topics'}</p><p class="text-xs text-slate-400 mt-0.5">${dateStr}</p></div>
+            <div class="flex items-center gap-2 shrink-0">
+                <span class="text-xs font-semibold border px-2 py-0.5 rounded-full ${typeBadge}">${typeLabel}</span>
+                <span class="text-sm font-bold ${q.accuracy >= 60 ? 'text-emerald-600' : q.accuracy < 30 ? 'text-rose-600' : 'text-amber-600'}">${q.accuracy}%</span>
+>>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
             </div>
         </div>`;
     }).join('');
@@ -1113,6 +1187,7 @@ function renderQuizHistorySection() {
     lucide.createIcons();
 }
 
+<<<<<<< HEAD
 function openQuizReviewModal(historyIndex) {
     const history = loadQuizHistory();
     const qData = history[historyIndex];
@@ -1196,6 +1271,8 @@ function openQuizReviewModal(historyIndex) {
     lucide.createIcons();
 }
 
+=======
+>>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
 // --- Edit Profile Modal ---
 const editProfileModal = document.getElementById('edit-profile-modal');
 const openEditProfileBtn = document.getElementById('open-edit-profile-btn');
@@ -1251,6 +1328,7 @@ document.addEventListener('defendx:quizFinished', (e) => {
     const { score, totalMarks, correct, incorrect, unattempted, quizType, topic } = e.detail;
     const attempted = correct + incorrect;
     const accuracy = attempted > 0 ? Math.round((correct / (attempted + unattempted)) * 100) : 0;
+<<<<<<< HEAD
     
     // Store deep copy of questions and answers for detailed review
     const historyEntry = {
@@ -1274,3 +1352,11 @@ document.addEventListener('defendx:quizFinished', (e) => {
     setText('dash-quizzes-done', quizHistory.length);
     launchConfetti();
 });
+=======
+    quizHistory = loadQuizHistory();
+    quizHistory.push({ date: new Date().toISOString(), type: quizType, topic: topic || 'Mixed Topics', score: parseFloat(score), totalMarks, correct, incorrect, unattempted, accuracy });
+    saveQuizHistory(quizHistory);
+    setText('dash-quizzes-done', quizHistory.length);
+    launchConfetti();
+});
+>>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
