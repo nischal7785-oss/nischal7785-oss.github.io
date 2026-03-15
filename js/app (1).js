@@ -1087,32 +1087,18 @@ const chatMessages = document.getElementById('chat-messages');
 
 let chatHistory = [];
 
-chatForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+async function sendChatMessage() {
     const message = chatInput.value.trim();
     if (!message) return;
-
-    // Add User Message
-    appendMessage(message, 'user');
     chatInput.value = '';
-    
-    // Add User Message to History
+    appendMessage(message, 'user');
     chatHistory.push({ role: "user", parts: [{ text: message }] });
-
-    // Show loading indicator
     const loadingId = 'loading-' + Date.now();
     appendLoadingIndicator(loadingId);
-
     try {
         const responseText = await fetchGeminiResponse(chatHistory);
-        
-        // Remove loading indicator
         removeLoadingIndicator(loadingId);
-        
-        // Add Bot Message
         appendMessage(responseText, 'bot');
-        
-        // Add Bot Message to History
         chatHistory.push({ role: "model", parts: [{ text: responseText }] });
     } catch (error) {
         removeLoadingIndicator(loadingId);
@@ -1126,6 +1112,30 @@ chatForm.addEventListener('submit', async (e) => {
         }
         console.error("Gemini API Error:", error);
     }
+}
+
+// Send on button click
+document.querySelector('#chat-form button[type="submit"]').addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    sendChatMessage();
+});
+
+// Send on Enter key
+chatInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        e.stopPropagation();
+        sendChatMessage();
+    }
+});
+
+chatForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const message = chatInput.value.trim();
+    if (!message) return;
+    sendChatMessage();
 });
 
 async function fetchGeminiResponse(history) {
