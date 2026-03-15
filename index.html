@@ -258,26 +258,96 @@
                         </div>
 
                         <div id="topic-selection-container">
-                            <label class="block text-sm font-medium text-slate-700 mb-2 mt-2">Topic Selection (For Practice Quizzes)</label>
-                            <select id="quiz-topic" class="w-full border border-slate-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-600 bg-white">
-                                <option value="all" class="font-bold">Mix of All Topics</option>
-                                <optgroup label="Mathematics">
-                                    <option value="Algebra">Algebra</option>
-                                    <option value="Matrices & Determinants">Matrices & Determinants</option>
-                                    <option value="Trigonometry">Trigonometry</option>
-                                    <option value="Calculus">Calculus</option>
-                                    <option value="Statistics & Probability">Statistics & Probability</option>
-                                    <option value="Analytical Geometry (2D & 3D)">Analytical Geometry (2D & 3D)</option>
-                                    <option value="Vector Algebra">Vector Algebra</option>
-                                </optgroup>
-                                <optgroup label="General Ability Test (GAT)">
-                                    <option value="English">English (Grammar & Vocab)</option>
-                                    <option value="Physics">Physics</option>
-                                    <option value="Chemistry">Chemistry</option>
-                                    <option value="Biology & General Science">Biology & General Science</option>
-                                    <option value="History & Indian Freedom Struggle">History & Politics</option>
-                                    <option value="Geography">Geography</option>
-                                </optgroup>
+                            <div class="flex gap-3 mb-2 mt-2">
+                                <div class="flex-1">
+                                    <label class="block text-sm font-medium text-slate-700 mb-2">Subject</label>
+                                    <select id="quiz-subject" class="w-full border border-slate-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-600 bg-white">
+                                        <option value="all">All Subjects</option>
+                                        <option value="Mathematics">Mathematics</option>
+                                        <option value="English">English</option>
+                                        <option value="Science">Science</option>
+                                        <option value="General Studies">General Studies</option>
+                                    </select>
+                                </div>
+                                <div class="flex-1">
+                                    <label class="block text-sm font-medium text-slate-700 mb-2">Topic</label>
+                                    <select id="quiz-topic" class="w-full border border-slate-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-600 bg-white">
+                                        <option value="all">Mix of All Topics</option>
+                                        <optgroup label="── Mathematics ──">
+                                            <option value="Number System">Number System</option>
+                                            <option value="Simplification">Simplification</option>
+                                            <option value="Average">Average</option>
+                                            <option value="Percentage">Percentage</option>
+                                            <option value="Profit Loss">Profit &amp; Loss</option>
+                                            <option value="Ratio Proportion">Ratio &amp; Proportion</option>
+                                            <option value="Time Work">Time &amp; Work</option>
+                                            <option value="Time Speed Distance">Time, Speed &amp; Distance</option>
+                                            <option value="SI CI">SI &amp; CI</option>
+                                            <option value="Algebra">Algebra</option>
+                                            <option value="Geometry">Geometry</option>
+                                            <option value="Mensuration">Mensuration</option>
+                                            <option value="Trigonometry">Trigonometry</option>
+                                            <option value="Calculus">Calculus</option>
+                                            <option value="Matrices">Matrices</option>
+                                            <option value="Vectors">Vectors</option>
+                                            <option value="Statistics">Statistics</option>
+                                            <option value="Probability">Probability</option>
+                                            <option value="Coordinate Geometry">Coordinate Geometry</option>
+                                            <option value="Sequences">Sequences &amp; Series</option>
+                                            <option value="Number Theory">Number Theory</option>
+                                            <option value="Set Theory">Set Theory</option>
+                                            <option value="Differential Equations">Differential Equations</option>
+                                            <option value="Permutation">Permutation</option>
+                                            <option value="Combination">Combination</option>
+                                            <option value="Binomial">Binomial Theorem</option>
+                                            <option value="Logarithm">Logarithm</option>
+                                            <option value="Complex Numbers">Complex Numbers</option>
+                                            <option value="3D Geometry">3D Geometry</option>
+                                        </optgroup>
+                                        <optgroup label="── English ──">
+                                            <option value="Synonyms">Synonyms</option>
+                                            <option value="Antonyms">Antonyms</option>
+                                            <option value="Spotting Errors">Spotting Errors</option>
+                                            <option value="Fill in the Blanks">Fill in the Blanks</option>
+                                            <option value="Idioms">Idioms &amp; Phrases</option>
+                                            <option value="One Word Substitution">One Word Substitution</option>
+                                            <option value="Sentence Improvement">Sentence Improvement</option>
+                                            <option value="Active Passive">Active &amp; Passive Voice</option>
+                                            <option value="Direct Indirect">Direct &amp; Indirect Speech</option>
+                                            <option value="Vocabulary">Vocabulary</option>
+                                            <option value="Spelling">Spelling</option>
+                                            <option value="Figures of Speech">Figures of Speech</option>
+                                        </optgroup>
+                                        <optgroup label="── Science ──">
+                                            <option value="Physics">Physics</option>
+                                            <option value="Chemistry">Chemistry</option>
+                                            <option value="Biology">Biology</option>
+                                        </optgroup>
+                                        <optgroup label="── General Studies ──">
+                                            <option value="History - Ancient">History – Ancient</option>
+                                            <option value="History - Medieval">History – Medieval</option>
+                                            <option value="History - Modern">History – Modern</option>
+                                            <option value="History - World">History – World</option>
+                                            <option value="Geography - India">Geography – India</option>
+                                            <option value="Geography - World">Geography – World</option>
+                                            <option value="Geography - Climate">Geography – Climate</option>
+                                            <option value="Polity">Indian Polity</option>
+                                            <option value="Economics">Economics</option>
+                                            <option value="Current Affairs">Current Affairs</option>
+                                            <option value="Defence">Defence &amp; Armed Forces</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2 mt-2">Difficulty Level (Optional)</label>
+                            <select id="quiz-difficulty" class="w-full border border-slate-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-600 bg-white">
+                                <option value="all">Any Difficulty (Balanced)</option>
+                                <option value="Easy">Easy (Foundation)</option>
+                                <option value="Medium">Medium (Standard NDA)</option>
+                                <option value="Hard">Difficult (Advanced)</option>
                             </select>
                         </div>
                     </div>
