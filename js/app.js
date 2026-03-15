@@ -113,7 +113,7 @@ function addTapListener(element, handler) {
 
 navButtons.forEach(btn => {
     addTapListener(btn, (e) => {
-        if (e.currentTarget.closest('aside') && e.currentTarget.dataset.target) {
+        if (e.currentTarget.dataset.target) {
             navigateTo(e.currentTarget.dataset.target);
         }
     });
