@@ -619,17 +619,27 @@ startQuizBtn.addEventListener('click', () => {
     currentQuestionIndex = 0;
     
     if (quizType === 'topic') {
-        // Filter questions
+        // Filter and shuffle fresh every time
+        let pool;
         if (topicSelect === 'all') {
-            currentQuizQuestions = [...ndaData.quizBank].sort(() => 0.5 - Math.random()).slice(0, 10);
+            pool = [...ndaData.quizBank];
         } else {
-            currentQuizQuestions = ndaData.quizBank.filter(q => q.topic === topicSelect).slice(0, 10);
+            pool = ndaData.quizBank.filter(q => q.topic === topicSelect);
         }
 
-        if (currentQuizQuestions.length === 0) {
+        if (pool.length === 0) {
             alert("Not enough questions for this topic yet!");
             return;
         }
+
+        // Fisher-Yates shuffle for true randomness
+        for (let i = pool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+
+        // Take up to 20 questions (or all if less than 20)
+        currentQuizQuestions = pool.slice(0, Math.min(20, pool.length));
 
         document.getElementById('quiz-mode-badge').textContent = 'Practice Mode - ' + (topicSelect === 'all' ? 'Mix' : topicSelect);
         document.getElementById('quiz-mode-badge').className = 'text-xs font-bold uppercase tracking-wider text-indigo-500 bg-indigo-50 px-2 py-1 rounded';
@@ -674,11 +684,19 @@ startQuizBtn.addEventListener('click', () => {
     renderQuestionGrid();
 });
 
+function fisherYatesShuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
 function generateMockQuestions(sourceArray, count) {
     let result = [];
     while (result.length < count) {
-        const shuffled = [...sourceArray].sort(() => 0.5 - Math.random());
-        result = result.concat(shuffled);
+        result = result.concat(fisherYatesShuffle(sourceArray));
     }
     return result.slice(0, count);
 }
