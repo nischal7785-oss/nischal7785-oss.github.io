@@ -77,31 +77,35 @@ const views = document.querySelectorAll('.view-section');
 
 navButtons.forEach(btn => {
     btn.addEventListener('click', (e) => {
-        const targetView = e.currentTarget.dataset.target;
-        
-        // Update active nav button styling
-        navButtons.forEach(b => b.classList.remove('active-nav'));
-        e.currentTarget.classList.add('active-nav');
-        
-        // Switch views
-        views.forEach(v => {
-            if (v.id === targetView) {
-                v.classList.remove('hidden');
-                v.classList.add('active');
-            } else {
-                v.classList.add('hidden');
-                v.classList.remove('active');
+        // Only fire if the click target is the nav button itself or its direct icon/text child
+        // This prevents bubbled clicks from inside the main content triggering navigation
+        if (!e.target.closest('.view-section') && e.currentTarget.dataset.target) {
+            const targetView = e.currentTarget.dataset.target;
+            
+            // Update active nav button styling
+            navButtons.forEach(b => b.classList.remove('active-nav'));
+            e.currentTarget.classList.add('active-nav');
+            
+            // Switch views
+            views.forEach(v => {
+                if (v.id === targetView) {
+                    v.classList.remove('hidden');
+                    v.classList.add('active');
+                } else {
+                    v.classList.add('hidden');
+                    v.classList.remove('active');
+                }
+            });
+
+            // Close mobile menu if open
+            if (window.innerWidth < 768) {
+                document.querySelector('aside').classList.add('hidden');
             }
-        });
 
-        // Close mobile menu if open
-        if (window.innerWidth < 768) {
-            document.querySelector('aside').classList.add('hidden');
-        }
-
-        // Re-render charts if dashboard
-        if (targetView === 'dashboard') {
-            initCharts();
+            // Re-render charts if dashboard
+            if (targetView === 'dashboard') {
+                initCharts();
+            }
         }
     });
 });
@@ -833,6 +837,7 @@ function renderQuizQuestion() {
     // Attach listeners
     document.querySelectorAll('.quiz-option').forEach(btn => {
         btn.addEventListener('click', (e) => {
+            e.stopPropagation();
             const btnEl = e.currentTarget;
             document.querySelectorAll('.quiz-option').forEach(el => {
                 el.classList.remove('selected', 'border-indigo-500', 'bg-indigo-50', 'shadow-sm');
@@ -859,7 +864,8 @@ function renderQuizQuestion() {
         });
     });
 
-    document.getElementById('prev-btn').addEventListener('click', () => {
+    document.getElementById('prev-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
         if(currentQuestionIndex > 0) {
             currentQuestionIndex--;
             renderQuizQuestion();
@@ -867,7 +873,8 @@ function renderQuizQuestion() {
         }
     });
 
-    document.getElementById('next-submit-btn').addEventListener('click', () => {
+    document.getElementById('next-submit-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
         if (state.quizType === 'topic' && userAnswers[currentQuestionIndex] === null) {
             // For practice mode, force them to select an answer unless it's a mock
             alert("Please select an answer to continue the practice.");
@@ -1479,13 +1486,14 @@ function closeEditModal() {
     editProfileModal.classList.add('hidden');
 }
 
-if (openEditProfileBtn)  openEditProfileBtn.addEventListener('click', openEditModal);
-if (closeEditProfileBtn) closeEditProfileBtn.addEventListener('click', closeEditModal);
-if (cancelEditBtn)       cancelEditBtn.addEventListener('click', closeEditModal);
+if (openEditProfileBtn)  openEditProfileBtn.addEventListener('click', (e) => { e.stopPropagation(); openEditModal(); });
+if (closeEditProfileBtn) closeEditProfileBtn.addEventListener('click', (e) => { e.stopPropagation(); closeEditModal(); });
+if (cancelEditBtn)       cancelEditBtn.addEventListener('click', (e) => { e.stopPropagation(); closeEditModal(); });
 if (editProfileModal)    editProfileModal.addEventListener('click', e => { if (e.target === editProfileModal) closeEditModal(); });
 
 if (saveProfileBtn) {
-    saveProfileBtn.addEventListener('click', () => {
+    saveProfileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         userProfile = {
             ...userProfile,
             name:         document.getElementById('edit-name').value.trim() || 'NDA Aspirant',
