@@ -790,17 +790,27 @@ function finishQuiz() {
     lucide.createIcons();
 
     addTapListener(document.getElementById('return-setup-btn'), () => {
+        // Hide results, show setup
         activeQuizView.classList.add('hidden');
         setupView.classList.remove('hidden');
-        document.getElementById('quiz-main-card').innerHTML = `
-            <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-100">
-                <div><span class="text-xs font-bold uppercase tracking-wider text-indigo-500 bg-indigo-50 px-2 py-1 rounded" id="quiz-mode-badge">Practice Mode</span></div>
-                <div class="flex items-center gap-2 bg-slate-800 text-white px-4 py-2 rounded-lg shadow-sm hidden" id="timer-container">
-                    <i data-lucide="timer" class="w-4 h-4 text-emerald-400"></i>
-                    <span class="font-mono font-bold tracking-wider text-xl" id="quiz-timer">00:00:00</span>
+
+        // Restore the active quiz view HTML structure for next quiz
+        activeQuizView.innerHTML = `
+            <div class="flex-1 bg-white rounded-2xl p-8 border border-slate-100 shadow-sm w-full relative z-10" id="quiz-main-card">
+                <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-100">
+                    <div><span class="text-xs font-bold uppercase tracking-wider text-indigo-500 bg-indigo-50 px-2 py-1 rounded" id="quiz-mode-badge">Practice Mode</span></div>
+                    <div class="flex items-center gap-2 bg-slate-800 text-white px-4 py-2 rounded-lg shadow-sm hidden" id="timer-container">
+                        <i data-lucide="timer" class="w-4 h-4 text-emerald-400"></i>
+                        <span class="font-mono font-bold tracking-wider text-xl" id="quiz-timer">00:00:00</span>
+                    </div>
                 </div>
+                <div id="quiz-question-content"></div>
             </div>
-            <div id="quiz-question-content"></div>`;
+            <div class="hidden lg:block w-72 shrink-0 bg-white rounded-2xl p-5 border border-slate-100 shadow-sm sticky top-6" id="quiz-nav-sidebar">
+                <h4 class="font-bold text-slate-800 mb-4 flex items-center gap-2"><i data-lucide="layout-grid" class="w-4 h-4 text-indigo-500"></i> Questions Panel</h4>
+                <div class="grid grid-cols-5 gap-2" id="question-grid"></div>
+                <button id="end-test-early-btn" class="w-full mt-6 py-3 rounded-xl border-2 border-rose-100 text-rose-600 font-bold hover:bg-rose-50 transition-colors">Submit Exam</button>
+            </div>`;
         lucide.createIcons();
     });
 }
