@@ -5,7 +5,6 @@ lucide.createIcons();
 
 // 3D Tilt effect on hover for .tilt-card elements
 document.addEventListener('mousemove', (e) => {
-    // Skip on touch devices - touch fires fake mousemove events causing bugs
     if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) return;
     document.querySelectorAll('.tilt-card').forEach(card => {
         const rect = card.getBoundingClientRect();
@@ -95,7 +94,6 @@ function navigateTo(targetView) {
     if (targetView === 'profile') renderProfilePage();
 }
 
-// Simple wrapper - just uses click events
 function addTapListener(element, handler) {
     element.addEventListener('click', handler);
 }
@@ -490,7 +488,6 @@ function updateQuizModeUI() {
 quizTypeRadios.forEach(radio => { radio.addEventListener('change', updateQuizModeUI); });
 updateQuizModeUI();
 
-<<<<<<< HEAD
 // Reset topic when subject changes so stale topic values don't cause empty results
 const quizSubjectSelect = document.getElementById('quiz-subject');
 if (quizSubjectSelect) {
@@ -525,10 +522,9 @@ addTapListener(startQuizBtn, () => {
         return result.slice(0, n);
     }
 
-    // Full 2425-question bank
+    // Full question bank
     let pool = ndaData.quizBank;
 
-    // Math subjects use the 'subject' field (new questions) or their topic names (old questions)
     const mathTopics = ['Algebra','Matrices & Determinants','Trigonometry','Calculus',
         'Statistics & Probability','Analytical Geometry (2D & 3D)','Vector Algebra',
         'Number System','Simplification','Average','Percentage','Profit Loss',
@@ -542,18 +538,14 @@ addTapListener(startQuizBtn, () => {
 
     if (quizType === 'topic') {
         let filtered = pool;
-        // Subject filter (new questions have q.subject; old ones don't — fall through gracefully)
         if (subjectSelect !== 'all') {
             filtered = filtered.filter(q => {
                 if (q.subject) return q.subject === subjectSelect;
-                // old questions: infer subject from topic
                 if (subjectSelect === 'Mathematics') return mathTopics.includes(q.topic);
                 return false;
             });
         }
-        // Topic filter
         if (topicSelect !== 'all') filtered = filtered.filter(q => q.topic === topicSelect);
-        // Difficulty filter
         if (difficultySelect !== 'all') filtered = filtered.filter(q => q.difficulty === difficultySelect);
 
         if (filtered.length === 0) {
@@ -567,23 +559,6 @@ addTapListener(startQuizBtn, () => {
         const topicLabel   = topicSelect !== 'all' ? topicSelect : 'Mixed Topics';
         const diffLabel    = difficultySelect !== 'all' ? ` (${difficultySelect})` : '';
         document.getElementById('quiz-mode-badge').textContent = `Practice — ${subjectLabel}${topicLabel}${diffLabel}`;
-=======
-addTapListener(startQuizBtn, () => {
-    const quizType = document.querySelector('input[name="quiz-type"]:checked').value;
-    state.quizType = quizType;
-    const topicSelect = document.getElementById('quiz-topic').value;
-    currentQuestionIndex = 0;
-
-    if (quizType === 'topic') {
-        let pool = topicSelect === 'all' ? [...ndaData.quizBank] : ndaData.quizBank.filter(q => q.topic === topicSelect);
-        if (pool.length === 0) { alert("Not enough questions for this topic yet!"); return; }
-        for (let i = pool.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [pool[i], pool[j]] = [pool[j], pool[i]];
-        }
-        currentQuizQuestions = pool.slice(0, Math.min(20, pool.length));
-        document.getElementById('quiz-mode-badge').textContent = 'Practice Mode - ' + (topicSelect === 'all' ? 'Mix' : topicSelect);
->>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
         document.getElementById('quiz-mode-badge').className = 'text-xs font-bold uppercase tracking-wider text-indigo-500 bg-indigo-50 px-2 py-1 rounded';
         document.getElementById('quiz-nav-sidebar').classList.remove('hidden');
         document.getElementById('quiz-nav-sidebar').classList.add('lg:block');
@@ -591,7 +566,6 @@ addTapListener(startQuizBtn, () => {
         document.getElementById('quiz-main-card').classList.remove('mx-auto', 'max-w-3xl');
 
     } else if (quizType === 'math-mock') {
-<<<<<<< HEAD
         let mathPool = pool.filter(q =>
             (q.subject === 'Mathematics') || (!q.subject && mathTopics.includes(q.topic))
         );
@@ -610,19 +584,6 @@ addTapListener(startQuizBtn, () => {
         if (gatPool.length === 0) { alert('Not enough GAT questions for this difficulty. Try "Any Difficulty".'); return; }
         currentQuizQuestions = pickN(gatPool, 150);
         document.getElementById('quiz-mode-badge').textContent = 'NDA GAT Mock' + (difficultySelect !== 'all' ? ` (${difficultySelect})` : '');
-=======
-        const mathTopicsList = ['Algebra','Matrices & Determinants','Trigonometry','Calculus','Statistics & Probability','Analytical Geometry (2D & 3D)','Vector Algebra'];
-        const src = ndaData.quizBank.filter(q => mathTopicsList.includes(q.topic));
-        currentQuizQuestions = generateMockQuestions(src.length > 0 ? src : ndaData.quizBank, 120);
-        document.getElementById('quiz-mode-badge').textContent = 'NDA Math Mock (Paper I)';
-        document.getElementById('quiz-mode-badge').className = 'text-xs font-bold uppercase tracking-wider text-blue-500 bg-blue-50 px-2 py-1 rounded';
-        setupMockUI(150 * 60);
-    } else if (quizType === 'gat-mock') {
-        const mathTopicsList = ['Algebra','Matrices & Determinants','Trigonometry','Calculus','Statistics & Probability','Analytical Geometry (2D & 3D)','Vector Algebra'];
-        const src = ndaData.quizBank.filter(q => !mathTopicsList.includes(q.topic));
-        currentQuizQuestions = generateMockQuestions(src.length > 0 ? src : ndaData.quizBank, 150);
-        document.getElementById('quiz-mode-badge').textContent = 'NDA GAT Mock (Paper II)';
->>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
         document.getElementById('quiz-mode-badge').className = 'text-xs font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-1 rounded';
         setupMockUI(150 * 60);
     }
@@ -641,7 +602,6 @@ function fisherYatesShuffle(arr) {
 }
 
 function generateMockQuestions(sourceArray, count) {
-    // Filter out any malformed questions first
     const clean = sourceArray.filter(q => q && q.options && Array.isArray(q.options) && typeof q.correctIndex === 'number');
     let result = [];
     while (result.length < count) result = result.concat(fisherYatesShuffle(clean));
@@ -695,8 +655,6 @@ function renderQuestionGrid() {
     });
 }
 
-// No longer need selectOption as we use listeners
-
 function renderQuizQuestion() {
     const q = currentQuizQuestions[currentQuestionIndex];
     if (!q) return;
@@ -704,7 +662,6 @@ function renderQuizQuestion() {
     const isLast = currentQuestionIndex === currentQuizQuestions.length - 1;
     const progress = ((currentQuestionIndex + 1) / currentQuizQuestions.length) * 100;
 
-<<<<<<< HEAD
     document.getElementById('quiz-progress-bar').style.width = `${progress}%`;
     document.getElementById('quiz-counter').textContent = `Question ${currentQuestionIndex + 1} of ${currentQuizQuestions.length}`;
 
@@ -716,34 +673,6 @@ function renderQuizQuestion() {
             <div class="flex items-center gap-3 mb-4">
                 <span class="text-xs font-semibold text-slate-400 bg-slate-100 px-2 py-1 rounded">${q.topic}</span>
                 ${diffTag}
-=======
-    let html = `
-        <div class="mb-6">
-            <div class="flex justify-between text-sm font-medium text-slate-500 mb-2">
-                <span>Question ${currentQuestionIndex + 1} of ${currentQuizQuestions.length}</span>
-                <span class="text-indigo-600">${q.topic}</span>
-            </div>
-            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden mb-6">
-                <div class="bg-indigo-500 h-full transition-all duration-300" style="width: ${progress}%"></div>
-            </div>
-            <h3 class="text-xl font-bold text-slate-800 mb-8">${q.question}</h3>
-            <div class="space-y-3" id="options-container">`;
-
-    q.options.forEach((opt, index) => {
-        const isSelected = userAnswers[currentQuestionIndex] === index;
-        html += `
-            <button class="quiz-option w-full text-left p-4 rounded-xl border transition-all ${isSelected ? 'selected border-indigo-500 bg-indigo-50 shadow-sm' : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'} font-medium" data-index="${index}">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded border flex items-center justify-center shrink-0 ${isSelected ? 'bg-indigo-500 border-indigo-600 text-white' : 'bg-slate-100 border-slate-200 text-slate-500'} font-bold">
-                        ${String.fromCharCode(65 + index)}
-                    </div>
-                    <span class="${isSelected ? 'text-indigo-900' : 'text-slate-700'}">${opt}</span>
-                </div>
-            </button>`;
-    });
-
-    html += `
->>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
             </div>
             <h2 class="text-xl md:text-2xl font-bold text-slate-800 leading-relaxed">${formatMath(q.question)}</h2>
         </div>
@@ -773,18 +702,18 @@ function renderQuizQuestion() {
         addTapListener(btn, () => {
             document.querySelectorAll('.quiz-option').forEach(el => {
                 el.classList.remove('selected', 'border-indigo-500', 'bg-indigo-50', 'shadow-sm');
-                el.classList.add('border-slate-200', 'hover:border-slate-300', 'hover:bg-slate-50');
+                el.classList.add('border-slate-100', 'hover:border-slate-300');
                 const badge = el.querySelector('.w-8');
                 badge.classList.remove('bg-indigo-500', 'border-indigo-600', 'text-white');
-                badge.classList.add('bg-slate-100', 'border-slate-200', 'text-slate-500');
+                badge.classList.add('border-slate-200', 'text-slate-400');
                 el.querySelector('span:last-child').classList.remove('text-indigo-900');
                 el.querySelector('span:last-child').classList.add('text-slate-700');
             });
             btn.classList.add('selected', 'border-indigo-500', 'bg-indigo-50', 'shadow-sm');
-            btn.classList.remove('border-slate-200', 'hover:border-slate-300', 'hover:bg-slate-50');
+            btn.classList.remove('border-slate-100', 'hover:border-slate-300');
             const activeBadge = btn.querySelector('.w-8');
             activeBadge.classList.add('bg-indigo-500', 'border-indigo-600', 'text-white');
-            activeBadge.classList.remove('bg-slate-100', 'border-slate-200', 'text-slate-500');
+            activeBadge.classList.remove('border-slate-200', 'text-slate-400');
             btn.querySelector('span:last-child').classList.add('text-indigo-900');
             btn.querySelector('span:last-child').classList.remove('text-slate-700');
             userAnswers[currentQuestionIndex] = parseInt(btn.dataset.index);
@@ -797,7 +726,6 @@ function renderQuizQuestion() {
     });
 
     addTapListener(document.getElementById('next-submit-btn'), () => {
-        // Allow skipping questions freely
         if (isLast) {
             if (confirm(state.quizType === 'topic' ? "Finish this practice quiz?" : "Are you sure you want to submit the final exam?")) finishQuiz();
         } else {
@@ -920,11 +848,9 @@ function finishQuiz() {
     lucide.createIcons();
 
     addTapListener(document.getElementById('return-setup-btn'), () => {
-        // Hide results, show setup
         activeQuizView.classList.add('hidden');
         setupView.classList.remove('hidden');
 
-        // Restore the active quiz view HTML structure for next quiz
         activeQuizView.innerHTML = `
             <div class="flex-1 bg-white rounded-2xl p-8 border border-slate-100 shadow-sm w-full relative z-10" id="quiz-main-card">
                 <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-100">
@@ -934,6 +860,10 @@ function finishQuiz() {
                         <span class="font-mono font-bold tracking-wider text-xl" id="quiz-timer">00:00:00</span>
                     </div>
                 </div>
+                <div id="quiz-progress-bar-container" class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mb-1">
+                    <div class="bg-indigo-500 h-full transition-all duration-300" id="quiz-progress-bar" style="width: 0%"></div>
+                </div>
+                <p class="text-xs text-slate-400 text-right mb-6" id="quiz-counter">Question 1 of 0</p>
                 <div id="quiz-question-content"></div>
             </div>
             <div class="hidden lg:block w-72 shrink-0 bg-white rounded-2xl p-5 border border-slate-100 shadow-sm sticky top-6" id="quiz-nav-sidebar">
@@ -1132,24 +1062,18 @@ function renderQuizHistorySection() {
         container.innerHTML = `<div class="text-center text-slate-400 py-8 flex flex-col items-center gap-3"><i data-lucide="clipboard-list" class="w-12 h-12 opacity-40"></i><p class="text-sm">No quizzes completed yet. Start practising!</p></div>`;
         lucide.createIcons(); return;
     }
-<<<<<<< HEAD
-    
+
     // Sort history to show most recent first
     const sortedHistory = [...history].reverse();
-    
+
     container.innerHTML = sortedHistory.slice(0, 10).map((q, idx) => {
-=======
-    container.innerHTML = [...history].reverse().slice(0, 5).map(q => {
->>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
         let scoreColor = 'text-amber-600 bg-amber-50 border-amber-200', icon = 'minus-circle';
         if (q.accuracy >= 60) { scoreColor = 'text-emerald-700 bg-emerald-50 border-emerald-200'; icon = 'check-circle-2'; }
         if (q.accuracy < 30) { scoreColor = 'text-rose-700 bg-rose-50 border-rose-200'; icon = 'x-circle'; }
         const typeLabel = { topic: 'Practice', 'math-mock': 'Math Mock', 'gat-mock': 'GAT Mock' }[q.type] || 'Practice';
         const typeBadge = { topic: 'bg-indigo-50 text-indigo-700 border-indigo-200', 'math-mock': 'bg-blue-50 text-blue-700 border-blue-200', 'gat-mock': 'bg-rose-50 text-rose-700 border-rose-200' }[q.type] || 'bg-indigo-50 text-indigo-700 border-indigo-200';
         const dateStr = new Date(q.date).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
-<<<<<<< HEAD
-        
-        // Use the original index from the 'history' array (not sortedHistory) for the data-index
+
         const originalIndex = history.length - 1 - idx;
         const hasDetails = q.questions && q.questions.length > 0;
 
@@ -1165,14 +1089,6 @@ function renderQuizHistorySection() {
                 <button class="review-quiz-btn px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all text-xs font-bold flex items-center gap-1.5 border border-indigo-100" data-index="${originalIndex}">
                     <i data-lucide="eye" class="w-3.5 h-3.5"></i> Review
                 </button>` : ''}
-=======
-        return `<div class="quiz-history-row">
-            <div class="w-9 h-9 rounded-xl ${scoreColor} border flex items-center justify-center shrink-0"><i data-lucide="${icon}" class="w-5 h-5"></i></div>
-            <div class="flex-1 min-w-0"><p class="font-semibold text-slate-800 text-sm truncate">${q.topic && q.topic !== 'all' ? q.topic : 'Mixed Topics'}</p><p class="text-xs text-slate-400 mt-0.5">${dateStr}</p></div>
-            <div class="flex items-center gap-2 shrink-0">
-                <span class="text-xs font-semibold border px-2 py-0.5 rounded-full ${typeBadge}">${typeLabel}</span>
-                <span class="text-sm font-bold ${q.accuracy >= 60 ? 'text-emerald-600' : q.accuracy < 30 ? 'text-rose-600' : 'text-amber-600'}">${q.accuracy}%</span>
->>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
             </div>
         </div>`;
     }).join('');
@@ -1187,19 +1103,17 @@ function renderQuizHistorySection() {
     lucide.createIcons();
 }
 
-<<<<<<< HEAD
 function openQuizReviewModal(historyIndex) {
     const history = loadQuizHistory();
     const qData = history[historyIndex];
     if (!qData || !qData.questions) return;
 
-    // We'll reuse the pyq-modal structure but with custom content
     const modal = document.getElementById('pyq-modal');
     const title = document.getElementById('pyq-modal-title');
     const content = document.getElementById('pyq-modal-content');
 
     title.textContent = `Review: ${qData.topic || 'Quiz'} (${new Date(qData.date).toLocaleDateString()})`;
-    
+
     let html = `
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
             <div class="bg-indigo-50 border border-indigo-100 p-3 rounded-xl text-center">
@@ -1225,7 +1139,7 @@ function openQuizReviewModal(historyIndex) {
         const userAnswer = qData.answers[i];
         const isCorrect = userAnswer === q.correctIndex;
         const isUnattempted = userAnswer === null;
-        
+
         let containerClass = 'border-slate-200 bg-white';
         if (isCorrect) containerClass = 'border-emerald-200 bg-emerald-50/20';
         else if (!isUnattempted) containerClass = 'border-rose-200 bg-rose-50/20';
@@ -1245,7 +1159,6 @@ function openQuizReviewModal(historyIndex) {
                                 let optClass = 'border-slate-100 bg-slate-50 text-slate-600';
                                 if (optIdx === q.correctIndex) optClass = 'border-emerald-200 bg-emerald-100 text-emerald-800 font-bold';
                                 else if (optIdx === userAnswer && !isCorrect) optClass = 'border-rose-200 bg-rose-100 text-rose-800 font-bold';
-                                
                                 return `
                                     <div class="text-sm p-3 rounded-xl border ${optClass} flex items-center gap-2">
                                         <span class="w-5 h-5 rounded-full bg-white/50 flex items-center justify-center text-[10px] font-bold shrink-0">${String.fromCharCode(65 + optIdx)}</span>
@@ -1264,15 +1177,13 @@ function openQuizReviewModal(historyIndex) {
     html += `</div>`;
     content.innerHTML = html;
     modal.classList.remove('hidden');
-    
+
     if (window.MathJax && MathJax.typesetPromise) {
         MathJax.typesetPromise([content]).catch((err) => console.log(err.message));
     }
     lucide.createIcons();
 }
 
-=======
->>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
 // --- Edit Profile Modal ---
 const editProfileModal = document.getElementById('edit-profile-modal');
 const openEditProfileBtn = document.getElementById('open-edit-profile-btn');
@@ -1328,8 +1239,7 @@ document.addEventListener('defendx:quizFinished', (e) => {
     const { score, totalMarks, correct, incorrect, unattempted, quizType, topic } = e.detail;
     const attempted = correct + incorrect;
     const accuracy = attempted > 0 ? Math.round((correct / (attempted + unattempted)) * 100) : 0;
-<<<<<<< HEAD
-    
+
     // Store deep copy of questions and answers for detailed review
     const historyEntry = {
         date: new Date().toISOString(),
@@ -1341,7 +1251,6 @@ document.addEventListener('defendx:quizFinished', (e) => {
         incorrect,
         unattempted,
         accuracy,
-        // New fields for detailed review
         questions: JSON.parse(JSON.stringify(currentQuizQuestions)),
         answers: [...userAnswers]
     };
@@ -1352,11 +1261,3 @@ document.addEventListener('defendx:quizFinished', (e) => {
     setText('dash-quizzes-done', quizHistory.length);
     launchConfetti();
 });
-=======
-    quizHistory = loadQuizHistory();
-    quizHistory.push({ date: new Date().toISOString(), type: quizType, topic: topic || 'Mixed Topics', score: parseFloat(score), totalMarks, correct, incorrect, unattempted, accuracy });
-    saveQuizHistory(quizHistory);
-    setText('dash-quizzes-done', quizHistory.length);
-    launchConfetti();
-});
->>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
