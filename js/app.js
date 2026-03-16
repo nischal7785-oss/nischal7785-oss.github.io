@@ -5,6 +5,7 @@ lucide.createIcons();
 
 // 3D Tilt effect on hover for .tilt-card elements
 document.addEventListener('mousemove', (e) => {
+    // Skip on touch devices - touch fires fake mousemove events causing bugs
     if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) return;
     document.querySelectorAll('.tilt-card').forEach(card => {
         const rect = card.getBoundingClientRect();
@@ -70,6 +71,114 @@ const state = {
     quizTimer: null
 };
 
+// --- GLOBAL HELPERS & CONSTANTS ---
+
+const mathTopics = ['Algebra','Matrices & Determinants','Trigonometry','Calculus','Statistics & Probability','Analytical Geometry (2D & 3D)','Vector Algebra','Number System','Simplification','Average','Percentage','Profit Loss','Ratio Proportion','Time Work','Time Speed Distance','SI CI','Geometry','Mensuration','Matrices','Vectors','Statistics','Probability','Coordinate Geometry','Sequences','Number Theory','Time Speed','Set Theory','Differential Equations','Permutation','Combination','Binomial','Logarithm','Complex Numbers','3D Geometry','Ratio','Mixture'];
+
+// Normalise subject/section + difficulty for any question
+function classifyQuestion(q) {
+    // --- Section bucket ---
+    let section = q.section;
+    const topic = q.topic || '';
+    const subject = q.subject || '';
+
+    if (!section) {
+        if (subject === 'Mathematics' || mathTopics.includes(topic)) {
+            section = 'Mathematics';
+        } else if (subject === 'English' || topic === 'English') {
+            section = 'English';
+        } else if (subject === 'Science' && topic === 'Physics') {
+            section = 'Physics';
+        } else if (subject === 'Science' && topic === 'Chemistry') {
+            section = 'Chemistry';
+        } else if (subject === 'Science' && topic === 'Biology') {
+            section = 'Biology';
+        } else if (topic === 'Biology' || topic === 'Biology & General Science') {
+            section = 'Biology';
+        } else if (subject === 'Science') {
+            section = 'Biology';
+        } else if (subject === 'General Studies' && topic.startsWith('Geography')) {
+            section = 'Geography';
+        } else if (subject === 'General Studies' && topic.startsWith('History')) {
+            section = 'History';
+        } else if (subject === 'General Studies' && (topic === 'Polity' || topic.startsWith('Polity'))) {
+            section = 'Polity';
+        } else if (subject === 'General Studies' && (topic === 'Economy' || topic.startsWith('Economics') || topic.startsWith('Indian Economy'))) {
+            section = 'Economics';
+        } else if (topic === 'Geography') {
+            section = 'Geography';
+        } else if (topic === 'History') {
+            section = 'History';
+        } else if (topic.includes('Current Events') || topic.includes('Current Affairs')) {
+            section = 'Current Affairs & Defence';
+        } else if (topic.includes('Defense') || topic.includes('Defence') || topic.includes('Military')) {
+            section = 'Current Affairs & Defence';
+        } else {
+            const gatSubjects = ['English','Science','General Studies'];
+            if (gatSubjects.includes(subject)) {
+                section = subject === 'Science' ? 'Biology' : (subject === 'General Studies' ? 'History' : subject);
+            } else {
+                section = 'Mathematics';
+            }
+        }
+    }
+
+    // --- Difficulty bucket ---
+    const originalDiff = q.difficulty;
+    let difficulty = 'Medium';
+
+    function hashId(str) {
+        if (!str) return 0;
+        let h = 0;
+        for (let i = 0; i < str.length; i++) { h = (h * 31 + str.charCodeAt(i)) >>> 0; }
+        return h;
+    }
+
+    if (originalDiff === 'Easy') {
+        difficulty = 'Easy';
+    } else if (originalDiff === 'Medium' || !originalDiff) {
+        const h = hashId(q.id || q.topic || q.question);
+        difficulty = (h % 2 === 0) ? 'Easy' : 'Medium';
+    } else if (originalDiff === 'Hard') {
+        difficulty = 'Medium';
+    }
+
+    const hardMathTopics = ['Differential Equations','Vector Algebra','3D Geometry','Analytical Geometry (2D & 3D)','Probability','Complex Numbers','Sequence and Series','Integral Calculus','Limits, Continuity & Differentiability'];
+    const hardPhysicsTopics = ['Current Electricity','Electromagnetic Induction','Alternating Current','Modern Physics','Optics'];
+    const hardChemistryTopics = ['Electrochemistry','Chemical Equilibrium','Thermodynamics','Coordination Compounds','Organic Chemistry','p-Block Elements','d-Block Elements'];
+    const hardBiologyTopics = ['Human Physiology','Genetics','Evolution','Biotechnology','Human Reproduction','Ecology'];
+    const hardGSTopics = ['Geography','Polity','Indian Economy','Economics','History - World'];
+
+    if (
+        (section === 'Mathematics' && hardMathTopics.some(h => topic && topic.includes(h))) ||
+        (section === 'Physics' && (originalDiff === 'Hard' || hardPhysicsTopics.some(h => topic && topic.includes(h)))) ||
+        (section === 'Chemistry' && (originalDiff === 'Hard' || hardChemistryTopics.some(h => topic && topic.includes(h)))) ||
+        (section === 'Biology' && (originalDiff === 'Hard' || hardBiologyTopics.some(h => topic && topic.includes(h)))) ||
+        ((section === 'Polity' || section === 'Economics' || section === 'History') && hardGSTopics.some(h => topic && topic.includes(h)))
+    ) {
+        difficulty = 'Hard';
+    }
+
+    return { section, difficulty };
+}
+
+// Helper: pick N items from pool, repeating if needed
+function pickN(pool, n) {
+    if (pool.length === 0) return [];
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+        return a;
+    }
+    let result = shuffle([...pool]);
+    while (result.length < n) result = result.concat(shuffle([...pool]));
+    return result.slice(0, n);
+}
+
+// Selectors for dynamic filtering
+const quizSubjectSelect = document.getElementById('quiz-subject');
+const quizTopicSelect   = document.getElementById('quiz-topic');
+
 // --- Navigation Logic ---
 const navButtons = document.querySelectorAll('.nav-btn');
 const views = document.querySelectorAll('.view-section');
@@ -94,8 +203,9 @@ function navigateTo(targetView) {
     if (targetView === 'profile') renderProfilePage();
 }
 
+// Simple wrapper - just uses click events
 function addTapListener(element, handler) {
-    if (element) element.addEventListener('click', handler);
+    element.addEventListener('click', handler);
 }
 
 navButtons.forEach(btn => {
@@ -488,104 +598,84 @@ function updateQuizModeUI() {
 quizTypeRadios.forEach(radio => { radio.addEventListener('change', updateQuizModeUI); });
 updateQuizModeUI();
 
-// Reset topic when subject changes and repopulate with relevant options
-const quizSubjectSelect = document.getElementById('quiz-subject');
-const quizTopicSelect   = document.getElementById('quiz-topic');
 
 function getTopicsForSubject(subject) {
-    const mathTopicsList = ['Algebra','Matrices & Determinants','Trigonometry','Calculus',
-        'Statistics & Probability','Analytical Geometry (2D & 3D)','Vector Algebra',
-        'Number System','Simplification','Average','Percentage','Profit Loss',
-        'Ratio Proportion','Time Work','Time Speed Distance','SI CI','Geometry',
-        'Mensuration','Matrices','Vectors','Statistics','Probability',
-        'Coordinate Geometry','Sequences','Number Theory','Time Speed','Set Theory',
-        'Differential Equations','Permutation','Combination','Binomial',
-        'Logarithm','Complex Numbers','3D Geometry','Ratio','Mixture'];
-    if (!ndaData || !ndaData.quizBank) return [];
+    if (!ndaData.quizBank) return [];
     const topics = new Set();
+    
     ndaData.quizBank.forEach(q => {
         if (!q.topic) return;
-        if (subject === 'all') { topics.add(q.topic); return; }
-        if (subject === 'Mathematics') {
-            if ((q.subject && q.subject === 'Mathematics') || (!q.subject && mathTopicsList.includes(q.topic)))
-                topics.add(q.topic);
-            return;
+        const cls = classifyQuestion(q);
+        const section = cls.section;
+
+        if (subject === 'all') {
+            topics.add(q.topic);
+        } else if (subject === 'Mathematics' && section === 'Mathematics') {
+            topics.add(q.topic);
+        } else if (subject === 'English' && section === 'English') {
+            topics.add(q.topic);
+        } else if (subject === 'Science' && ['Physics', 'Chemistry', 'Biology'].includes(section)) {
+            topics.add(q.topic);
+        } else if (subject === 'General Studies' && ['History', 'Geography', 'Polity', 'Economics', 'Current Affairs & Defence'].includes(section)) {
+            topics.add(q.topic);
         }
-        // GAT and specific GAT sub-subjects
-        if (q.subject && q.subject === subject) { topics.add(q.topic); return; }
-        if (!q.subject && !mathTopicsList.includes(q.topic)) topics.add(q.topic);
     });
-    return [...topics].sort();
+    return Array.from(topics).sort();
 }
 
 function populateTopicDropdown(subject) {
     if (!quizTopicSelect) return;
+    const currentVal = quizTopicSelect.value;
+    quizTopicSelect.innerHTML = '<option value="all">Mixed Topics (Any)</option>';
     const topics = getTopicsForSubject(subject);
-    quizTopicSelect.innerHTML = '<option value="all">All Topics</option>';
     topics.forEach(t => {
         const opt = document.createElement('option');
-        opt.value = t; opt.textContent = t;
+        opt.value = t;
+        opt.textContent = t;
         quizTopicSelect.appendChild(opt);
     });
+    if (Array.from(quizTopicSelect.options).some(o => o.value === currentVal)) {
+        quizTopicSelect.value = currentVal;
+    }
 }
 
 if (quizSubjectSelect) {
     quizSubjectSelect.addEventListener('change', () => {
         populateTopicDropdown(quizSubjectSelect.value);
     });
-    populateTopicDropdown(quizSubjectSelect.value || 'all'); // populate on page load
+    // Initial population
+    populateTopicDropdown(quizSubjectSelect.value || 'all');
 }
 
 addTapListener(startQuizBtn, () => {
     const quizType = document.querySelector('input[name="quiz-type"]:checked').value;
     state.quizType = quizType;
-    const topicSelect      = document.getElementById('quiz-topic')?.value || 'all';
-    const subjectSelect    = document.getElementById('quiz-subject')?.value || 'all';
-    const difficultySelect = document.getElementById('quiz-difficulty')?.value || 'all';
+    const topicSelect      = document.getElementById('quiz-topic').value;
+    const subjectSelect    = document.getElementById('quiz-subject').value;
+    const difficultySelect = document.getElementById('quiz-difficulty').value;
     currentQuestionIndex   = 0;
+    
+    // Full 2425-question bank
+    const pool = ndaData.quizBank || [];
 
-    // Helper: shuffle array in place (Fisher-Yates)
-    function shuffle(arr) {
-        for (let i = arr.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-    }
-
-    // Helper: pick N items from pool, repeating if needed
-    function pickN(pool, n) {
-        if (pool.length === 0) return [];
-        let result = shuffle([...pool]);
-        while (result.length < n) result = result.concat(shuffle([...pool]));
-        return result.slice(0, n);
-    }
-
-    // Full question bank
-    let pool = ndaData.quizBank;
-
-    const mathTopics = ['Algebra','Matrices & Determinants','Trigonometry','Calculus',
-        'Statistics & Probability','Analytical Geometry (2D & 3D)','Vector Algebra',
-        'Number System','Simplification','Average','Percentage','Profit Loss',
-        'Ratio Proportion','Time Work','Time Speed Distance','SI CI','Geometry',
-        'Mensuration','Matrices','Vectors','Statistics','Probability',
-        'Coordinate Geometry','Sequences','Number Theory','Time Speed','Set Theory',
-        'Differential Equations','Permutation','Combination','Binomial',
-        'Logarithm','Complex Numbers','3D Geometry','Ratio','Mixture'];
-
-    const gatSubjects = ['English','Science','General Studies'];
 
     if (quizType === 'topic') {
         let filtered = pool;
+        // Subject filter (new questions have q.subject; old ones don't — fall through gracefully)
         if (subjectSelect !== 'all') {
             filtered = filtered.filter(q => {
-                if (q.subject) return q.subject === subjectSelect;
-                if (subjectSelect === 'Mathematics') return mathTopics.includes(q.topic);
-                if (subjectSelect === 'GAT') return !mathTopics.includes(q.topic);
+                const cls = classifyQuestion(q);
+                const section = cls.section;
+                if (subjectSelect === 'Mathematics') return section === 'Mathematics';
+                if (subjectSelect === 'English') return section === 'English';
+                if (subjectSelect === 'Science') return ['Physics', 'Chemistry', 'Biology'].includes(section);
+                if (subjectSelect === 'General Studies') return ['History', 'Geography', 'Polity', 'Economics', 'Current Affairs & Defence'].includes(section);
                 return false;
             });
         }
+        // Topic filter
         if (topicSelect !== 'all') filtered = filtered.filter(q => q.topic === topicSelect);
+        // Difficulty filter
         if (difficultySelect !== 'all') filtered = filtered.filter(q => q.difficulty === difficultySelect);
 
         if (filtered.length === 0) {
@@ -599,6 +689,7 @@ addTapListener(startQuizBtn, () => {
         const topicLabel   = topicSelect !== 'all' ? topicSelect : 'Mixed Topics';
         const diffLabel    = difficultySelect !== 'all' ? ` (${difficultySelect})` : '';
         document.getElementById('quiz-mode-badge').textContent = `Practice — ${subjectLabel}${topicLabel}${diffLabel}`;
+
         document.getElementById('quiz-mode-badge').className = 'text-xs font-bold uppercase tracking-wider text-indigo-500 bg-indigo-50 px-2 py-1 rounded';
         document.getElementById('quiz-nav-sidebar').classList.remove('hidden');
         document.getElementById('quiz-nav-sidebar').classList.add('lg:block');
@@ -606,9 +697,12 @@ addTapListener(startQuizBtn, () => {
         document.getElementById('quiz-main-card').classList.remove('mx-auto', 'max-w-3xl');
 
     } else if (quizType === 'math-mock') {
-        let mathPool = pool.filter(q =>
-            (q.subject === 'Mathematics') || (!q.subject && mathTopics.includes(q.topic))
-        );
+        let mathPool = pool.filter(q => {
+            const cls = classifyQuestion(q);
+            q.section = cls.section;
+            q.difficulty = cls.difficulty;
+            return cls.section === 'Mathematics';
+        });
         if (difficultySelect !== 'all') mathPool = mathPool.filter(q => q.difficulty === difficultySelect);
         if (mathPool.length === 0) { alert('Not enough Math questions for this difficulty. Try "Any Difficulty".'); return; }
         currentQuizQuestions = pickN(mathPool, 120);
@@ -617,12 +711,75 @@ addTapListener(startQuizBtn, () => {
         setupMockUI(150 * 60);
 
     } else if (quizType === 'gat-mock') {
-        let gatPool = pool.filter(q =>
-            (q.subject && gatSubjects.includes(q.subject)) || (!q.subject && !mathTopics.includes(q.topic))
-        );
-        if (difficultySelect !== 'all') gatPool = gatPool.filter(q => q.difficulty === difficultySelect);
-        if (gatPool.length === 0) { alert('Not enough GAT questions for this difficulty. Try "Any Difficulty".'); return; }
-        currentQuizQuestions = pickN(gatPool, 150);
+        // Target distribution for full GAT mock (total 150 Qs)
+        // 50 English, 22 Physics, 18 Chemistry, 10 Biology,
+        // 20 Geography, 15 History, 5 Polity/Economics, 10 Defence & Current Affairs
+        const distribution = {
+            english: 50,
+            physics: 22,
+            chemistry: 18,
+            biology: 10,
+            geography: 20,
+            history: 15,
+            polityEco: 5,
+            defenceCA: 10
+        };
+
+        function buildPoolForSection(sectionName) {
+            let p = pool.filter(q => {
+                const cls = classifyQuestion(q);
+                q.section = cls.section;
+                q.difficulty = cls.difficulty;
+                return cls.section === sectionName;
+            });
+            if (difficultySelect !== 'all') p = p.filter(q => q.difficulty === difficultySelect);
+            return p;
+        }
+
+        const englishPool   = buildPoolForSection('English');
+        const physicsPool   = buildPoolForSection('Physics');
+        const chemistryPool = buildPoolForSection('Chemistry');
+        const biologyPool   = buildPoolForSection('Biology');
+        const geographyPool = buildPoolForSection('Geography');
+        const historyPool   = buildPoolForSection('History');
+        const polityEcoPool = buildPoolForSection('Polity').concat(buildPoolForSection('Economics'));
+        const defenceCaPool = buildPoolForSection('Current Affairs & Defence');
+
+        // Ensure we have at least some questions for each bucket
+        if (
+            !englishPool.length   ||
+            !physicsPool.length   ||
+            !chemistryPool.length ||
+            !biologyPool.length   ||
+            !geographyPool.length ||
+            !historyPool.length   ||
+            !polityEcoPool.length ||
+            !defenceCaPool.length
+        ) {
+            alert('Not enough GAT questions in one or more sections for this difficulty. Try "Any Difficulty".');
+            return;
+        }
+
+        const englishQs   = pickN(englishPool,   distribution.english);
+        const physicsQs   = pickN(physicsPool,   distribution.physics);
+        const chemistryQs = pickN(chemistryPool, distribution.chemistry);
+        const biologyQs   = pickN(biologyPool,   distribution.biology);
+        const geographyQs = pickN(geographyPool, distribution.geography);
+        const historyQs   = pickN(historyPool,   distribution.history);
+        const polityEcoQs = pickN(polityEcoPool, distribution.polityEco);
+        const defenceCaQs = pickN(defenceCaPool, distribution.defenceCA);
+
+        currentQuizQuestions = [
+            ...englishQs,
+            ...physicsQs,
+            ...chemistryQs,
+            ...biologyQs,
+            ...geographyQs,
+            ...historyQs,
+            ...polityEcoQs,
+            ...defenceCaQs
+        ];
+
         document.getElementById('quiz-mode-badge').textContent = 'NDA GAT Mock' + (difficultySelect !== 'all' ? ` (${difficultySelect})` : '');
         document.getElementById('quiz-mode-badge').className = 'text-xs font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-1 rounded';
         setupMockUI(150 * 60);
@@ -642,6 +799,7 @@ function fisherYatesShuffle(arr) {
 }
 
 function generateMockQuestions(sourceArray, count) {
+    // Filter out any malformed questions first
     const clean = sourceArray.filter(q => q && q.options && Array.isArray(q.options) && typeof q.correctIndex === 'number');
     let result = [];
     while (result.length < count) result = result.concat(fisherYatesShuffle(clean));
@@ -654,9 +812,6 @@ function setupMockUI(durationInSeconds) {
     document.getElementById('timer-container').classList.remove('hidden');
     document.getElementById('timer-container').classList.add('flex');
     document.getElementById('quiz-main-card').classList.remove('mx-auto', 'max-w-3xl');
-    // Show progress bar for mock exams too
-    const pbContainer = document.getElementById('quiz-progress-bar-container');
-    if (pbContainer) pbContainer.classList.remove('hidden');
     startTimer(durationInSeconds);
 }
 
@@ -676,7 +831,6 @@ function updateTimerDisplay() {
     const m = Math.floor((state.timeRemaining % 3600) / 60);
     const s = state.timeRemaining % 60;
     const timerElem = document.getElementById('quiz-timer');
-    if (!timerElem) return;
     timerElem.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
     if (state.timeRemaining < 300) { timerElem.classList.remove('text-emerald-400'); timerElem.classList.add('text-rose-500'); }
     else { timerElem.classList.add('text-emerald-400'); timerElem.classList.remove('text-rose-500'); }
@@ -699,16 +853,19 @@ function renderQuestionGrid() {
     });
 }
 
+// No longer need selectOption as we use listeners
+
 function renderQuizQuestion() {
     const q = currentQuizQuestions[currentQuestionIndex];
     if (!q) return;
 
     const isLast = currentQuestionIndex === currentQuizQuestions.length - 1;
     const progress = ((currentQuestionIndex + 1) / currentQuizQuestions.length) * 100;
+
     const progressBar = document.getElementById('quiz-progress-bar');
-    const counterEl   = document.getElementById('quiz-counter');
     if (progressBar) progressBar.style.width = `${progress}%`;
-    if (counterEl)   counterEl.textContent = `Question ${currentQuestionIndex + 1} of ${currentQuizQuestions.length}`;
+    const counter = document.getElementById('quiz-counter');
+    if (counter) counter.textContent = `Question ${currentQuestionIndex + 1} of ${currentQuizQuestions.length}`;
 
     const diffColors = { 'Easy': 'text-emerald-500 bg-emerald-50', 'Medium': 'text-amber-500 bg-amber-50', 'Hard': 'text-rose-500 bg-rose-50' };
     const diffTag = q.difficulty ? `<span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${diffColors[q.difficulty] || 'text-slate-500 bg-slate-100'}">${q.difficulty}</span>` : '';
@@ -716,18 +873,18 @@ function renderQuizQuestion() {
     const html = `
         <div class="mb-8">
             <div class="flex items-center gap-3 mb-4">
-                <span class="text-xs font-semibold text-slate-400 bg-slate-100 px-2 py-1 rounded">${q.topic || ''}</span>
+                <span class="text-xs font-semibold text-slate-400 bg-slate-100 px-2 py-1 rounded">${q.topic || 'General'}</span>
                 ${diffTag}
             </div>
-            <h2 class="text-xl md:text-2xl font-bold text-slate-800 leading-relaxed">${formatMath(q.question)}</h2>
+            <h2 class="text-xl md:text-2xl font-bold text-slate-800 leading-relaxed">${formatMath(q.question || '')}</h2>
         </div>
         <div class="space-y-4 mb-8">
             ${(q.options || []).map((opt, i) => `
                 <button class="quiz-option w-full text-left p-5 border-2 rounded-2xl transition-all duration-200 flex items-center gap-4 group ${userAnswers[currentQuestionIndex] === i ? 'border-indigo-500 bg-indigo-50 shadow-sm selected' : 'border-slate-100 hover:border-slate-300 bg-white'}" data-index="${i}">
-                    <div class="option-badge w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold shrink-0 ${userAnswers[currentQuestionIndex] === i ? 'bg-indigo-500 border-indigo-600 text-white' : 'border-slate-200 text-slate-400 group-hover:border-indigo-400 group-hover:text-indigo-400'}">
+                    <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold shrink-0 ${userAnswers[currentQuestionIndex] === i ? 'bg-indigo-500 border-indigo-600 text-white' : 'border-slate-200 text-slate-400 group-hover:border-indigo-400 group-hover:text-indigo-400'}">
                         ${String.fromCharCode(65 + i)}
                     </div>
-                    <span class="option-text flex-1 font-medium ${userAnswers[currentQuestionIndex] === i ? 'text-indigo-900' : 'text-slate-700'}">${formatMath(opt)}</span>
+                    <span class="flex-1 font-medium ${userAnswers[currentQuestionIndex] === i ? 'text-indigo-900' : 'text-slate-700'}">${formatMath(opt || '')}</span>
                 </button>
             `).join('')}
         </div>
@@ -737,6 +894,7 @@ function renderQuizQuestion() {
                 ${isLast ? 'Final Submit' : 'Next Question <i data-lucide="arrow-right" class="w-4 h-4"></i>'}
             </button>
         </div>`;
+;
 
     const questionContainer = document.getElementById('quiz-question-content');
     questionContainer.innerHTML = html;
@@ -745,28 +903,22 @@ function renderQuizQuestion() {
 
     document.querySelectorAll('.quiz-option').forEach(btn => {
         addTapListener(btn, () => {
-            // Reset all options to unselected state
             document.querySelectorAll('.quiz-option').forEach(el => {
                 el.classList.remove('selected', 'border-indigo-500', 'bg-indigo-50', 'shadow-sm');
-                el.classList.add('border-slate-100', 'hover:border-slate-300', 'bg-white');
-                const badge = el.querySelector('.option-badge');
-                if (badge) {
-                    badge.classList.remove('bg-indigo-500', 'border-indigo-600', 'text-white');
-                    badge.classList.add('border-slate-200', 'text-slate-400');
-                }
-                const text = el.querySelector('.option-text');
-                if (text) { text.classList.remove('text-indigo-900'); text.classList.add('text-slate-700'); }
+                el.classList.add('border-slate-200', 'hover:border-slate-300', 'hover:bg-slate-50');
+                const badge = el.querySelector('.w-8');
+                badge.classList.remove('bg-indigo-500', 'border-indigo-600', 'text-white');
+                badge.classList.add('bg-slate-100', 'border-slate-200', 'text-slate-500');
+                el.querySelector('span:last-child').classList.remove('text-indigo-900');
+                el.querySelector('span:last-child').classList.add('text-slate-700');
             });
-            // Mark clicked option as selected
             btn.classList.add('selected', 'border-indigo-500', 'bg-indigo-50', 'shadow-sm');
-            btn.classList.remove('border-slate-100', 'hover:border-slate-300', 'bg-white');
-            const activeBadge = btn.querySelector('.option-badge');
-            if (activeBadge) {
-                activeBadge.classList.add('bg-indigo-500', 'border-indigo-600', 'text-white');
-                activeBadge.classList.remove('border-slate-200', 'text-slate-400');
-            }
-            const activeText = btn.querySelector('.option-text');
-            if (activeText) { activeText.classList.add('text-indigo-900'); activeText.classList.remove('text-slate-700'); }
+            btn.classList.remove('border-slate-200', 'hover:border-slate-300', 'hover:bg-slate-50');
+            const activeBadge = btn.querySelector('.w-8');
+            activeBadge.classList.add('bg-indigo-500', 'border-indigo-600', 'text-white');
+            activeBadge.classList.remove('bg-slate-100', 'border-slate-200', 'text-slate-500');
+            btn.querySelector('span:last-child').classList.add('text-indigo-900');
+            btn.querySelector('span:last-child').classList.remove('text-slate-700');
             userAnswers[currentQuestionIndex] = parseInt(btn.dataset.index);
             renderQuestionGrid();
         });
@@ -777,6 +929,7 @@ function renderQuizQuestion() {
     });
 
     addTapListener(document.getElementById('next-submit-btn'), () => {
+        // Allow skipping questions freely
         if (isLast) {
             if (confirm(state.quizType === 'topic' ? "Finish this practice quiz?" : "Are you sure you want to submit the final exam?")) finishQuiz();
         } else {
@@ -812,10 +965,9 @@ function finishQuiz() {
     });
 
     const finalScore = score.toFixed(2);
-    const percentage = Math.round((Math.max(0, parseFloat(finalScore)) / totalMarks) * 100);
+    const percentage = Math.round((Math.max(0, finalScore) / totalMarks) * 100);
     state.quizzesCompleted++;
-    const dashDoneEl = document.getElementById('dash-quizzes-done');
-    if (dashDoneEl) dashDoneEl.textContent = state.quizzesCompleted;
+    document.getElementById('dash-quizzes-done').textContent = state.quizzesCompleted;
 
     const topicLabel = state.quizType === 'topic' ? (document.getElementById('quiz-topic')?.value || 'Mixed Topics') : null;
     document.dispatchEvent(new CustomEvent('defendx:quizFinished', {
@@ -879,10 +1031,10 @@ function finishQuiz() {
                     <div class="flex items-center gap-2">
                         <span class="text-slate-500 w-24">Your Answer:</span>
                         <span class="font-medium px-2 py-0.5 rounded ${isCorrect ? 'bg-emerald-100 text-emerald-800' : (isUnattempted ? 'bg-slate-100 text-slate-600' : 'bg-rose-100 text-rose-800')}">
-                            ${!isUnattempted ? ((q.options && q.options[userAnswers[i]]) || 'Unknown') : 'Skipped / Unattempted'}
+                            ${!isUnattempted ? (q.options ? q.options[userAnswers[i]] || 'Skipped' : 'Error') : 'Skipped / Unattempted'}
                         </span>
                     </div>
-                    ${!isCorrect ? `<div class="flex items-center gap-2"><span class="text-slate-500 w-24">Correct Answer:</span><span class="font-medium bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">${(q.options && q.options[q.correctIndex]) || 'N/A'}</span></div>` : ''}
+                    ${!isCorrect ? `<div class="flex items-center gap-2"><span class="text-slate-500 w-24">Correct Answer:</span><span class="font-medium bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">${q.options ? q.options[q.correctIndex] || 'N/A' : 'Error'}</span></div>` : ''}
                     <div class="mt-3 pt-3 border-t border-slate-100"><p class="text-indigo-900 leading-relaxed"><strong class="text-indigo-500">Explanation:</strong> ${q.explanation || 'No explanation available.'}</p></div>
                 </div>
             </div>`;
@@ -900,9 +1052,11 @@ function finishQuiz() {
     lucide.createIcons();
 
     addTapListener(document.getElementById('return-setup-btn'), () => {
+        // Hide results, show setup
         activeQuizView.classList.add('hidden');
         setupView.classList.remove('hidden');
 
+        // Restore the active quiz view HTML structure for next quiz
         activeQuizView.innerHTML = `
             <div class="flex-1 bg-white rounded-2xl p-8 border border-slate-100 shadow-sm w-full relative z-10" id="quiz-main-card">
                 <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-100">
@@ -912,10 +1066,6 @@ function finishQuiz() {
                         <span class="font-mono font-bold tracking-wider text-xl" id="quiz-timer">00:00:00</span>
                     </div>
                 </div>
-                <div id="quiz-progress-bar-container" class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mb-1">
-                    <div class="bg-indigo-500 h-full transition-all duration-300" id="quiz-progress-bar" style="width: 0%"></div>
-                </div>
-                <p class="text-xs text-slate-400 text-right mb-6" id="quiz-counter">Question 1 of 0</p>
                 <div id="quiz-question-content"></div>
             </div>
             <div class="hidden lg:block w-72 shrink-0 bg-white rounded-2xl p-5 border border-slate-100 shadow-sm sticky top-6" id="quiz-nav-sidebar">
@@ -1024,8 +1174,10 @@ function appendMessage(text, sender) {
 const DEFAULT_PROFILE = {
     name: 'NDA Aspirant', attempt: 'April 2026', currentClass: 'Class 12', city: 'India',
     targetMath: 150, targetGat: 300, studyHours: 4, weakAreas: ['Trigonometry', 'Calculus'],
-    joinDate: new Date().toISOString()
+    joinDate: new Date().toISOString(),
+    mathMocks: [], gatMocks: []
 };
+
 
 function loadProfile() {
     try { const saved = localStorage.getItem('defendx_profile'); return saved ? { ...DEFAULT_PROFILE, ...JSON.parse(saved) } : { ...DEFAULT_PROFILE }; }
@@ -1036,16 +1188,7 @@ function loadQuizHistory() {
     try { const saved = localStorage.getItem('defendx_quiz_history'); return saved ? JSON.parse(saved) : []; }
     catch(e) { return []; }
 }
-function saveQuizHistory(h) {
-    try {
-        localStorage.setItem('defendx_quiz_history', JSON.stringify(h));
-    } catch (e) {
-        // localStorage quota exceeded — trim to last 50 entries and retry
-        console.warn('localStorage quota exceeded, trimming quiz history to last 50 entries.');
-        const trimmed = h.slice(-50);
-        try { localStorage.setItem('defendx_quiz_history', JSON.stringify(trimmed)); } catch (_) {}
-    }
-}
+function saveQuizHistory(h) { localStorage.setItem('defendx_quiz_history', JSON.stringify(h)); }
 function getInitials(name) {
     if (!name || !name.trim()) return 'NA';
     const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -1123,19 +1266,24 @@ function renderQuizHistorySection() {
         container.innerHTML = `<div class="text-center text-slate-400 py-8 flex flex-col items-center gap-3"><i data-lucide="clipboard-list" class="w-12 h-12 opacity-40"></i><p class="text-sm">No quizzes completed yet. Start practising!</p></div>`;
         lucide.createIcons(); return;
     }
-
     // Sort history to show most recent first
-    const sortedHistory = [...history].reverse();
+    const histories = [
+        ...(userProfile.mathMocks || []).map(m => ({...m, source: 'mathMocks'})),
+        ...(userProfile.gatMocks || []).map(m => ({...m, source: 'gatMocks'})),
+        ...(history || []).map(h => ({...h, source: 'history'}))
+    ];
 
-    container.innerHTML = sortedHistory.slice(0, 10).map((q, idx) => {
+    histories.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    // Show top 10 combined results
+    container.innerHTML = histories.slice(0, 10).map((q, idx) => {
         let scoreColor = 'text-amber-600 bg-amber-50 border-amber-200', icon = 'minus-circle';
         if (q.accuracy >= 60) { scoreColor = 'text-emerald-700 bg-emerald-50 border-emerald-200'; icon = 'check-circle-2'; }
         if (q.accuracy < 30) { scoreColor = 'text-rose-700 bg-rose-50 border-rose-200'; icon = 'x-circle'; }
         const typeLabel = { topic: 'Practice', 'math-mock': 'Math Mock', 'gat-mock': 'GAT Mock' }[q.type] || 'Practice';
         const typeBadge = { topic: 'bg-indigo-50 text-indigo-700 border-indigo-200', 'math-mock': 'bg-blue-50 text-blue-700 border-blue-200', 'gat-mock': 'bg-rose-50 text-rose-700 border-rose-200' }[q.type] || 'bg-indigo-50 text-indigo-700 border-indigo-200';
         const dateStr = new Date(q.date).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
-
-        const originalIndex = history.length - 1 - idx;
+        
         const hasDetails = q.questions && q.questions.length > 0;
 
         return `<div class="quiz-history-row group">
@@ -1147,7 +1295,7 @@ function renderQuizHistorySection() {
                     <span class="text-sm font-bold ${q.accuracy >= 60 ? 'text-emerald-600' : q.accuracy < 30 ? 'text-rose-600' : 'text-amber-600'}">${q.accuracy}%</span>
                 </div>
                 ${hasDetails ? `
-                <button class="review-quiz-btn px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all text-xs font-bold flex items-center gap-1.5 border border-indigo-100" data-index="${originalIndex}">
+                <button class="review-quiz-btn px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all text-xs font-bold flex items-center gap-1.5 border border-indigo-100" data-source="${q.source}" data-index="${q.source === 'history' ? history.indexOf(history.find(h => h.date === q.date)) : (q.source === 'mathMocks' ? userProfile.mathMocks.indexOf(userProfile.mathMocks.find(m => m.date === q.date)) : userProfile.gatMocks.indexOf(userProfile.gatMocks.find(m => m.date === q.date)))}">
                     <i data-lucide="eye" class="w-3.5 h-3.5"></i> Review
                 </button>` : ''}
             </div>
@@ -1156,17 +1304,22 @@ function renderQuizHistorySection() {
 
     document.querySelectorAll('.review-quiz-btn').forEach(btn => {
         addTapListener(btn, () => {
+            const source = btn.dataset.source;
             const index = parseInt(btn.dataset.index);
-            openQuizReviewModal(index);
+            openQuizReviewModal(source, index);
         });
     });
 
     lucide.createIcons();
+
 }
 
-function openQuizReviewModal(historyIndex) {
-    const history = loadQuizHistory();
-    const qData = history[historyIndex];
+function openQuizReviewModal(source, historyIndex) {
+    let qData;
+    if (source === 'mathMocks') qData = userProfile.mathMocks[historyIndex];
+    else if (source === 'gatMocks') qData = userProfile.gatMocks[historyIndex];
+    else qData = quizHistory[historyIndex];
+
     if (!qData || !qData.questions) return;
 
     const modal = document.getElementById('pyq-modal');
@@ -1174,7 +1327,7 @@ function openQuizReviewModal(historyIndex) {
     const content = document.getElementById('pyq-modal-content');
 
     title.textContent = `Review: ${qData.topic || 'Quiz'} (${new Date(qData.date).toLocaleDateString()})`;
-
+    
     let html = `
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
             <div class="bg-indigo-50 border border-indigo-100 p-3 rounded-xl text-center">
@@ -1200,7 +1353,7 @@ function openQuizReviewModal(historyIndex) {
         const userAnswer = qData.answers[i];
         const isCorrect = userAnswer === q.correctIndex;
         const isUnattempted = userAnswer === null;
-
+        
         let containerClass = 'border-slate-200 bg-white';
         if (isCorrect) containerClass = 'border-emerald-200 bg-emerald-50/20';
         else if (!isUnattempted) containerClass = 'border-rose-200 bg-rose-50/20';
@@ -1213,17 +1366,18 @@ function openQuizReviewModal(historyIndex) {
                     </div>
                     <div class="flex-1">
                         <p class="font-bold text-slate-800 leading-relaxed mb-4">
-                            <span class="text-slate-400 mr-2">Q${i+1}.</span>${formatMath(q.question)}
+                            <span class="text-slate-400 mr-2">Q${i+1}.</span>${formatMath(q.question || '')}
                         </p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
                             ${(q.options || []).map((opt, optIdx) => {
                                 let optClass = 'border-slate-100 bg-slate-50 text-slate-600';
                                 if (optIdx === q.correctIndex) optClass = 'border-emerald-200 bg-emerald-100 text-emerald-800 font-bold';
                                 else if (optIdx === userAnswer && !isCorrect) optClass = 'border-rose-200 bg-rose-100 text-rose-800 font-bold';
+                                
                                 return `
                                     <div class="text-sm p-3 rounded-xl border ${optClass} flex items-center gap-2">
                                         <span class="w-5 h-5 rounded-full bg-white/50 flex items-center justify-center text-[10px] font-bold shrink-0">${String.fromCharCode(65 + optIdx)}</span>
-                                        <span>${formatMath(opt)}</span>
+                                        <span>${formatMath(opt || '')}</span>
                                     </div>`;
                             }).join('')}
                         </div>
@@ -1238,7 +1392,7 @@ function openQuizReviewModal(historyIndex) {
     html += `</div>`;
     content.innerHTML = html;
     modal.classList.remove('hidden');
-
+    
     if (window.MathJax && MathJax.typesetPromise) {
         MathJax.typesetPromise([content]).catch((err) => console.log(err.message));
     }
@@ -1300,16 +1454,8 @@ document.addEventListener('defendx:quizFinished', (e) => {
     const { score, totalMarks, correct, incorrect, unattempted, quizType, topic } = e.detail;
     const attempted = correct + incorrect;
     const accuracy = attempted > 0 ? Math.round((correct / (attempted + unattempted)) * 100) : 0;
-
-    // Save a lightweight copy to avoid hitting localStorage quota on large mock exams
-    const lightQuestions = currentQuizQuestions.map(q => ({
-        question:     q.question,
-        options:      q.options,
-        correctIndex: q.correctIndex,
-        explanation:  q.explanation || '',
-        topic:        q.topic || ''
-    }));
-
+    
+    // Store deep copy of questions and answers for detailed review
     const historyEntry = {
         date: new Date().toISOString(),
         type: quizType,
@@ -1320,13 +1466,55 @@ document.addEventListener('defendx:quizFinished', (e) => {
         incorrect,
         unattempted,
         accuracy,
-        questions: lightQuestions,
+        // Save a lightweight copy to avoid hitting localStorage quota on large mock exams
+        questions: currentQuizQuestions.map(q => ({
+            question:     q.question,
+            options:      q.options,
+            correctIndex: q.correctIndex,
+            explanation:  q.explanation || '',
+            topic:        q.topic || ''
+        })),
         answers: [...userAnswers]
     };
 
-    quizHistory = loadQuizHistory();
-    quizHistory.push(historyEntry);
-    saveQuizHistory(quizHistory);
-    setText('dash-quizzes-done', quizHistory.length);
+    if (quizType === 'math-mock') {
+        userProfile.mathMocks = userProfile.mathMocks || [];
+        userProfile.mathMocks.push(historyEntry);
+        if (userProfile.mathMocks.length > 3) userProfile.mathMocks.shift();
+        saveProfileToStorage(userProfile);
+    } else if (quizType === 'gat-mock') {
+        userProfile.gatMocks = userProfile.gatMocks || [];
+        userProfile.gatMocks.push(historyEntry);
+        if (userProfile.gatMocks.length > 3) userProfile.gatMocks.shift();
+        saveProfileToStorage(userProfile);
+    } else {
+        quizHistory = loadQuizHistory();
+        quizHistory.push(historyEntry);
+        if (quizHistory.length > 10) quizHistory.shift();
+        saveQuizHistory(quizHistory);
+    }
+
+    setText('dash-quizzes-done', (userProfile.mathMocks || []).length + (userProfile.gatMocks || []).length + (quizHistory || []).length);
     launchConfetti();
 });
+
+// Helper to quickly inspect counts by section and difficulty in browser console
+window.defendxQuestionStats = function () {
+    if (!ndaData || !ndaData.quizBank) {
+        console.warn('ndaData.quizBank not available');
+        return;
+    }
+    const bySection = {};
+    const byDifficulty = { Easy: 0, Medium: 0, Hard: 0 };
+    ndaData.quizBank.forEach((q) => {
+        const cls = classifyQuestion(q);
+        q.section = cls.section;
+        q.difficulty = cls.difficulty;
+        bySection[cls.section] = (bySection[cls.section] || 0) + 1;
+        byDifficulty[cls.difficulty] = (byDifficulty[cls.difficulty] || 0) + 1;
+    });
+    console.table(bySection);
+    console.table(byDifficulty);
+    return { bySection, byDifficulty };
+};
+
