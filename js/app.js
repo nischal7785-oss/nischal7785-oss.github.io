@@ -490,7 +490,6 @@ function updateQuizModeUI() {
 quizTypeRadios.forEach(radio => { radio.addEventListener('change', updateQuizModeUI); });
 updateQuizModeUI();
 
-<<<<<<< HEAD
 // Reset topic when subject changes so stale topic values don't cause empty results
 const quizSubjectSelect = document.getElementById('quiz-subject');
 if (quizSubjectSelect) {
@@ -540,6 +539,161 @@ addTapListener(startQuizBtn, () => {
 
     const gatSubjects = ['English','Science','General Studies'];
 
+    // Normalise subject/section + difficulty for any question
+    function classifyQuestion(q) {
+        // --- Section bucket ---
+        let section = q.section;
+        const topic = q.topic || '';
+        const subject = q.subject || '';
+
+        if (!section) {
+            if (subject === 'Mathematics' || mathTopics.includes(topic)) {
+                section = 'Mathematics';
+            } else if (subject === 'English' || topic === 'English') {
+                section = 'English';
+            } else if (subject === 'Science' && topic === 'Physics') {
+                section = 'Physics';
+            } else if (subject === 'Science' && topic === 'Chemistry') {
+                section = 'Chemistry';
+            } else if (subject === 'Science' && topic === 'Biology') {
+                section = 'Biology';
+            } else if (topic === 'Biology' || topic === 'Biology & General Science') {
+                section = 'Biology';
+            } else if (subject === 'Science') {
+                // Any remaining science goes under Physics/Chem/Bio bucket as generic science
+                section = 'Biology';
+            } else if (subject === 'General Studies' && topic.startsWith('Geography')) {
+                section = 'Geography';
+            } else if (subject === 'General Studies' && topic.startsWith('History')) {
+                section = 'History';
+            } else if (subject === 'General Studies' &&
+                (topic === 'Polity' || topic.startsWith('Polity'))) {
+                section = 'Polity';
+            } else if (subject === 'General Studies' &&
+                (topic === 'Economy' || topic.startsWith('Economics') || topic.startsWith('Indian Economy'))) {
+                section = 'Economics';
+            } else if (topic === 'Geography') {
+                section = 'Geography';
+            } else if (topic === 'History') {
+                section = 'History';
+            } else if (topic.includes('Current Events') || topic.includes('Current Affairs')) {
+                section = 'Current Affairs & Defence';
+            } else if (topic.includes('Defense') || topic.includes('Defence') || topic.includes('Military')) {
+                section = 'Current Affairs & Defence';
+            } else {
+                // Fallbacks for any remaining GAT-type questions
+                if (gatSubjects.includes(subject)) {
+                    section = subject === 'Science' ? 'Biology' : (subject === 'General Studies' ? 'History' : subject);
+                } else {
+                    section = 'Mathematics';
+                }
+            }
+        }
+
+        // --- Difficulty bucket ---
+        // Re-evaluated difficulty:
+        // - Most questions are Easy / Medium
+        // - Only conceptually advanced questions keep/receive the Hard tag
+        const originalDiff = q.difficulty;
+        let difficulty = 'Medium';
+
+        // Base balancing: roughly split Medium into Easy/Medium using id hash
+        function hashId(str) {
+            if (!str) return 0;
+            let h = 0;
+            for (let i = 0; i < str.length; i++) {
+                h = (h * 31 + str.charCodeAt(i)) >>> 0;
+            }
+            return h;
+        }
+
+        if (originalDiff === 'Easy') {
+            difficulty = 'Easy';
+        } else if (originalDiff === 'Medium' || !originalDiff) {
+            const h = hashId(q.id || q.topic || q.question);
+            difficulty = (h % 2 === 0) ? 'Easy' : 'Medium';
+        } else if (originalDiff === 'Hard') {
+            difficulty = 'Medium';
+        }
+
+        // Promote to Hard only for genuinely advanced areas
+        const hardMathTopics = [
+            'Differential Equations',
+            'Vector Algebra',
+            '3D Geometry',
+            'Analytical Geometry (2D & 3D)',
+            'Probability',
+            'Complex Numbers',
+            'Sequence and Series',
+            'Integral Calculus',
+            'Limits, Continuity & Differentiability'
+        ];
+        const hardPhysicsTopics = [
+            'Current Electricity',
+            'Electromagnetic Induction',
+            'Alternating Current',
+            'Modern Physics',
+            'Optics'
+        ];
+        const hardChemistryTopics = [
+            'Electrochemistry',
+            'Chemical Equilibrium',
+            'Thermodynamics',
+            'Coordination Compounds',
+            'Organic Chemistry',
+            'p-Block Elements',
+            'd-Block Elements'
+        ];
+        const hardBiologyTopics = [
+            'Human Physiology',
+            'Genetics',
+            'Evolution',
+            'Biotechnology',
+            'Human Reproduction',
+            'Ecology'
+        ];
+        const hardGSTopics = [
+            'Polity',
+            'Indian Economy',
+            'Economics',
+            'History - World'
+        ];
+
+        const t = topic;
+        if (
+            (section === 'Mathematics' && hardMathTopics.some(h => t && t.includes(h))) ||
+            (section === 'Physics' && (originalDiff === 'Hard' || hardPhysicsTopics.some(h => t && t.includes(h)))) ||
+            (section === 'Chemistry' && (originalDiff === 'Hard' || hardChemistryTopics.some(h => t && t.includes(h)))) ||
+            (section === 'Biology' && (originalDiff === 'Hard' || hardBiologyTopics.some(h => t && t.includes(h)))) ||
+            ((section === 'Polity' || section === 'Economics' || section === 'History') &&
+                hardGSTopics.some(h => t && t.includes(h)))
+        ) {
+            difficulty = 'Hard';
+        }
+
+        return { section, difficulty };
+    }
+
+    // Helper to quickly inspect counts by section and difficulty in browser console
+    window.defendxQuestionStats = function () {
+        if (!ndaData || !ndaData.quizBank) {
+            console.warn('ndaData.quizBank not available');
+            return;
+        }
+        const bySection = {};
+        const byDifficulty = { Easy: 0, Medium: 0, Hard: 0 };
+        ndaData.quizBank.forEach((q) => {
+            const cls = classifyQuestion(q);
+            q.section = cls.section;
+            q.difficulty = cls.difficulty;
+            bySection[cls.section] = (bySection[cls.section] || 0) + 1;
+            byDifficulty[cls.difficulty] = (byDifficulty[cls.difficulty] || 0) + 1;
+        });
+        console.table(bySection);
+        console.table(byDifficulty);
+        return { bySection, byDifficulty };
+    };
+
     if (quizType === 'topic') {
         let filtered = pool;
         // Subject filter (new questions have q.subject; old ones don't — fall through gracefully)
@@ -567,23 +721,7 @@ addTapListener(startQuizBtn, () => {
         const topicLabel   = topicSelect !== 'all' ? topicSelect : 'Mixed Topics';
         const diffLabel    = difficultySelect !== 'all' ? ` (${difficultySelect})` : '';
         document.getElementById('quiz-mode-badge').textContent = `Practice — ${subjectLabel}${topicLabel}${diffLabel}`;
-=======
-addTapListener(startQuizBtn, () => {
-    const quizType = document.querySelector('input[name="quiz-type"]:checked').value;
-    state.quizType = quizType;
-    const topicSelect = document.getElementById('quiz-topic').value;
-    currentQuestionIndex = 0;
 
-    if (quizType === 'topic') {
-        let pool = topicSelect === 'all' ? [...ndaData.quizBank] : ndaData.quizBank.filter(q => q.topic === topicSelect);
-        if (pool.length === 0) { alert("Not enough questions for this topic yet!"); return; }
-        for (let i = pool.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [pool[i], pool[j]] = [pool[j], pool[i]];
-        }
-        currentQuizQuestions = pool.slice(0, Math.min(20, pool.length));
-        document.getElementById('quiz-mode-badge').textContent = 'Practice Mode - ' + (topicSelect === 'all' ? 'Mix' : topicSelect);
->>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
         document.getElementById('quiz-mode-badge').className = 'text-xs font-bold uppercase tracking-wider text-indigo-500 bg-indigo-50 px-2 py-1 rounded';
         document.getElementById('quiz-nav-sidebar').classList.remove('hidden');
         document.getElementById('quiz-nav-sidebar').classList.add('lg:block');
@@ -591,10 +729,13 @@ addTapListener(startQuizBtn, () => {
         document.getElementById('quiz-main-card').classList.remove('mx-auto', 'max-w-3xl');
 
     } else if (quizType === 'math-mock') {
-<<<<<<< HEAD
-        let mathPool = pool.filter(q =>
-            (q.subject === 'Mathematics') || (!q.subject && mathTopics.includes(q.topic))
-        );
+    } else if (quizType === 'math-mock') {
+        let mathPool = pool.filter(q => {
+            const cls = classifyQuestion(q);
+            q.section = cls.section;
+            q.difficulty = cls.difficulty;
+            return cls.section === 'Mathematics';
+        });
         if (difficultySelect !== 'all') mathPool = mathPool.filter(q => q.difficulty === difficultySelect);
         if (mathPool.length === 0) { alert('Not enough Math questions for this difficulty. Try "Any Difficulty".'); return; }
         currentQuizQuestions = pickN(mathPool, 120);
@@ -603,26 +744,76 @@ addTapListener(startQuizBtn, () => {
         setupMockUI(150 * 60);
 
     } else if (quizType === 'gat-mock') {
-        let gatPool = pool.filter(q =>
-            (q.subject && gatSubjects.includes(q.subject)) || (!q.subject && !mathTopics.includes(q.topic))
-        );
-        if (difficultySelect !== 'all') gatPool = gatPool.filter(q => q.difficulty === difficultySelect);
-        if (gatPool.length === 0) { alert('Not enough GAT questions for this difficulty. Try "Any Difficulty".'); return; }
-        currentQuizQuestions = pickN(gatPool, 150);
+        // Target distribution for full GAT mock (total 150 Qs)
+        // 50 English, 22 Physics, 18 Chemistry, 10 Biology,
+        // 20 Geography, 15 History, 5 Polity/Economics, 10 Defence & Current Affairs
+        const distribution = {
+            english: 50,
+            physics: 22,
+            chemistry: 18,
+            biology: 10,
+            geography: 20,
+            history: 15,
+            polityEco: 5,
+            defenceCA: 10
+        };
+
+        function buildPoolForSection(sectionName) {
+            let p = pool.filter(q => {
+                const cls = classifyQuestion(q);
+                q.section = cls.section;
+                q.difficulty = cls.difficulty;
+                return cls.section === sectionName;
+            });
+            if (difficultySelect !== 'all') p = p.filter(q => q.difficulty === difficultySelect);
+            return p;
+        }
+
+        const englishPool   = buildPoolForSection('English');
+        const physicsPool   = buildPoolForSection('Physics');
+        const chemistryPool = buildPoolForSection('Chemistry');
+        const biologyPool   = buildPoolForSection('Biology');
+        const geographyPool = buildPoolForSection('Geography');
+        const historyPool   = buildPoolForSection('History');
+        const polityEcoPool = buildPoolForSection('Polity').concat(buildPoolForSection('Economics'));
+        const defenceCaPool = buildPoolForSection('Current Affairs & Defence');
+
+        // Ensure we have at least some questions for each bucket
+        if (
+            !englishPool.length   ||
+            !physicsPool.length   ||
+            !chemistryPool.length ||
+            !biologyPool.length   ||
+            !geographyPool.length ||
+            !historyPool.length   ||
+            !polityEcoPool.length ||
+            !defenceCaPool.length
+        ) {
+            alert('Not enough GAT questions in one or more sections for this difficulty. Try "Any Difficulty".');
+            return;
+        }
+
+        const englishQs   = pickN(englishPool,   distribution.english);
+        const physicsQs   = pickN(physicsPool,   distribution.physics);
+        const chemistryQs = pickN(chemistryPool, distribution.chemistry);
+        const biologyQs   = pickN(biologyPool,   distribution.biology);
+        const geographyQs = pickN(geographyPool, distribution.geography);
+        const historyQs   = pickN(historyPool,   distribution.history);
+        const polityEcoQs = pickN(polityEcoPool, distribution.polityEco);
+        const defenceCaQs = pickN(defenceCaPool, distribution.defenceCA);
+
+        currentQuizQuestions = [
+            ...englishQs,
+            ...physicsQs,
+            ...chemistryQs,
+            ...biologyQs,
+            ...geographyQs,
+            ...historyQs,
+            ...polityEcoQs,
+            ...defenceCaQs
+        ];
+
         document.getElementById('quiz-mode-badge').textContent = 'NDA GAT Mock' + (difficultySelect !== 'all' ? ` (${difficultySelect})` : '');
-=======
-        const mathTopicsList = ['Algebra','Matrices & Determinants','Trigonometry','Calculus','Statistics & Probability','Analytical Geometry (2D & 3D)','Vector Algebra'];
-        const src = ndaData.quizBank.filter(q => mathTopicsList.includes(q.topic));
-        currentQuizQuestions = generateMockQuestions(src.length > 0 ? src : ndaData.quizBank, 120);
-        document.getElementById('quiz-mode-badge').textContent = 'NDA Math Mock (Paper I)';
-        document.getElementById('quiz-mode-badge').className = 'text-xs font-bold uppercase tracking-wider text-blue-500 bg-blue-50 px-2 py-1 rounded';
-        setupMockUI(150 * 60);
-    } else if (quizType === 'gat-mock') {
-        const mathTopicsList = ['Algebra','Matrices & Determinants','Trigonometry','Calculus','Statistics & Probability','Analytical Geometry (2D & 3D)','Vector Algebra'];
-        const src = ndaData.quizBank.filter(q => !mathTopicsList.includes(q.topic));
-        currentQuizQuestions = generateMockQuestions(src.length > 0 ? src : ndaData.quizBank, 150);
-        document.getElementById('quiz-mode-badge').textContent = 'NDA GAT Mock (Paper II)';
->>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
         document.getElementById('quiz-mode-badge').className = 'text-xs font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-1 rounded';
         setupMockUI(150 * 60);
     }
@@ -704,7 +895,6 @@ function renderQuizQuestion() {
     const isLast = currentQuestionIndex === currentQuizQuestions.length - 1;
     const progress = ((currentQuestionIndex + 1) / currentQuizQuestions.length) * 100;
 
-<<<<<<< HEAD
     document.getElementById('quiz-progress-bar').style.width = `${progress}%`;
     document.getElementById('quiz-counter').textContent = `Question ${currentQuestionIndex + 1} of ${currentQuizQuestions.length}`;
 
@@ -716,34 +906,6 @@ function renderQuizQuestion() {
             <div class="flex items-center gap-3 mb-4">
                 <span class="text-xs font-semibold text-slate-400 bg-slate-100 px-2 py-1 rounded">${q.topic}</span>
                 ${diffTag}
-=======
-    let html = `
-        <div class="mb-6">
-            <div class="flex justify-between text-sm font-medium text-slate-500 mb-2">
-                <span>Question ${currentQuestionIndex + 1} of ${currentQuizQuestions.length}</span>
-                <span class="text-indigo-600">${q.topic}</span>
-            </div>
-            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden mb-6">
-                <div class="bg-indigo-500 h-full transition-all duration-300" style="width: ${progress}%"></div>
-            </div>
-            <h3 class="text-xl font-bold text-slate-800 mb-8">${q.question}</h3>
-            <div class="space-y-3" id="options-container">`;
-
-    q.options.forEach((opt, index) => {
-        const isSelected = userAnswers[currentQuestionIndex] === index;
-        html += `
-            <button class="quiz-option w-full text-left p-4 rounded-xl border transition-all ${isSelected ? 'selected border-indigo-500 bg-indigo-50 shadow-sm' : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'} font-medium" data-index="${index}">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded border flex items-center justify-center shrink-0 ${isSelected ? 'bg-indigo-500 border-indigo-600 text-white' : 'bg-slate-100 border-slate-200 text-slate-500'} font-bold">
-                        ${String.fromCharCode(65 + index)}
-                    </div>
-                    <span class="${isSelected ? 'text-indigo-900' : 'text-slate-700'}">${opt}</span>
-                </div>
-            </button>`;
-    });
-
-    html += `
->>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
             </div>
             <h2 class="text-xl md:text-2xl font-bold text-slate-800 leading-relaxed">${formatMath(q.question)}</h2>
         </div>
@@ -763,6 +925,7 @@ function renderQuizQuestion() {
                 ${isLast ? 'Final Submit' : 'Next Question <i data-lucide="arrow-right" class="w-4 h-4"></i>'}
             </button>
         </div>`;
+;
 
     const questionContainer = document.getElementById('quiz-question-content');
     questionContainer.innerHTML = html;
@@ -1042,8 +1205,10 @@ function appendMessage(text, sender) {
 const DEFAULT_PROFILE = {
     name: 'NDA Aspirant', attempt: 'April 2026', currentClass: 'Class 12', city: 'India',
     targetMath: 150, targetGat: 300, studyHours: 4, weakAreas: ['Trigonometry', 'Calculus'],
-    joinDate: new Date().toISOString()
+    joinDate: new Date().toISOString(),
+    mathMocks: [], gatMocks: []
 };
+
 
 function loadProfile() {
     try { const saved = localStorage.getItem('defendx_profile'); return saved ? { ...DEFAULT_PROFILE, ...JSON.parse(saved) } : { ...DEFAULT_PROFILE }; }
@@ -1132,25 +1297,24 @@ function renderQuizHistorySection() {
         container.innerHTML = `<div class="text-center text-slate-400 py-8 flex flex-col items-center gap-3"><i data-lucide="clipboard-list" class="w-12 h-12 opacity-40"></i><p class="text-sm">No quizzes completed yet. Start practising!</p></div>`;
         lucide.createIcons(); return;
     }
-<<<<<<< HEAD
-    
     // Sort history to show most recent first
-    const sortedHistory = [...history].reverse();
-    
-    container.innerHTML = sortedHistory.slice(0, 10).map((q, idx) => {
-=======
-    container.innerHTML = [...history].reverse().slice(0, 5).map(q => {
->>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
+    const histories = [
+        ...(userProfile.mathMocks || []).map(m => ({...m, source: 'mathMocks'})),
+        ...(userProfile.gatMocks || []).map(m => ({...m, source: 'gatMocks'})),
+        ...(history || []).map(h => ({...h, source: 'history'}))
+    ];
+
+    histories.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    // Show top 10 combined results
+    container.innerHTML = histories.slice(0, 10).map((q, idx) => {
         let scoreColor = 'text-amber-600 bg-amber-50 border-amber-200', icon = 'minus-circle';
         if (q.accuracy >= 60) { scoreColor = 'text-emerald-700 bg-emerald-50 border-emerald-200'; icon = 'check-circle-2'; }
         if (q.accuracy < 30) { scoreColor = 'text-rose-700 bg-rose-50 border-rose-200'; icon = 'x-circle'; }
         const typeLabel = { topic: 'Practice', 'math-mock': 'Math Mock', 'gat-mock': 'GAT Mock' }[q.type] || 'Practice';
         const typeBadge = { topic: 'bg-indigo-50 text-indigo-700 border-indigo-200', 'math-mock': 'bg-blue-50 text-blue-700 border-blue-200', 'gat-mock': 'bg-rose-50 text-rose-700 border-rose-200' }[q.type] || 'bg-indigo-50 text-indigo-700 border-indigo-200';
         const dateStr = new Date(q.date).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
-<<<<<<< HEAD
         
-        // Use the original index from the 'history' array (not sortedHistory) for the data-index
-        const originalIndex = history.length - 1 - idx;
         const hasDetails = q.questions && q.questions.length > 0;
 
         return `<div class="quiz-history-row group">
@@ -1162,38 +1326,33 @@ function renderQuizHistorySection() {
                     <span class="text-sm font-bold ${q.accuracy >= 60 ? 'text-emerald-600' : q.accuracy < 30 ? 'text-rose-600' : 'text-amber-600'}">${q.accuracy}%</span>
                 </div>
                 ${hasDetails ? `
-                <button class="review-quiz-btn px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all text-xs font-bold flex items-center gap-1.5 border border-indigo-100" data-index="${originalIndex}">
+                <button class="review-quiz-btn px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all text-xs font-bold flex items-center gap-1.5 border border-indigo-100" data-source="${q.source}" data-index="${q.source === 'history' ? history.indexOf(history.find(h => h.date === q.date)) : (q.source === 'mathMocks' ? userProfile.mathMocks.indexOf(userProfile.mathMocks.find(m => m.date === q.date)) : userProfile.gatMocks.indexOf(userProfile.gatMocks.find(m => m.date === q.date)))}">
                     <i data-lucide="eye" class="w-3.5 h-3.5"></i> Review
                 </button>` : ''}
-=======
-        return `<div class="quiz-history-row">
-            <div class="w-9 h-9 rounded-xl ${scoreColor} border flex items-center justify-center shrink-0"><i data-lucide="${icon}" class="w-5 h-5"></i></div>
-            <div class="flex-1 min-w-0"><p class="font-semibold text-slate-800 text-sm truncate">${q.topic && q.topic !== 'all' ? q.topic : 'Mixed Topics'}</p><p class="text-xs text-slate-400 mt-0.5">${dateStr}</p></div>
-            <div class="flex items-center gap-2 shrink-0">
-                <span class="text-xs font-semibold border px-2 py-0.5 rounded-full ${typeBadge}">${typeLabel}</span>
-                <span class="text-sm font-bold ${q.accuracy >= 60 ? 'text-emerald-600' : q.accuracy < 30 ? 'text-rose-600' : 'text-amber-600'}">${q.accuracy}%</span>
->>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
             </div>
         </div>`;
     }).join('');
 
     document.querySelectorAll('.review-quiz-btn').forEach(btn => {
         addTapListener(btn, () => {
+            const source = btn.dataset.source;
             const index = parseInt(btn.dataset.index);
-            openQuizReviewModal(index);
+            openQuizReviewModal(source, index);
         });
     });
 
     lucide.createIcons();
+
 }
 
-<<<<<<< HEAD
-function openQuizReviewModal(historyIndex) {
-    const history = loadQuizHistory();
-    const qData = history[historyIndex];
+function openQuizReviewModal(source, historyIndex) {
+    let qData;
+    if (source === 'mathMocks') qData = userProfile.mathMocks[historyIndex];
+    else if (source === 'gatMocks') qData = userProfile.gatMocks[historyIndex];
+    else qData = quizHistory[historyIndex];
+
     if (!qData || !qData.questions) return;
 
-    // We'll reuse the pyq-modal structure but with custom content
     const modal = document.getElementById('pyq-modal');
     const title = document.getElementById('pyq-modal-title');
     const content = document.getElementById('pyq-modal-content');
@@ -1271,8 +1430,6 @@ function openQuizReviewModal(historyIndex) {
     lucide.createIcons();
 }
 
-=======
->>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
 // --- Edit Profile Modal ---
 const editProfileModal = document.getElementById('edit-profile-modal');
 const openEditProfileBtn = document.getElementById('open-edit-profile-btn');
@@ -1328,7 +1485,6 @@ document.addEventListener('defendx:quizFinished', (e) => {
     const { score, totalMarks, correct, incorrect, unattempted, quizType, topic } = e.detail;
     const attempted = correct + incorrect;
     const accuracy = attempted > 0 ? Math.round((correct / (attempted + unattempted)) * 100) : 0;
-<<<<<<< HEAD
     
     // Store deep copy of questions and answers for detailed review
     const historyEntry = {
@@ -1346,17 +1502,24 @@ document.addEventListener('defendx:quizFinished', (e) => {
         answers: [...userAnswers]
     };
 
-    quizHistory = loadQuizHistory();
-    quizHistory.push(historyEntry);
-    saveQuizHistory(quizHistory);
-    setText('dash-quizzes-done', quizHistory.length);
+    if (quizType === 'math-mock') {
+        userProfile.mathMocks = userProfile.mathMocks || [];
+        userProfile.mathMocks.push(historyEntry);
+        if (userProfile.mathMocks.length > 3) userProfile.mathMocks.shift();
+        saveProfileToStorage(userProfile);
+    } else if (quizType === 'gat-mock') {
+        userProfile.gatMocks = userProfile.gatMocks || [];
+        userProfile.gatMocks.push(historyEntry);
+        if (userProfile.gatMocks.length > 3) userProfile.gatMocks.shift();
+        saveProfileToStorage(userProfile);
+    } else {
+        quizHistory = loadQuizHistory();
+        quizHistory.push(historyEntry);
+        if (quizHistory.length > 10) quizHistory.shift();
+        saveQuizHistory(quizHistory);
+    }
+
+    setText('dash-quizzes-done', (userProfile.mathMocks || []).length + (userProfile.gatMocks || []).length + (quizHistory || []).length);
     launchConfetti();
 });
-=======
-    quizHistory = loadQuizHistory();
-    quizHistory.push({ date: new Date().toISOString(), type: quizType, topic: topic || 'Mixed Topics', score: parseFloat(score), totalMarks, correct, incorrect, unattempted, accuracy });
-    saveQuizHistory(quizHistory);
-    setText('dash-quizzes-done', quizHistory.length);
-    launchConfetti();
-});
->>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd
+
