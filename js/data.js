@@ -8,6 +8,10 @@ const ndaData = {
             labels: ['English', 'Physics', 'Geography', 'History/Polity', 'Chemistry', 'Current Affairs'],
             data: [50, 25, 20, 20, 15, 20]
         },
+        gatDetailedWeightage: {
+            labels: ['Eng (Grammar)', 'Eng (Vocab)', 'Physics (Opt)', 'Physics (Mech)', 'Chemistry', 'Biology', 'Geography (Ind)', 'Geography (Wrld)', 'History', 'Polity', 'Cur. Affairs'],
+            data: [25, 25, 12, 13, 15, 10, 10, 10, 12, 8, 10]
+        },
         difficulty: {
             years: ['2021', '2022', '2023', '2024', '2025', '2026 (Expected)'],
             mathData: [50, 65, 70, 75, 82, 85], // Scale out of 100

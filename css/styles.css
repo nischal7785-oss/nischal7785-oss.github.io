@@ -177,19 +177,31 @@ body::after {
   border-color: rgba(99,102,241,0.2);
 }
 
-/* === TOPIC ITEMS === */
+/* === TOPIC ITEMS & GLASS EFFECTS === */
+.glass-topic {
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+}
+
 .topic-item {
   transition: all var(--transition-snappy);
-  border-left: 3px solid transparent;
+  border-left: 4px solid transparent;
 }
 .topic-item:hover {
   border-left-color: var(--primary-light);
   background-color: rgba(99,102,241,0.03);
   transform: translateX(4px);
 }
-.topic-item.active {
+.topic-item.active-topic {
   border-left-color: var(--primary);
-  background-color: #eef2ff;
+  background-color: rgba(99, 102, 241, 0.08) !important;
+}
+
+.subtopics-container {
+  background: rgba(248, 250, 252, 0.5) !important;
+  backdrop-filter: blur(4px);
 }
 
 /* Subtopic hover: slide-right arrow */
@@ -466,8 +478,4 @@ button:active:not(:disabled) {
 /* Eliminate 300ms touch delay on mobile for all interactive elements */
 button, a, input, select, label, [role="button"] {
     touch-action: manipulation;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> d8d1c83435efa2630d17c72f77242e61f6bb57fd

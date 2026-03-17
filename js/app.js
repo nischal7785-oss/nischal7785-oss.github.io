@@ -337,6 +337,14 @@ function initCharts() {
 
     const weightageToggle = document.getElementById('weightage-toggle');
     if (weightageToggle) {
+        // Inject Detailed GAT option if missing
+        if (![...weightageToggle.options].some(o => o.value === 'gatDetailedWeightage')) {
+            const opt = document.createElement('option');
+            opt.value = 'gatDetailedWeightage';
+            opt.textContent = 'GAT Paper (Detailed)';
+            weightageToggle.appendChild(opt);
+        }
+
         weightageToggle.addEventListener('change', (e) => {
             const selectedType = e.target.value;
             if (ndaData.trends[selectedType] && weightageChartInstance) {
@@ -348,13 +356,73 @@ function initCharts() {
     }
 }
 
-initCharts();
+// Initialized at end of script
+
+// --- Dynamic Fixes & Injections (Workaround for locked index.html) ---
+function applyDynamicFixes() {
+    console.log('NDA: applyDynamicFixes started');
+    // Use labels to find cards reliably in the dashboard section
+    document.querySelectorAll('#dashboard .dash-stat-card').forEach((card, idx) => {
+        const cardText = card.innerText || card.textContent;
+        const h3 = card.querySelector('h3');
+        if (!h3) return;
+
+        if (cardText.toLowerCase().includes('streak')) {
+            console.log('NDA: Found Streak Card via text match');
+            if (!h3.id || h3.id !== 'dash-streak') {
+                h3.innerHTML = `<span id="dash-streak">0</span> <span id="dash-streak-unit" class="text-sm text-slate-400 font-medium tracking-normal capitalize ml-1">Days</span>`;
+            }
+        }
+        
+        if (cardText.toLowerCase().includes('target') && cardText.toLowerCase().includes('score')) {
+            console.log('NDA: Found Target Score Card via text match');
+            h3.id = 'dash-target-score';
+        }
+    });
+
+    // 2. Inject Index Score Information Guide (Dashboard)
+    const difficultyChartCard = document.getElementById('difficulty-chart')?.closest('.bg-white');
+    if (difficultyChartCard && !document.getElementById('index-score-info')) {
+        const guideHtml = `
+            <div id="index-score-info" class="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-100 animate-[fadeIn_0.5s_ease-out]">
+                <h4 class="text-sm font-bold text-slate-800 mb-2 flex items-center gap-2">
+                    <i data-lucide="info" class="w-4 h-4 text-indigo-500"></i> What is the Difficulty Index?
+                </h4>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    The <strong>Difficulty Index (40-100)</strong> represents the complexity of the exam based on question depth, negative marking impact, and length. 
+                    <span class="text-emerald-600 font-semibold">40-60:</span> Moderate, <span class="text-amber-600 font-semibold">60-80:</span> Hard, <span class="text-rose-600 font-semibold">80+:</span> Complex.
+                </p>
+                <div class="mt-2 flex gap-4">
+                    <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-400" title="Mathematics Difficulty Trend Line">
+                        <div class="w-2 h-2 rounded-full bg-indigo-500"></div> Mathematics
+                    </div>
+                    <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-400" title="GAT Difficulty Trend Line">
+                        <div class="w-2 h-2 rounded-full bg-rose-500"></div> GAT
+                    </div>
+                </div>
+            </div>`;
+        difficultyChartCard.insertAdjacentHTML('beforeend', guideHtml);
+    }
+
+    // 3. Theory Overlay Fix (Ensure solid backgrounds for sticky headers)
+    const theoryHeader = document.querySelector('#topics .sticky');
+    if (theoryHeader) {
+        theoryHeader.classList.add('bg-white');
+        theoryHeader.style.backgroundColor = '#ffffff'; // Force solid bg
+    }
+    
+    lucide.createIcons();
+}
+
+// Initialized later at the end of script
 
 // --- Topics & Theory Logic ---
 const topicsListContainer = document.getElementById('topics-list-container');
 const theoryContent = document.getElementById('theory-content');
 
 let currentSubjectFilter = 'Mathematics';
+let expandedTopicId = null;
+let activeSubTopicId = null;
 
 function renderTopicsList() {
     topicsListContainer.innerHTML = '';
@@ -364,17 +432,21 @@ function renderTopicsList() {
         topicsListContainer.innerHTML = '<div class="p-4 text-slate-500 text-sm text-center">No topics available.</div>';
     }
 
-    filteredTopics.forEach((topic, index) => {
+    // REMOVED: Auto-expansion of first topic to comply with "only topics first" request
+
+    filteredTopics.forEach((topic) => {
         const div = document.createElement('div');
-        div.className = `topic-item bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden mb-3`;
+        div.className = `topic-item glass-topic rounded-xl border border-slate-100 shadow-sm overflow-hidden mb-3`;
         div.dataset.id = topic.id;
 
         let difficultyColor = 'text-green-600 bg-green-50';
         if(topic.difficulty === 'Medium') difficultyColor = 'text-amber-600 bg-amber-50';
         if(topic.difficulty === 'Hard') difficultyColor = 'text-red-600 bg-red-50';
 
+        const isExpanded = expandedTopicId === topic.id;
+
         const header = document.createElement('div');
-        header.className = `p-4 cursor-pointer flex justify-between items-center hover:bg-slate-50 transition-colors topic-header ${index === 0 ? 'bg-indigo-50 border-l-4 border-indigo-500' : ''}`;
+        header.className = `p-4 cursor-pointer flex justify-between items-center hover:bg-slate-50 transition-colors topic-header ${isExpanded ? 'active-topic border-l-4 border-indigo-500' : ''}`;
         header.innerHTML = `
             <div>
                 <div class="flex items-center gap-2 mb-1">
@@ -383,55 +455,73 @@ function renderTopicsList() {
                 </div>
                 <p class="text-xs text-slate-500 line-clamp-1">${topic.weightage}</p>
             </div>
-            <i data-lucide="${index === 0 ? 'chevron-down' : 'chevron-right'}" class="w-4 h-4 text-slate-400 transition-transform"></i>
+            <i data-lucide="${isExpanded ? 'chevron-down' : 'chevron-right'}" class="w-4 h-4 text-slate-400 transition-transform"></i>
         `;
 
         const subtopicsContainer = document.createElement('div');
-        subtopicsContainer.className = `subtopics-container bg-slate-50/50 border-t border-slate-100 ${index === 0 ? 'block' : 'hidden'}`;
+        subtopicsContainer.className = `subtopics-container border-t border-slate-100 ${isExpanded ? 'block' : 'hidden'}`;
 
         if (topic.subTopics && topic.subTopics.length > 0) {
-            topic.subTopics.forEach((sub, sIdx) => {
+            topic.subTopics.forEach((sub) => {
+                const isSubActive = activeSubTopicId === sub.id;
+                
+                const subItemWrapper = document.createElement('div');
+                subItemWrapper.className = `border-b border-slate-100 last:border-0`;
+
                 const subDiv = document.createElement('div');
-                const isSubActive = index === 0 && sIdx === 0;
-                subDiv.className = `p-3 pl-5 border-b border-slate-100 last:border-0 text-sm cursor-pointer hover:bg-white hover:text-indigo-600 transition-colors flex items-center gap-2 subtopic-item ${isSubActive ? 'text-indigo-600 font-semibold bg-white' : 'text-slate-600'}`;
+                subDiv.className = `p-3 pl-5 text-sm cursor-pointer hover:bg-white hover:text-indigo-600 transition-colors flex items-center gap-2 subtopic-item ${isSubActive ? 'text-indigo-600 font-semibold bg-white' : 'text-slate-600'}`;
                 subDiv.dataset.topicId = topic.id;
                 subDiv.dataset.subId = sub.id;
                 subDiv.innerHTML = `<i data-lucide="${isSubActive ? 'book-open' : 'book'}" class="w-3.5 h-3.5 ${isSubActive ? 'text-indigo-500' : 'text-slate-400'}"></i> <span class="flex-1 truncate">${sub.title}</span>`;
 
+                // Mobile Theory Container (In-line expansion)
+                const mobileTheoryContainer = document.createElement('div');
+                mobileTheoryContainer.className = `mobile-theory-content ${isSubActive && window.innerWidth < 1024 ? 'block' : 'hidden'} bg-white p-4 border-t border-indigo-50 lg:hidden`;
+                mobileTheoryContainer.id = `mobile-theory-${sub.id}`;
+
                 addTapListener(subDiv, (e) => {
+                    // Update global state
+                    activeSubTopicId = sub.id;
+                    
+                    // Render into desktop panel immediately
+                    renderSubTheory(topic.id, sub.id);
+
+                    // For mobile: Refresh list to update all items, but ensure the current subtopic stays focused
+                    // (Manual DOM toggle is faster/smoother than a full refresh here)
                     document.querySelectorAll('.subtopic-item').forEach(el => {
                         el.classList.remove('text-indigo-600', 'font-semibold', 'bg-white');
                         el.classList.add('text-slate-600');
                         const icon = el.querySelector('i');
                         if (icon) { icon.setAttribute('data-lucide', 'book'); icon.classList.remove('text-indigo-500'); icon.classList.add('text-slate-400'); }
                     });
+                    document.querySelectorAll('.mobile-theory-content').forEach(el => el.classList.add('hidden'));
+
                     subDiv.classList.add('text-indigo-600', 'font-semibold', 'bg-white');
-                    subDiv.classList.remove('text-slate-600');
                     const activeIcon = subDiv.querySelector('i');
-                    if(activeIcon) { activeIcon.setAttribute('data-lucide', 'book-open'); activeIcon.classList.add('text-indigo-500'); activeIcon.classList.remove('text-slate-400'); }
+                    if(activeIcon) { activeIcon.setAttribute('data-lucide', 'book-open'); activeIcon.classList.add('text-indigo-500'); }
+                    
+                    if (window.innerWidth < 1024) {
+                        mobileTheoryContainer.classList.remove('hidden');
+                        mobileTheoryContainer.innerHTML = document.getElementById('theory-content').innerHTML;
+                    }
+                    
                     lucide.createIcons();
-                    renderSubTheory(topic.id, sub.id);
                 });
 
-                subtopicsContainer.appendChild(subDiv);
+                subItemWrapper.appendChild(subDiv);
+                subItemWrapper.appendChild(mobileTheoryContainer);
+                subtopicsContainer.appendChild(subItemWrapper);
             });
         }
 
         addTapListener(header, () => {
-            const isHidden = subtopicsContainer.classList.contains('hidden');
-            document.querySelectorAll('.subtopics-container').forEach(c => c.classList.add('hidden'));
-            document.querySelectorAll('.topic-header').forEach(h => {
-                h.classList.remove('bg-indigo-50', 'border-l-4', 'border-indigo-500');
-                const i = h.querySelector('i[data-lucide]');
-                if(i) i.setAttribute('data-lucide', 'chevron-right');
-            });
-            if (isHidden) {
-                subtopicsContainer.classList.remove('hidden');
-                header.classList.add('bg-indigo-50', 'border-l-4', 'border-indigo-500');
-                const i = header.querySelector('i[data-lucide]');
-                if(i) i.setAttribute('data-lucide', 'chevron-down');
+            if (expandedTopicId === topic.id) {
+                expandedTopicId = null;
+            } else {
+                expandedTopicId = topic.id;
             }
-            lucide.createIcons();
+            // Trigger UI refresh
+            renderTopicsList();
         });
 
         div.appendChild(header);
@@ -439,14 +529,21 @@ function renderTopicsList() {
         topicsListContainer.appendChild(div);
     });
 
-    if(filteredTopics.length > 0 && filteredTopics[0].subTopics && filteredTopics[0].subTopics.length > 0) {
-        renderSubTheory(filteredTopics[0].id, filteredTopics[0].subTopics[0].id);
-    } else {
+    // Handle initial state or empty selection
+    if (!activeSubTopicId) {
         document.getElementById('theory-title').textContent = 'Select a Topic';
-        document.getElementById('theory-weightage').innerHTML = '<i data-lucide="target" class="w-4 h-4 inline mr-1 text-slate-400"></i> Weightage: --';
-        document.getElementById('theory-difficulty').innerHTML = '<i data-lucide="activity" class="w-4 h-4 inline mr-1 text-slate-400"></i> Difficulty: --';
-        document.getElementById('theory-content').innerHTML = '<div class="h-full flex flex-col items-center justify-center text-slate-400"><i data-lucide="book-open" class="w-16 h-16 mb-4 opacity-50"></i><p>Select a subtopic from the left to read theory.</p></div>';
+        document.getElementById('theory-content').innerHTML = `
+            <div class="h-full flex flex-col items-center justify-center text-slate-400 py-12">
+                <i data-lucide="book-open" class="w-16 h-16 mb-4 opacity-30"></i>
+                <p class="font-medium">Choose a subject and sub-topic to start reading.</p>
+                <p class="text-sm opacity-60">Theory will appear here on your desktop screen.</p>
+            </div>`;
         lucide.createIcons();
+    } else {
+        const currentActiveTopic = ndaData.topics.find(t => t.subTopics && t.subTopics.some(s => s.id === activeSubTopicId));
+        if (currentActiveTopic) {
+            renderSubTheory(currentActiveTopic.id, activeSubTopicId);
+        }
     }
 }
 
@@ -573,7 +670,7 @@ function openPyqModal(topicId, subId) {
     if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([contentBox]).catch((err) => console.log(err.message));
 }
 
-renderTopicsList();
+// Initialized at end of script
 
 // --- Quiz Logic ---
 let currentQuizQuestions = [];
@@ -1315,16 +1412,82 @@ function setText(id, value) { const el = document.getElementById(id); if (el) el
 
 function computeAndRenderStats() {
     const history = loadQuizHistory();
-    setText('profile-stat-quizzes', history.length);
-    if (history.length === 0) { setText('profile-stat-accuracy', '0%'); setText('profile-stat-streak', '0'); setText('profile-stat-best', '--'); return; }
-    const avg = Math.round(history.reduce((s, q) => s + (q.accuracy || 0), 0) / history.length);
+    const mathMocks = userProfile.mathMocks || [];
+    const gatMocks = userProfile.gatMocks || [];
+    
+    const allAttempts = [...history, ...mathMocks, ...gatMocks];
+    
+    setText('profile-stat-quizzes', allAttempts.length);
+    setText('dash-quizzes-done', allAttempts.length);
+
+    if (allAttempts.length === 0) {
+        setText('profile-stat-accuracy', '0%');
+        setText('profile-stat-streak', '0');
+        setText('dash-streak', '0');
+        setText('profile-stat-best', '--');
+        return;
+    }
+
+    const avg = Math.round(allAttempts.reduce((s, q) => s + (q.accuracy || 0), 0) / allAttempts.length);
     setText('profile-stat-accuracy', `${avg}%`);
-    setText('profile-stat-best', `${Math.max(...history.map(q => q.accuracy || 0))}%`);
-    const today = new Date(); today.setHours(0,0,0,0);
-    const activeDays = new Set(history.map(q => { const d = new Date(q.date); d.setHours(0,0,0,0); return d.getTime(); }));
-    let streak = 0, day = today.getTime();
-    while (activeDays.has(day)) { streak++; day -= 86400000; }
+    setText('profile-stat-best', `${Math.max(...allAttempts.map(q => q.accuracy || 0))}%`);
+    
+    // Update Dashboard Target Score
+    const totalTarget = (userProfile.targetMath || 0) + (userProfile.targetGat || 0);
+    const targetEl = document.getElementById('dash-target-score');
+    if (targetEl) {
+        targetEl.innerHTML = `${totalTarget}+ <span class="text-sm text-emerald-500 font-medium tracking-normal capitalize ml-1">/ 900 (Total)</span>`;
+    }
+
+    updateDayStreak(allAttempts);
+}
+
+function updateDayStreak(history) {
+    if (!history || history.length === 0) {
+        setText('profile-stat-streak', '0');
+        setText('dash-streak', '0');
+        return;
+    }
+
+    const activeDates = new Set();
+    history.forEach(h => {
+        if (h.date) {
+            const date = new Date(h.date);
+            if (!isNaN(date.getTime())) {
+                date.setHours(0, 0, 0, 0);
+                activeDates.add(date.getTime());
+            }
+        }
+    });
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    let streak = 0;
+    let curr = new Date(today);
+
+    // If no activity today, check if active yesterday to continue streak
+    if (!activeDates.has(today.getTime())) {
+        if (activeDates.has(yesterday.getTime())) {
+            curr = new Date(yesterday);
+        } else {
+            setText('profile-stat-streak', '0');
+            setText('dash-streak', '0');
+            return;
+        }
+    }
+
+    while (activeDates.has(curr.getTime())) {
+        streak++;
+        curr.setDate(curr.getDate() - 1);
+    }
+
     setText('profile-stat-streak', streak);
+    setText('dash-streak', streak);
+    const streakUnit = document.getElementById('dash-streak-unit');
+    if (streakUnit) streakUnit.textContent = streak === 1 ? 'Day' : 'Days';
 }
 
 function resetSeenHistory() {
@@ -1567,11 +1730,12 @@ document.addEventListener('defendx:quizFinished', (e) => {
     } else {
         quizHistory = loadQuizHistory();
         quizHistory.push(historyEntry);
-        if (quizHistory.length > 10) quizHistory.shift();
+        if (quizHistory.length > 5) quizHistory.shift();
         saveQuizHistory(quizHistory);
     }
 
     setText('dash-quizzes-done', (userProfile.mathMocks || []).length + (userProfile.gatMocks || []).length + (quizHistory || []).length);
+    computeAndRenderStats();
     launchConfetti();
 });
 
@@ -1594,3 +1758,21 @@ window.defendxQuestionStats = function () {
     console.table(byDifficulty);
     return { bySection, byDifficulty };
 };
+
+// --- APP INITIALIZATION ---
+// Grouping initializations here to ensure all dependencies (TDZ) and functions are ready
+console.log('NDA: Starting app initialization...');
+try {
+    console.log('NDA: Calling initCharts()...');
+    initCharts();
+    console.log('NDA: Calling applyDynamicFixes()...');
+    applyDynamicFixes();
+    console.log('NDA: Calling computeAndRenderStats()...');
+    computeAndRenderStats();
+    console.log('NDA: Calling renderTopicsList()...');
+    renderTopicsList();
+    console.log('NDA: App initialization complete.');
+} catch (err) {
+    console.error('NDA: Initialization failed:', err);
+}
+loadProfile(); // Ensure profile is loaded (redundant but safe)
