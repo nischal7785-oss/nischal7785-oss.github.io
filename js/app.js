@@ -71,6 +71,114 @@ const state = {
     quizTimer: null
 };
 
+// --- GLOBAL HELPERS & CONSTANTS ---
+
+const mathTopics = ['Algebra','Matrices & Determinants','Trigonometry','Calculus','Statistics & Probability','Analytical Geometry (2D & 3D)','Vector Algebra','Number System','Simplification','Average','Percentage','Profit Loss','Ratio Proportion','Time Work','Time Speed Distance','SI CI','Geometry','Mensuration','Matrices','Vectors','Statistics','Probability','Coordinate Geometry','Sequences','Number Theory','Time Speed','Set Theory','Differential Equations','Permutation','Combination','Binomial','Logarithm','Complex Numbers','3D Geometry','Ratio','Mixture'];
+
+// Normalise subject/section + difficulty for any question
+function classifyQuestion(q) {
+    // --- Section bucket ---
+    let section = q.section;
+    const topic = q.topic || '';
+    const subject = q.subject || '';
+
+    if (!section) {
+        if (subject === 'Mathematics' || mathTopics.includes(topic)) {
+            section = 'Mathematics';
+        } else if (subject === 'English' || topic === 'English') {
+            section = 'English';
+        } else if (subject === 'Science' && topic === 'Physics') {
+            section = 'Physics';
+        } else if (subject === 'Science' && topic === 'Chemistry') {
+            section = 'Chemistry';
+        } else if (subject === 'Science' && topic === 'Biology') {
+            section = 'Biology';
+        } else if (topic === 'Biology' || topic === 'Biology & General Science') {
+            section = 'Biology';
+        } else if (subject === 'Science') {
+            section = 'Biology';
+        } else if (subject === 'General Studies' && topic.startsWith('Geography')) {
+            section = 'Geography';
+        } else if (subject === 'General Studies' && topic.startsWith('History')) {
+            section = 'History';
+        } else if (subject === 'General Studies' && (topic === 'Polity' || topic.startsWith('Polity'))) {
+            section = 'Polity';
+        } else if (subject === 'General Studies' && (topic === 'Economy' || topic.startsWith('Economics') || topic.startsWith('Indian Economy'))) {
+            section = 'Economics';
+        } else if (topic === 'Geography') {
+            section = 'Geography';
+        } else if (topic === 'History') {
+            section = 'History';
+        } else if (topic.includes('Current Events') || topic.includes('Current Affairs')) {
+            section = 'Current Affairs & Defence';
+        } else if (topic.includes('Defense') || topic.includes('Defence') || topic.includes('Military')) {
+            section = 'Current Affairs & Defence';
+        } else {
+            const gatSubjects = ['English','Science','General Studies'];
+            if (gatSubjects.includes(subject)) {
+                section = subject === 'Science' ? 'Biology' : (subject === 'General Studies' ? 'History' : subject);
+            } else {
+                section = 'Mathematics';
+            }
+        }
+    }
+
+    // --- Difficulty bucket ---
+    const originalDiff = q.difficulty;
+    let difficulty = 'Medium';
+
+    function hashId(str) {
+        if (!str) return 0;
+        let h = 0;
+        for (let i = 0; i < str.length; i++) { h = (h * 31 + str.charCodeAt(i)) >>> 0; }
+        return h;
+    }
+
+    if (originalDiff === 'Easy') {
+        difficulty = 'Easy';
+    } else if (originalDiff === 'Medium' || !originalDiff) {
+        const h = hashId(q.id || q.topic || q.question);
+        difficulty = (h % 2 === 0) ? 'Easy' : 'Medium';
+    } else if (originalDiff === 'Hard') {
+        difficulty = 'Medium';
+    }
+
+    const hardMathTopics = ['Differential Equations','Vector Algebra','3D Geometry','Analytical Geometry (2D & 3D)','Probability','Complex Numbers','Sequence and Series','Integral Calculus','Limits, Continuity & Differentiability'];
+    const hardPhysicsTopics = ['Current Electricity','Electromagnetic Induction','Alternating Current','Modern Physics','Optics'];
+    const hardChemistryTopics = ['Electrochemistry','Chemical Equilibrium','Thermodynamics','Coordination Compounds','Organic Chemistry','p-Block Elements','d-Block Elements'];
+    const hardBiologyTopics = ['Human Physiology','Genetics','Evolution','Biotechnology','Human Reproduction','Ecology'];
+    const hardGSTopics = ['Geography','Polity','Indian Economy','Economics','History - World'];
+
+    if (
+        (section === 'Mathematics' && hardMathTopics.some(h => topic && topic.includes(h))) ||
+        (section === 'Physics' && (originalDiff === 'Hard' || hardPhysicsTopics.some(h => topic && topic.includes(h)))) ||
+        (section === 'Chemistry' && (originalDiff === 'Hard' || hardChemistryTopics.some(h => topic && topic.includes(h)))) ||
+        (section === 'Biology' && (originalDiff === 'Hard' || hardBiologyTopics.some(h => topic && topic.includes(h)))) ||
+        ((section === 'Polity' || section === 'Economics' || section === 'History') && hardGSTopics.some(h => topic && topic.includes(h)))
+    ) {
+        difficulty = 'Hard';
+    }
+
+    return { section, difficulty };
+}
+
+// Helper: pick N items from pool, repeating if needed
+function pickN(pool, n) {
+    if (pool.length === 0) return [];
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+        return a;
+    }
+    let result = shuffle([...pool]);
+    while (result.length < n) result = result.concat(shuffle([...pool]));
+    return result.slice(0, n);
+}
+
+// Selectors for dynamic filtering
+const quizSubjectSelect = document.getElementById('quiz-subject');
+const quizTopicSelect   = document.getElementById('quiz-topic');
+
 // --- Navigation Logic ---
 const navButtons = document.querySelectorAll('.nav-btn');
 const views = document.querySelectorAll('.view-section');
@@ -490,13 +598,58 @@ function updateQuizModeUI() {
 quizTypeRadios.forEach(radio => { radio.addEventListener('change', updateQuizModeUI); });
 updateQuizModeUI();
 
+<<<<<<< HEAD
 // Reset topic when subject changes so stale topic values don't cause empty results
 const quizSubjectSelect = document.getElementById('quiz-subject');
+=======
+
+function getTopicsForSubject(subject) {
+    if (!ndaData.quizBank) return [];
+    const topics = new Set();
+    
+    ndaData.quizBank.forEach(q => {
+        if (!q.topic) return;
+        const cls = classifyQuestion(q);
+        const section = cls.section;
+
+        if (subject === 'all') {
+            topics.add(q.topic);
+        } else if (subject === 'Mathematics' && section === 'Mathematics') {
+            topics.add(q.topic);
+        } else if (subject === 'English' && section === 'English') {
+            topics.add(q.topic);
+        } else if (subject === 'Science' && ['Physics', 'Chemistry', 'Biology'].includes(section)) {
+            topics.add(q.topic);
+        } else if (subject === 'General Studies' && ['History', 'Geography', 'Polity', 'Economics', 'Current Affairs & Defence'].includes(section)) {
+            topics.add(q.topic);
+        }
+    });
+    return Array.from(topics).sort();
+}
+
+function populateTopicDropdown(subject) {
+    if (!quizTopicSelect) return;
+    const currentVal = quizTopicSelect.value;
+    quizTopicSelect.innerHTML = '<option value="all">Mixed Topics (Any)</option>';
+    const topics = getTopicsForSubject(subject);
+    topics.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = t;
+        quizTopicSelect.appendChild(opt);
+    });
+    if (Array.from(quizTopicSelect.options).some(o => o.value === currentVal)) {
+        quizTopicSelect.value = currentVal;
+    }
+}
+
+>>>>>>> ec3908b10a0c87842527cd0254e2fd9115babd44
 if (quizSubjectSelect) {
     quizSubjectSelect.addEventListener('change', () => {
-        const topicEl = document.getElementById('quiz-topic');
-        if (topicEl) topicEl.value = 'all';
+        populateTopicDropdown(quizSubjectSelect.value);
     });
+    // Initial population
+    populateTopicDropdown(quizSubjectSelect.value || 'all');
 }
 
 addTapListener(startQuizBtn, () => {
@@ -506,38 +659,10 @@ addTapListener(startQuizBtn, () => {
     const subjectSelect    = document.getElementById('quiz-subject').value;
     const difficultySelect = document.getElementById('quiz-difficulty').value;
     currentQuestionIndex   = 0;
-
-    // Helper: shuffle array in place (Fisher-Yates)
-    function shuffle(arr) {
-        for (let i = arr.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-    }
-
-    // Helper: pick N items from pool, repeating if needed
-    function pickN(pool, n) {
-        if (pool.length === 0) return [];
-        let result = shuffle([...pool]);
-        while (result.length < n) result = result.concat(shuffle([...pool]));
-        return result.slice(0, n);
-    }
-
+    
     // Full 2425-question bank
-    let pool = ndaData.quizBank;
+    const pool = ndaData.quizBank || [];
 
-    // Math subjects use the 'subject' field (new questions) or their topic names (old questions)
-    const mathTopics = ['Algebra','Matrices & Determinants','Trigonometry','Calculus',
-        'Statistics & Probability','Analytical Geometry (2D & 3D)','Vector Algebra',
-        'Number System','Simplification','Average','Percentage','Profit Loss',
-        'Ratio Proportion','Time Work','Time Speed Distance','SI CI','Geometry',
-        'Mensuration','Matrices','Vectors','Statistics','Probability',
-        'Coordinate Geometry','Sequences','Number Theory','Time Speed','Set Theory',
-        'Differential Equations','Permutation','Combination','Binomial',
-        'Logarithm','Complex Numbers','3D Geometry','Ratio','Mixture'];
-
-    const gatSubjects = ['English','Science','General Studies'];
 
     // Normalise subject/section + difficulty for any question
     function classifyQuestion(q) {
@@ -699,9 +824,12 @@ addTapListener(startQuizBtn, () => {
         // Subject filter (new questions have q.subject; old ones don't — fall through gracefully)
         if (subjectSelect !== 'all') {
             filtered = filtered.filter(q => {
-                if (q.subject) return q.subject === subjectSelect;
-                // old questions: infer subject from topic
-                if (subjectSelect === 'Mathematics') return mathTopics.includes(q.topic);
+                const cls = classifyQuestion(q);
+                const section = cls.section;
+                if (subjectSelect === 'Mathematics') return section === 'Mathematics';
+                if (subjectSelect === 'English') return section === 'English';
+                if (subjectSelect === 'Science') return ['Physics', 'Chemistry', 'Biology'].includes(section);
+                if (subjectSelect === 'General Studies') return ['History', 'Geography', 'Polity', 'Economics', 'Current Affairs & Defence'].includes(section);
                 return false;
             });
         }
@@ -729,7 +857,10 @@ addTapListener(startQuizBtn, () => {
         document.getElementById('quiz-main-card').classList.remove('mx-auto', 'max-w-3xl');
 
     } else if (quizType === 'math-mock') {
+<<<<<<< HEAD
     } else if (quizType === 'math-mock') {
+=======
+>>>>>>> ec3908b10a0c87842527cd0254e2fd9115babd44
         let mathPool = pool.filter(q => {
             const cls = classifyQuestion(q);
             q.section = cls.section;
@@ -895,8 +1026,15 @@ function renderQuizQuestion() {
     const isLast = currentQuestionIndex === currentQuizQuestions.length - 1;
     const progress = ((currentQuestionIndex + 1) / currentQuizQuestions.length) * 100;
 
+<<<<<<< HEAD
     document.getElementById('quiz-progress-bar').style.width = `${progress}%`;
     document.getElementById('quiz-counter').textContent = `Question ${currentQuestionIndex + 1} of ${currentQuizQuestions.length}`;
+=======
+    const progressBar = document.getElementById('quiz-progress-bar');
+    if (progressBar) progressBar.style.width = `${progress}%`;
+    const counter = document.getElementById('quiz-counter');
+    if (counter) counter.textContent = `Question ${currentQuestionIndex + 1} of ${currentQuizQuestions.length}`;
+>>>>>>> ec3908b10a0c87842527cd0254e2fd9115babd44
 
     const diffColors = { 'Easy': 'text-emerald-500 bg-emerald-50', 'Medium': 'text-amber-500 bg-amber-50', 'Hard': 'text-rose-500 bg-rose-50' };
     const diffTag = q.difficulty ? `<span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${diffColors[q.difficulty] || 'text-slate-500 bg-slate-100'}">${q.difficulty}</span>` : '';
@@ -904,18 +1042,22 @@ function renderQuizQuestion() {
     const html = `
         <div class="mb-8">
             <div class="flex items-center gap-3 mb-4">
-                <span class="text-xs font-semibold text-slate-400 bg-slate-100 px-2 py-1 rounded">${q.topic}</span>
+                <span class="text-xs font-semibold text-slate-400 bg-slate-100 px-2 py-1 rounded">${q.topic || 'General'}</span>
                 ${diffTag}
             </div>
+<<<<<<< HEAD
             <h2 class="text-xl md:text-2xl font-bold text-slate-800 leading-relaxed">${formatMath(q.question)}</h2>
+=======
+            <h2 class="text-xl md:text-2xl font-bold text-slate-800 leading-relaxed">${formatMath(q.question || '')}</h2>
+>>>>>>> ec3908b10a0c87842527cd0254e2fd9115babd44
         </div>
         <div class="space-y-4 mb-8">
-            ${q.options.map((opt, i) => `
+            ${(q.options || []).map((opt, i) => `
                 <button class="quiz-option w-full text-left p-5 border-2 rounded-2xl transition-all duration-200 flex items-center gap-4 group ${userAnswers[currentQuestionIndex] === i ? 'border-indigo-500 bg-indigo-50 shadow-sm selected' : 'border-slate-100 hover:border-slate-300 bg-white'}" data-index="${i}">
                     <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold shrink-0 ${userAnswers[currentQuestionIndex] === i ? 'bg-indigo-500 border-indigo-600 text-white' : 'border-slate-200 text-slate-400 group-hover:border-indigo-400 group-hover:text-indigo-400'}">
                         ${String.fromCharCode(65 + i)}
                     </div>
-                    <span class="flex-1 font-medium ${userAnswers[currentQuestionIndex] === i ? 'text-indigo-900' : 'text-slate-700'}">${formatMath(opt)}</span>
+                    <span class="flex-1 font-medium ${userAnswers[currentQuestionIndex] === i ? 'text-indigo-900' : 'text-slate-700'}">${formatMath(opt || '')}</span>
                 </button>
             `).join('')}
         </div>
@@ -1062,11 +1204,11 @@ function finishQuiz() {
                     <div class="flex items-center gap-2">
                         <span class="text-slate-500 w-24">Your Answer:</span>
                         <span class="font-medium px-2 py-0.5 rounded ${isCorrect ? 'bg-emerald-100 text-emerald-800' : (isUnattempted ? 'bg-slate-100 text-slate-600' : 'bg-rose-100 text-rose-800')}">
-                            ${!isUnattempted ? (q.options[userAnswers[i]] || 'Skipped') : 'Skipped / Unattempted'}
+                            ${!isUnattempted ? (q.options ? q.options[userAnswers[i]] || 'Skipped' : 'Error') : 'Skipped / Unattempted'}
                         </span>
                     </div>
-                    ${!isCorrect ? `<div class="flex items-center gap-2"><span class="text-slate-500 w-24">Correct Answer:</span><span class="font-medium bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">${q.options[q.correctIndex]}</span></div>` : ''}
-                    <div class="mt-3 pt-3 border-t border-slate-100"><p class="text-indigo-900 leading-relaxed"><strong class="text-indigo-500">Explanation:</strong> ${q.explanation}</p></div>
+                    ${!isCorrect ? `<div class="flex items-center gap-2"><span class="text-slate-500 w-24">Correct Answer:</span><span class="font-medium bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">${q.options ? q.options[q.correctIndex] || 'N/A' : 'Error'}</span></div>` : ''}
+                    <div class="mt-3 pt-3 border-t border-slate-100"><p class="text-indigo-900 leading-relaxed"><strong class="text-indigo-500">Explanation:</strong> ${q.explanation || 'No explanation available.'}</p></div>
                 </div>
             </div>`;
     });
@@ -1397,10 +1539,10 @@ function openQuizReviewModal(source, historyIndex) {
                     </div>
                     <div class="flex-1">
                         <p class="font-bold text-slate-800 leading-relaxed mb-4">
-                            <span class="text-slate-400 mr-2">Q${i+1}.</span>${formatMath(q.question)}
+                            <span class="text-slate-400 mr-2">Q${i+1}.</span>${formatMath(q.question || '')}
                         </p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
-                            ${q.options.map((opt, optIdx) => {
+                            ${(q.options || []).map((opt, optIdx) => {
                                 let optClass = 'border-slate-100 bg-slate-50 text-slate-600';
                                 if (optIdx === q.correctIndex) optClass = 'border-emerald-200 bg-emerald-100 text-emerald-800 font-bold';
                                 else if (optIdx === userAnswer && !isCorrect) optClass = 'border-rose-200 bg-rose-100 text-rose-800 font-bold';
@@ -1408,12 +1550,12 @@ function openQuizReviewModal(source, historyIndex) {
                                 return `
                                     <div class="text-sm p-3 rounded-xl border ${optClass} flex items-center gap-2">
                                         <span class="w-5 h-5 rounded-full bg-white/50 flex items-center justify-center text-[10px] font-bold shrink-0">${String.fromCharCode(65 + optIdx)}</span>
-                                        <span>${formatMath(opt)}</span>
+                                        <span>${formatMath(opt || '')}</span>
                                     </div>`;
                             }).join('')}
                         </div>
                         <div class="bg-white/60 backdrop-blur-sm p-4 rounded-xl border border-slate-100 text-sm">
-                            <p class="text-indigo-900 leading-relaxed"><strong class="text-indigo-600">Explanation:</strong> ${formatMath(q.explanation)}</p>
+                            <p class="text-indigo-900 leading-relaxed"><strong class="text-indigo-600">Explanation:</strong> ${formatMath(q.explanation || 'No explanation available.')}</p>
                         </div>
                     </div>
                 </div>
@@ -1497,8 +1639,14 @@ document.addEventListener('defendx:quizFinished', (e) => {
         incorrect,
         unattempted,
         accuracy,
-        // New fields for detailed review
-        questions: JSON.parse(JSON.stringify(currentQuizQuestions)),
+        // Save a lightweight copy to avoid hitting localStorage quota on large mock exams
+        questions: currentQuizQuestions.map(q => ({
+            question:     q.question,
+            options:      q.options,
+            correctIndex: q.correctIndex,
+            explanation:  q.explanation || '',
+            topic:        q.topic || ''
+        })),
         answers: [...userAnswers]
     };
 
@@ -1523,3 +1671,26 @@ document.addEventListener('defendx:quizFinished', (e) => {
     launchConfetti();
 });
 
+<<<<<<< HEAD
+=======
+// Helper to quickly inspect counts by section and difficulty in browser console
+window.defendxQuestionStats = function () {
+    if (!ndaData || !ndaData.quizBank) {
+        console.warn('ndaData.quizBank not available');
+        return;
+    }
+    const bySection = {};
+    const byDifficulty = { Easy: 0, Medium: 0, Hard: 0 };
+    ndaData.quizBank.forEach((q) => {
+        const cls = classifyQuestion(q);
+        q.section = cls.section;
+        q.difficulty = cls.difficulty;
+        bySection[cls.section] = (bySection[cls.section] || 0) + 1;
+        byDifficulty[cls.difficulty] = (byDifficulty[cls.difficulty] || 0) + 1;
+    });
+    console.table(bySection);
+    console.table(byDifficulty);
+    return { bySection, byDifficulty };
+};
+
+>>>>>>> ec3908b10a0c87842527cd0254e2fd9115babd44
