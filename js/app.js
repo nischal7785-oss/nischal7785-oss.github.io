@@ -68,8 +68,19 @@ const state = {
     activeTopic: null,
     quizScore: 0,
     quizzesCompleted: 0,
-    quizTimer: null
+    quizTimer: null,
+    seenQuestionIds: []
 };
+
+// Load seen history from localStorage
+try {
+    const savedHistory = localStorage.getItem('defendx_seen_history');
+    if (savedHistory) {
+        state.seenQuestionIds = JSON.parse(savedHistory);
+    }
+} catch (e) {
+    console.error('Error loading seen history:', e);
+}
 
 // --- GLOBAL HELPERS & CONSTANTS ---
 
@@ -162,7 +173,7 @@ function classifyQuestion(q) {
     return { section, difficulty };
 }
 
-// Helper: pick N items from pool, repeating if needed
+// Helper: pick N items from pool, repeating if needed, avoiding seen IDs
 function pickN(pool, n) {
     if (pool.length === 0) return [];
     function shuffle(arr) {
@@ -170,8 +181,19 @@ function pickN(pool, n) {
         for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
         return a;
     }
-    let result = shuffle([...pool]);
-    while (result.length < n) result = result.concat(shuffle([...pool]));
+    
+    // Filter out seen IDs
+    let available = pool.filter(q => !state.seenQuestionIds.includes(q.id));
+    
+    // Fallback if not enough unseen questions
+    if (available.length < n) {
+        available = pool;
+    }
+
+    let result = shuffle([...available]);
+    while (result.length < n && pool.length > 0) {
+       result = result.concat(shuffle([...pool]));
+    }
     return result.slice(0, n);
 }
 
@@ -598,11 +620,6 @@ function updateQuizModeUI() {
 quizTypeRadios.forEach(radio => { radio.addEventListener('change', updateQuizModeUI); });
 updateQuizModeUI();
 
-<<<<<<< HEAD
-// Reset topic when subject changes so stale topic values don't cause empty results
-const quizSubjectSelect = document.getElementById('quiz-subject');
-=======
-
 function getTopicsForSubject(subject) {
     if (!ndaData.quizBank) return [];
     const topics = new Set();
@@ -643,7 +660,6 @@ function populateTopicDropdown(subject) {
     }
 }
 
->>>>>>> ec3908b10a0c87842527cd0254e2fd9115babd44
 if (quizSubjectSelect) {
     quizSubjectSelect.addEventListener('change', () => {
         populateTopicDropdown(quizSubjectSelect.value);
@@ -664,160 +680,8 @@ addTapListener(startQuizBtn, () => {
     const pool = ndaData.quizBank || [];
 
 
-    // Normalise subject/section + difficulty for any question
-    function classifyQuestion(q) {
-        // --- Section bucket ---
-        let section = q.section;
-        const topic = q.topic || '';
-        const subject = q.subject || '';
-
-        if (!section) {
-            if (subject === 'Mathematics' || mathTopics.includes(topic)) {
-                section = 'Mathematics';
-            } else if (subject === 'English' || topic === 'English') {
-                section = 'English';
-            } else if (subject === 'Science' && topic === 'Physics') {
-                section = 'Physics';
-            } else if (subject === 'Science' && topic === 'Chemistry') {
-                section = 'Chemistry';
-            } else if (subject === 'Science' && topic === 'Biology') {
-                section = 'Biology';
-            } else if (topic === 'Biology' || topic === 'Biology & General Science') {
-                section = 'Biology';
-            } else if (subject === 'Science') {
-                // Any remaining science goes under Physics/Chem/Bio bucket as generic science
-                section = 'Biology';
-            } else if (subject === 'General Studies' && topic.startsWith('Geography')) {
-                section = 'Geography';
-            } else if (subject === 'General Studies' && topic.startsWith('History')) {
-                section = 'History';
-            } else if (subject === 'General Studies' &&
-                (topic === 'Polity' || topic.startsWith('Polity'))) {
-                section = 'Polity';
-            } else if (subject === 'General Studies' &&
-                (topic === 'Economy' || topic.startsWith('Economics') || topic.startsWith('Indian Economy'))) {
-                section = 'Economics';
-            } else if (topic === 'Geography') {
-                section = 'Geography';
-            } else if (topic === 'History') {
-                section = 'History';
-            } else if (topic.includes('Current Events') || topic.includes('Current Affairs')) {
-                section = 'Current Affairs & Defence';
-            } else if (topic.includes('Defense') || topic.includes('Defence') || topic.includes('Military')) {
-                section = 'Current Affairs & Defence';
-            } else {
-                // Fallbacks for any remaining GAT-type questions
-                if (gatSubjects.includes(subject)) {
-                    section = subject === 'Science' ? 'Biology' : (subject === 'General Studies' ? 'History' : subject);
-                } else {
-                    section = 'Mathematics';
-                }
-            }
-        }
-
-        // --- Difficulty bucket ---
-        // Re-evaluated difficulty:
-        // - Most questions are Easy / Medium
-        // - Only conceptually advanced questions keep/receive the Hard tag
-        const originalDiff = q.difficulty;
-        let difficulty = 'Medium';
-
-        // Base balancing: roughly split Medium into Easy/Medium using id hash
-        function hashId(str) {
-            if (!str) return 0;
-            let h = 0;
-            for (let i = 0; i < str.length; i++) {
-                h = (h * 31 + str.charCodeAt(i)) >>> 0;
-            }
-            return h;
-        }
-
-        if (originalDiff === 'Easy') {
-            difficulty = 'Easy';
-        } else if (originalDiff === 'Medium' || !originalDiff) {
-            const h = hashId(q.id || q.topic || q.question);
-            difficulty = (h % 2 === 0) ? 'Easy' : 'Medium';
-        } else if (originalDiff === 'Hard') {
-            difficulty = 'Medium';
-        }
-
-        // Promote to Hard only for genuinely advanced areas
-        const hardMathTopics = [
-            'Differential Equations',
-            'Vector Algebra',
-            '3D Geometry',
-            'Analytical Geometry (2D & 3D)',
-            'Probability',
-            'Complex Numbers',
-            'Sequence and Series',
-            'Integral Calculus',
-            'Limits, Continuity & Differentiability'
-        ];
-        const hardPhysicsTopics = [
-            'Current Electricity',
-            'Electromagnetic Induction',
-            'Alternating Current',
-            'Modern Physics',
-            'Optics'
-        ];
-        const hardChemistryTopics = [
-            'Electrochemistry',
-            'Chemical Equilibrium',
-            'Thermodynamics',
-            'Coordination Compounds',
-            'Organic Chemistry',
-            'p-Block Elements',
-            'd-Block Elements'
-        ];
-        const hardBiologyTopics = [
-            'Human Physiology',
-            'Genetics',
-            'Evolution',
-            'Biotechnology',
-            'Human Reproduction',
-            'Ecology'
-        ];
-        const hardGSTopics = [
-            'Polity',
-            'Indian Economy',
-            'Economics',
-            'History - World'
-        ];
-
-        const t = topic;
-        if (
-            (section === 'Mathematics' && hardMathTopics.some(h => t && t.includes(h))) ||
-            (section === 'Physics' && (originalDiff === 'Hard' || hardPhysicsTopics.some(h => t && t.includes(h)))) ||
-            (section === 'Chemistry' && (originalDiff === 'Hard' || hardChemistryTopics.some(h => t && t.includes(h)))) ||
-            (section === 'Biology' && (originalDiff === 'Hard' || hardBiologyTopics.some(h => t && t.includes(h)))) ||
-            ((section === 'Polity' || section === 'Economics' || section === 'History') &&
-                hardGSTopics.some(h => t && t.includes(h)))
-        ) {
-            difficulty = 'Hard';
-        }
-
-        return { section, difficulty };
-    }
-
     // Helper to quickly inspect counts by section and difficulty in browser console
-    window.defendxQuestionStats = function () {
-        if (!ndaData || !ndaData.quizBank) {
-            console.warn('ndaData.quizBank not available');
-            return;
-        }
-        const bySection = {};
-        const byDifficulty = { Easy: 0, Medium: 0, Hard: 0 };
-        ndaData.quizBank.forEach((q) => {
-            const cls = classifyQuestion(q);
-            q.section = cls.section;
-            q.difficulty = cls.difficulty;
-            bySection[cls.section] = (bySection[cls.section] || 0) + 1;
-            byDifficulty[cls.difficulty] = (byDifficulty[cls.difficulty] || 0) + 1;
-        });
-        console.table(bySection);
-        console.table(byDifficulty);
-        return { bySection, byDifficulty };
-    };
+    // (Already defined globally)
 
     if (quizType === 'topic') {
         let filtered = pool;
@@ -857,10 +721,7 @@ addTapListener(startQuizBtn, () => {
         document.getElementById('quiz-main-card').classList.remove('mx-auto', 'max-w-3xl');
 
     } else if (quizType === 'math-mock') {
-<<<<<<< HEAD
     } else if (quizType === 'math-mock') {
-=======
->>>>>>> ec3908b10a0c87842527cd0254e2fd9115babd44
         let mathPool = pool.filter(q => {
             const cls = classifyQuestion(q);
             q.section = cls.section;
@@ -1026,15 +887,10 @@ function renderQuizQuestion() {
     const isLast = currentQuestionIndex === currentQuizQuestions.length - 1;
     const progress = ((currentQuestionIndex + 1) / currentQuizQuestions.length) * 100;
 
-<<<<<<< HEAD
-    document.getElementById('quiz-progress-bar').style.width = `${progress}%`;
-    document.getElementById('quiz-counter').textContent = `Question ${currentQuestionIndex + 1} of ${currentQuizQuestions.length}`;
-=======
     const progressBar = document.getElementById('quiz-progress-bar');
     if (progressBar) progressBar.style.width = `${progress}%`;
     const counter = document.getElementById('quiz-counter');
     if (counter) counter.textContent = `Question ${currentQuestionIndex + 1} of ${currentQuizQuestions.length}`;
->>>>>>> ec3908b10a0c87842527cd0254e2fd9115babd44
 
     const diffColors = { 'Easy': 'text-emerald-500 bg-emerald-50', 'Medium': 'text-amber-500 bg-amber-50', 'Hard': 'text-rose-500 bg-rose-50' };
     const diffTag = q.difficulty ? `<span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${diffColors[q.difficulty] || 'text-slate-500 bg-slate-100'}">${q.difficulty}</span>` : '';
@@ -1045,11 +901,7 @@ function renderQuizQuestion() {
                 <span class="text-xs font-semibold text-slate-400 bg-slate-100 px-2 py-1 rounded">${q.topic || 'General'}</span>
                 ${diffTag}
             </div>
-<<<<<<< HEAD
-            <h2 class="text-xl md:text-2xl font-bold text-slate-800 leading-relaxed">${formatMath(q.question)}</h2>
-=======
             <h2 class="text-xl md:text-2xl font-bold text-slate-800 leading-relaxed">${formatMath(q.question || '')}</h2>
->>>>>>> ec3908b10a0c87842527cd0254e2fd9115babd44
         </div>
         <div class="space-y-4 mb-8">
             ${(q.options || []).map((opt, i) => `
@@ -1141,6 +993,21 @@ function finishQuiz() {
     const percentage = Math.round((Math.max(0, finalScore) / totalMarks) * 100);
     state.quizzesCompleted++;
     document.getElementById('dash-quizzes-done').textContent = state.quizzesCompleted;
+
+    // Mark questions as seen
+    currentQuizQuestions.forEach(q => {
+        if (q.id && !state.seenQuestionIds.includes(q.id)) {
+            state.seenQuestionIds.push(q.id);
+        }
+    });
+
+    // Limit history to 500
+    if (state.seenQuestionIds.length > 500) {
+        state.seenQuestionIds = state.seenQuestionIds.slice(-500);
+    }
+
+    // Persist to localStorage
+    localStorage.setItem('defendx_seen_history', JSON.stringify(state.seenQuestionIds));
 
     const topicLabel = state.quizType === 'topic' ? (document.getElementById('quiz-topic')?.value || 'Mixed Topics') : null;
     document.dispatchEvent(new CustomEvent('defendx:quizFinished', {
@@ -1412,6 +1279,35 @@ function renderProfilePage() {
     }
     computeAndRenderStats();
     renderQuizHistorySection();
+    
+    // Workaround: Inject Settings section if it doesn't exist (since index.html is locked)
+    if (!document.getElementById('reset-history-btn')) {
+        const profileSection = document.getElementById('profile');
+        if (profileSection && !document.getElementById('settings-card')) {
+            const settingsHtml = `
+                <div id="settings-card" class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 mb-8">
+                    <h3 class="text-lg font-bold font-heading text-slate-800 mb-5 flex items-center gap-2">
+                        <i data-lucide="settings-2" class="w-5 h-5 text-slate-500"></i> Settings & History
+                    </h3>
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <div>
+                            <p class="font-bold text-slate-800 text-sm">Question Repetition History</p>
+                            <p class="text-xs text-slate-500 mt-1">We track questions you've seen to avoid immediate repetition. Resetting this will treat all questions as new.</p>
+                        </div>
+                        <button id="reset-history-btn" class="px-4 py-2 rounded-lg bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 transition-all text-xs font-bold flex items-center gap-2 shrink-0">
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Reset Seen History
+                        </button>
+                    </div>
+                </div>`;
+            profileSection.insertAdjacentHTML('beforeend', settingsHtml);
+            
+            const resetBtn = document.getElementById('reset-history-btn');
+            if (resetBtn) {
+                addTapListener(resetBtn, () => resetSeenHistory());
+            }
+        }
+    }
+
     lucide.createIcons();
 }
 
@@ -1429,6 +1325,15 @@ function computeAndRenderStats() {
     let streak = 0, day = today.getTime();
     while (activeDays.has(day)) { streak++; day -= 86400000; }
     setText('profile-stat-streak', streak);
+}
+
+function resetSeenHistory() {
+    if (confirm('Are you sure you want to reset your seen question history? This will allow questions to repeat as if you haven\'t seen them.')) {
+        state.seenQuestionIds = [];
+        localStorage.removeItem('defendx_seen_history');
+        alert('Seen question history has been reset.');
+        renderProfilePage();
+    }
 }
 
 function renderQuizHistorySection() {
@@ -1484,7 +1389,6 @@ function renderQuizHistorySection() {
     });
 
     lucide.createIcons();
-
 }
 
 function openQuizReviewModal(source, historyIndex) {
@@ -1671,8 +1575,6 @@ document.addEventListener('defendx:quizFinished', (e) => {
     launchConfetti();
 });
 
-<<<<<<< HEAD
-=======
 // Helper to quickly inspect counts by section and difficulty in browser console
 window.defendxQuestionStats = function () {
     if (!ndaData || !ndaData.quizBank) {
@@ -1692,5 +1594,3 @@ window.defendxQuestionStats = function () {
     console.table(byDifficulty);
     return { bySection, byDifficulty };
 };
-
->>>>>>> ec3908b10a0c87842527cd0254e2fd9115babd44
